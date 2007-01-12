@@ -3,27 +3,27 @@ package galapagos;
 import java.util.*;
 
 public class Grudger implements Behavior {
-	Set enemies;
-	
-	public Grudger () {
-		enemies = new HashSet();
-	}
-	
-    /**
-     * 
-     */
-    public Action decide(Finch finch) {
-        if (enemies.contains(finch))
-        	return Action.IGNORING;
-        else
-        	return Action.CLEANING;
-    }
+	Set<Finch> enemies;
 
-    /**
-     * 
-     */
-    public void response(Finch finch, Action action) {
-        if (action == Action.IGNORING)
-        	enemies.add(finch);
-    }
+	public Grudger() {
+		enemies = new HashSet<Finch>();
+	}
+
+	/**
+	 * 
+	 */
+	public Action decide(Finch finch) {
+		if (enemies.contains(finch))
+			return Action.IGNORING;
+		else
+			return Action.CLEANING;
+	}
+
+	/**
+	 * 
+	 */
+	public void response(Finch finch, Action action) {
+		if (action == Action.IGNORING)
+			enemies.add(finch);
+	}
 }
