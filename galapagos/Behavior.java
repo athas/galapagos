@@ -1,6 +1,6 @@
 package galapagos;
 
 public interface Behavior {
-  public Action decide (Finch);
-  public void response (Finch, Action);
+  public Action decide (Finch finch);
+  public void response (Finch finch, Action action);
 }
