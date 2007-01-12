@@ -20,10 +20,10 @@ public class GalapagosFinch implements Finch {
     return behavior.decide(finch);
   }
   
-  public FichStatus status () {
-    if (hitpoints == 0) return DEAD_TICKS;
-    if (age > maxAge) return DEAD_AGE;
-      else return ALIVE;
+  public FinchStatus status () {
+    if (hitpoints == 0) return FinchStatus.DEAD_TICKS;
+    if (age > maxAge) return FinchStatus.DEAD_AGE;
+      else return FinchStatus.ALIVE;
   }
   
   public void addHitpoints (int add) {
