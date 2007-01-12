@@ -9,7 +9,7 @@ import java.lang.*;
  * surroundings. Also provides an iterator-based facility for going
  * through the places of the world randomly.
  */
-public class World<T> implements Iterable {
+public class World<T> implements Iterable<World.Place> {
     private ArrayList<Place<T>> array;
     private int width;
     private int height;
@@ -139,7 +139,7 @@ public class World<T> implements Iterable {
         getAt(x, y).element = value;
     }
 
-    public Iterator<Place<T>> iterator() {
+    public Iterator iterator() {
         return array.iterator();
     }
 
@@ -149,7 +149,7 @@ public class World<T> implements Iterable {
      * has been created will not be reflected in the elements iterated
      * over.
      */
-    public Iterator<Place<T>> randomIterator() {
+    public Iterator randomIterator() {
         List<Place<T>> list = (List) array.clone();
         Collections.shuffle(list);
         return list.iterator();

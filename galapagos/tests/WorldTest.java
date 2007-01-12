@@ -30,8 +30,8 @@ public class WorldTest extends TestCase {
             for (int y = 0; y < w.height(); y++)
                 testContainsTheSame(w.getAt(x, y).filledNeighbours(), list);
 
-        for (Object p : w) {
-            testContainsTheSame(((World.Place)p).filledNeighbours(), list);
+        for (World.Place p : w) {
+            testContainsTheSame(p.filledNeighbours(), list);
         }
 
         for (Iterator i = w.randomIterator(); i.hasNext(); ) {
