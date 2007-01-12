@@ -1,4 +1,4 @@
-package gui;
+package galapagos;
 
 import java.awt.*;
 import java.awt.image.*;
