@@ -1,11 +1,11 @@
 package galapagos;
 
-public class <navn> implements Behavior {
+public class Samaritan implements Behavior {
     /**
-     * 
+     * Will always clean the other Finch
      */
     public Action decide(Finch finch) {
-        
+        return Action.CLEANING; 
     }
 
     /**
