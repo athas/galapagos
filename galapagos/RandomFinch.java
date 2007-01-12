@@ -2,13 +2,13 @@ package galapagos;
 
 import java.util.Random;
 
-public class Random implements Behavior {
+public class RandomFinch implements Behavior {
     Random random = new Random();
     /**
      * Chooses randomly between CLEANING and IGNORING the other finch
      */
     public Action decide(Finch finch) {
-        int choice = random.next(2);
+        int choice = random.nextInt(2);
 
         switch (choice) {
         case 0:
