@@ -12,7 +12,7 @@ public class <navn> implements Behavior
     /**
      * 
      */
-    public void response(Action action)
+    public void response(Finch finch, Action action)
     {
         
     }
