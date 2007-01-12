@@ -1,3 +1,4 @@
+package galapagos;
 
 public class <navn> implements Behavior
 {
