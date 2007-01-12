@@ -22,7 +22,7 @@ public class GalapagosFinch implements Finch {
   
   public FichStatus status () {
     if (hitpoints == 0) return DEAD_TICKS;
-    if (age > maxAge) return DEAD_AGE
+    if (age > maxAge) return DEAD_AGE;
       else return ALIVE;
   }
   
