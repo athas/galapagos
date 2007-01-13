@@ -174,20 +174,8 @@ public class Biotope extends Observable {
         }
     }
     
-    public List<Integer> population () {
-        return null;
-    }
-    
-    public List<Integer> born () {
-        return null;
-    }
-    
-    public List<Integer> deadByAge () {
-        return null;
-    }
-    
-    public List<Integer> deadByTicks () {
-        return null;
+    public Statistics statistics(Behavior behavior) {
+        return statisticsTree.get(behavior.toString());
     }
     
     public int round () {
