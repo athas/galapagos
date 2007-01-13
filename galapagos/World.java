@@ -92,7 +92,7 @@ public class World<T> implements Iterable<World<T>.Place> {
          * @return The y position.
          */
         public int yPosition() {
-            return xPosition;
+            return yPosition;
         }
 
         private int wrappedX(int x) {
