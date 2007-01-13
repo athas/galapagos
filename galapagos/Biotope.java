@@ -97,15 +97,24 @@ public class Biotope extends Observable {
         
     }
     
+    /**
+     * Decrease the hitpoints of all finches by hitpointsPerRound, and find dead finches
+     * and remove them from world, and store the changes in statisticsTree.
+     */
     private void grimReaper () {
-        /*for (p : world) if (p.element != null) {
-            GalapagosFinch f = (GalapagosFinch)p.element;
+        for (World<GalapagosFinch>.Place p : world) if (p.element() != null) {
+            GalapagosFinch f = p.element();
             f.addHitpoints(-hitpointsPerRound);
-            if (f.status != FinchStatus.ALIVE) {
-                String behaviorString = f.behavior.toString();
-                Statistics s = statistics.get(behaviorString);
-          */      
-            
+            FinchStatus newStatus = f.status();
+            if (newStatus != FinchStatus.ALIVE) {
+                Statistics s = statisticsTree.get(f.behavior().toString());
+                if (newStatus == FinchStatus.DEAD_AGE)
+                    s.incDeadByAge();
+                    else s.incDeadByTicks();
+                s.decPopulation();
+                world.setAt(p.xPosition(),p.yPosition(),null);
+            }
+        }
     }
     
     public List<Integer> population () {
