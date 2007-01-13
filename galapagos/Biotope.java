@@ -75,7 +75,18 @@ public class Biotope extends Observable {
     }
     
     private void breed () {
-        
+        for (Iterator<World<GalapagosFinch>.Place> i = world.randomIterator(); i.hasNext();) {
+            World<GalapagosFinch>.Place place = i.next();
+            GalapagosFinch finch = place.element();
+            if (finch != null && finch.age() > 0) {
+                List<World<GalapagosFinch>.Place> neighbours = place.emptyNeighbours();
+                if (!neighbours.isEmpty()) {
+                    int maxAge = random.nextInt(maxMaxAge - minMaxAge) + minMaxAge;
+                    world.setAt(neighbours.get(0).xPosition(), neighbours.get(0).yPosition(), 
+                            new GalapagosFinch(initialHitpoints, maxAge, finch.behavior().clone()));
+                }
+            }
+        }
     }
     
     private void makeMeetings () {
