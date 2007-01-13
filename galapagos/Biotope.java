@@ -58,7 +58,7 @@ public class Biotope extends Observable {
     }
     */
     
-    public void newRound () {
+    public void runRound () {
         
     }
     
@@ -66,7 +66,7 @@ public class Biotope extends Observable {
         
     }
     
-    private void makeMeeting () {
+    private void makeMeetings () {
         
     }
     
@@ -74,7 +74,7 @@ public class Biotope extends Observable {
         
     }
     
-    private void finchesGetOld () {
+    private void grimReaper () {
         
     }
     
