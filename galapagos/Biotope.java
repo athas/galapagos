@@ -15,6 +15,13 @@ public class Biotope extends Observable {
     private List<Integer> born;
     private List<Integer> deadByAge;
     private List<Integer> deadByTicks;
+
+    private ArrayList<Boolean> engagedFinches;
+
+    private final static int HelpedGotHelpValue = 3;
+    private final static int HelpedDidntGetHelpValue = 0;
+    private final static int DidntHelpGotHelpValue = 5;
+    private final static int DidntHelpDidntGetHelpValue = 1;
     
     public Biotope () {
         
@@ -24,6 +31,15 @@ public class Biotope extends Observable {
             int initialHitpoints, int minMaxAge, int maxMaxAge, int finchesPerBehavior, List<Behavior> behaviors) {
         
     }
+    
+    /**
+     * Do initialization of objects common to all constructors.
+     */
+    private void initialize () {
+        engagedFinches = new ArrayList(width * height);
+    }
+
+
     /* OR:
     public void setWorldSize (int width, int height) {
         
