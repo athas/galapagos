@@ -25,6 +25,7 @@ public class Biotope extends Observable {
         width = 300;
         height = 200;
         initialHitpoints = 7;
+        hitpointsPerRound = 3;
         minMaxAge = 10;
         maxMaxAge = 13;
         finchesPerBehavior = 40;
