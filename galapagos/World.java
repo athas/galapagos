@@ -166,7 +166,7 @@ public class World<T> implements Iterable<World<T>.Place> {
      * has been created will not be reflected in the elements iterated
      * over.
      */
-    public Iterator randomIterator() {
+    public Iterator<Place> randomIterator() {
         List<Place> list = (List) array.clone();
         Collections.shuffle(list);
         return list.iterator();
