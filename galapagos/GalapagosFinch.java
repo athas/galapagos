@@ -65,4 +65,11 @@ public class GalapagosFinch implements Finch {
   public void response (Finch finch, Action action) {
     behavior.response(finch, action);
   }
+  
+  /**
+   * The Behavior of this GalapagosFinch.
+   */
+  public Behavior behavior () {
+      return behavior;
+  }
 } 
