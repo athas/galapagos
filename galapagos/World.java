@@ -116,7 +116,25 @@ public class World<T> implements Iterable<World<T>.Place> {
             for (int x = xPosition - 1; x <= xPosition + 1; x++)
                 for (int y = yPosition - 1; y <= yPosition + 1; y++) {
                     Place p = getAt(wrappedX(x), wrappedY(y));
-                    if (!(p == null) && p.element != null)
+                    if (p != this && p.element != null)
+                        list.add(getAt(wrappedX(x), wrappedY(y)));
+                }
+            Collections.shuffle(list);
+            return list;
+        }
+        
+        /**
+         * Get the empty neighbors of this place as a randomly
+         * arranged list.
+         *
+         * @return A list of empty neighbor places.
+         */
+        public List<Place> emptyNeighbours() {
+            List<Place> list = new ArrayList<Place>(8);
+            for (int x = xPosition - 1; x <= xPosition + 1; x++)
+                for (int y = yPosition - 1; y <= yPosition + 1; y++) {
+                    Place p = getAt(wrappedX(x), wrappedY(y));
+                    if (p != this && p.element == null)
                         list.add(getAt(wrappedX(x), wrappedY(y)));
                 }
             Collections.shuffle(list);
