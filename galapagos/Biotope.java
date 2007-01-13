@@ -21,13 +21,14 @@ public class Biotope extends Observable {
     private final static int DidntHelpDidntGetHelpValue = 1;
     private ArrayList<Boolean> engagedFinches;
     
-    public Biotope () {
+    public Biotope (List<Behavior> behaviors) {
         width = 300;
         height = 200;
         initialHitpoints = 7;
         minMaxAge = 10;
         maxMaxAge = 13;
         finchesPerBehavior = 40;
+        finchBehaviors = behaviors;
         initialize();
     }
     
@@ -49,9 +50,10 @@ public class Biotope extends Observable {
         for (int i = 0; i < width * height; i++)
             engagedFinches.add(false);
 
-        for (int bcounter = 0; bcounter < numberOfBehaviors; bcounter++)
+        
+        for (Behavior b : finchBehaviors)
             for (int fcounter = 0; fcounter < finchesPerBehavior; fcounter++)
-                addRandomFinch(new Samaritan());
+                addRandomFinch(b.clone());
     }
     
     private void addRandomFinch (Behavior behavior) {
