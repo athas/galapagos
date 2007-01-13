@@ -10,6 +10,7 @@ import java.util.*;
  */
 public class World<T> implements Iterable<World<T>.Place> {
     private ArrayList<Place> array;
+    private ArrayList<Place> shuffledArray;
     private int width;
     private int height;
 
@@ -23,6 +24,7 @@ public class World<T> implements Iterable<World<T>.Place> {
         for (int x = 0; x < width; x++)
             for (int y = 0; y < height; y++)
                 array.add(new Place(x, y));
+        shuffledArray = (ArrayList) array.clone();
     }
 
     /**
@@ -169,8 +171,7 @@ public class World<T> implements Iterable<World<T>.Place> {
      * over.
      */
     public Iterator<Place> randomIterator() {
-        List<Place> list = (List) array.clone();
-        Collections.shuffle(list);
-        return list.iterator();
+        Collections.shuffle(shuffledArray);
+        return shuffledArray.iterator();
     }
 }
