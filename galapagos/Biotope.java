@@ -20,8 +20,6 @@ public class Biotope extends Observable {
     private List<Integer> deadByAge;
     private List<Integer> deadByTicks;*/
 
-    private Random random;
-
     private final static int HelpedGotHelpValue = 3;
     private final static int HelpedDidntGetHelpValue = 0;
     private final static int DidntHelpGotHelpValue = 5;
@@ -120,9 +118,9 @@ public class Biotope extends Observable {
             if (finch != null && finch.age() > 0) {
                 List<World<GalapagosFinch>.Place> neighbours = place.emptyNeighbours();
                 if (!neighbours.isEmpty()) {
-                    int maxAge = random.nextInt(maxMaxAge - minMaxAge) + minMaxAge;
-                    // world.setAt(neighbours.get(0).xPosition(), neighbours.get(0).yPosition(), 
-//                                 new GalapagosFinch(initialHitpoints, maxAge, finch.behavior().clone()));
+                    int maxAge = ((int) (Math.random()*(maxMaxAge - minMaxAge))) + minMaxAge;
+                    world.setAt(neighbours.get(0).xPosition(), neighbours.get(0).yPosition(), 
+                            new GalapagosFinch(initialHitpoints, maxAge, finch.behavior().clone()));
                 }
             }
         }
