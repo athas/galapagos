@@ -112,12 +112,13 @@ public class Biotope extends Observable {
         if (place.element() != null) {
             List<World.Place> filledNeighbours = place.filledNeighbours();
 
-        for (World.Place p : filledNeighbours)
-            if (isUnengaged(p)) {
-                engage(p);
-                meet((GalapagosFinch)place.element(), (GalapagosFinch)p.element());
-                return;
-            }
+            for (World.Place p : filledNeighbours)
+                if (isUnengaged(p)) {
+                    engage(p);
+                    meet((GalapagosFinch)place.element(), (GalapagosFinch)p.element());
+                    return;
+                }
+        }
     }
 
     private void clearEngagementKnowledge() {
