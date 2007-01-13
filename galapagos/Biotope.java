@@ -121,6 +121,9 @@ public class Biotope extends Observable {
                     int maxAge = ((int) (Math.random()*(maxMaxAge - minMaxAge))) + minMaxAge;
                     world.setAt(neighbours.get(0).xPosition(), neighbours.get(0).yPosition(), 
                             new GalapagosFinch(initialHitpoints, maxAge, finch.behavior().clone()));
+                    Statistics stat = statisticsTree.get(finch.behavior().toString());
+                    stat.incPopulation();
+                    stat.incBorn();
                 }
             }
         }
