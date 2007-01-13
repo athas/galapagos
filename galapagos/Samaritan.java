@@ -18,4 +18,8 @@ public class Samaritan implements Behavior {
     public Behavior clone() {
         return new Samaritan();
     }
+    
+    public String toString() {
+        return "Samaritan";
+    }
 }

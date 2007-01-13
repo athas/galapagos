@@ -32,4 +32,8 @@ public class RandomFinch implements Behavior {
     public Behavior clone() {
         return new RandomFinch();
     }
+    
+    public String toString() {
+        return "RandomFinch";
+    }
 }

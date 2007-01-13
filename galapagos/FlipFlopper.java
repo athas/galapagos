@@ -28,4 +28,8 @@ public class FlipFlopper implements Behavior {
     public Behavior clone() {
         return new FlipFlopper();
     }
+    
+    public String toString() {
+        return "FlipFlopper";
+    }
 }

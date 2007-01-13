@@ -36,4 +36,8 @@ public class TitForTat implements Behavior {
   public Behavior clone() {
       return new TitForTat();
   }
+  
+  public String toString() {
+      return "TitForTat";
+  }
 }

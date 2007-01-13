@@ -21,4 +21,8 @@ public class Cheater implements Behavior
     public Behavior clone() {
         return new Cheater();
     }
+    
+    public String toString() {
+        return "Cheater";
+    }
 }

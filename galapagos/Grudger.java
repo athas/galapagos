@@ -30,4 +30,8 @@ public class Grudger implements Behavior {
     public Behavior clone() {
         return new Grudger();
     }
+    
+    public String toString() {
+        return "Grudger";
+    }
 }
