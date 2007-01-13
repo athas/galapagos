@@ -184,14 +184,10 @@ public class Biotope extends Observable {
     }
     
     public int round () {
-        return 0;
+        return round;
     }
     
-    public Behavior behavior (int row, int column) {
-        return null;
-    }
-    // OR
-    public World<GalapagosFinch> world () {
-        return null;
+    public Iterator<World<GalapagosFinch>.Place> worldIterator () {
+        return world.iterator();
     }
 }
