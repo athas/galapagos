@@ -1,12 +1,14 @@
 package galapagos;
 
 import java.util.*;
+import java.lang.*;
 
 public class Biotope extends Observable {
     private int width, height;
     private double breedingProbability;
     private int maxHitpoints, initialHitpoints, hitpointsPerRound;
     private int minMaxAge, maxMaxAge;
+    private int numberOfBehaviors;
     private int finchesPerBehavior;
     private int round;
     private World<GalapagosFinch> world;
@@ -16,23 +18,57 @@ public class Biotope extends Observable {
     private List<Integer> population;
     private List<Integer> born;
     private List<Integer> deadByAge;
-    private List<Integer> deadByTicks;
+    private List<Integer> deadByTicks;*/
+
+    private Random random;
+
+    private final static int HelpedGotHelpValue = 3;
+    private final static int HelpedDidntGetHelpValue = 0;
+    private final static int DidntHelpGotHelpValue = 5;
+    private final static int DidntHelpDidntGetHelpValue = 1;
+    private ArrayList<Boolean> engagedFinches;
     
     public Biotope () {
-        
+        width = 300;
+        height = 200;
+        initialHitpoints = 7;
+        minMaxAge = 10;
+        maxMaxAge = 13;
+        finchesPerBehavior = 40;
+        initialize();
     }
     
     public Biotope (int width, int height /*eller Dimension*/, double breedingProbability, int maxHitpoints, 
             int initialHitpoints, int hitpointsPerRound, int minMaxAge, int maxMaxAge,
             int finchesPerBehavior, List<Behavior> behaviors) {
-        
+        throw new Error("Unimplemented");
+        //initialize();
     }
     
     /**
      * Do initialization of objects common to all constructors.
      */
     private void initialize () {
+        numberOfBehaviors = 5;
         engagedFinches = new ArrayList(width * height);
+        world = new World<GalapagosFinch>(width, height);
+
+        for (int bcounter = 0; bcounter < numberOfBehaviors; bcounter++)
+            for (int fcounter = 0; fcounter < finchesPerBehavior; fcounter++)
+                addRandomFinch(new Samaritan());
+    }
+    
+    private void addRandomFinch (Behavior behavior) {
+        int x = (int) (Math.random() * width);
+        int y = (int) (Math.random() * height);
+
+        if (world.getAt(x, y).element() == null) {
+            world.setAt(x, y, new GalapagosFinch(initialHitpoints,
+                                                 minMaxAge + (int)
+                                                 (Math.random() *
+                                                  (maxMaxAge - minMaxAge)),
+                                                 behavior));
+        } else addRandomFinch(behavior);
     }
 
 
@@ -82,8 +118,8 @@ public class Biotope extends Observable {
                 List<World<GalapagosFinch>.Place> neighbours = place.emptyNeighbours();
                 if (!neighbours.isEmpty()) {
                     int maxAge = random.nextInt(maxMaxAge - minMaxAge) + minMaxAge;
-                    world.setAt(neighbours.get(0).xPosition(), neighbours.get(0).yPosition(), 
-                            new GalapagosFinch(initialHitpoints, maxAge, finch.behavior().clone()));
+                    // world.setAt(neighbours.get(0).xPosition(), neighbours.get(0).yPosition(), 
+//                                 new GalapagosFinch(initialHitpoints, maxAge, finch.behavior().clone()));
                 }
             }
         }
