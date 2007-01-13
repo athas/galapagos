@@ -13,7 +13,7 @@ public class Statistics {
         deadByTicks = 0;
     }
     
-    public int getPopulations () {
+    public int getPopulation () {
         return population;
     }
     
