@@ -26,4 +26,8 @@ public class Grudger implements Behavior {
 		if (action == Action.IGNORING)
 			enemies.add(finch);
 	}
+    
+    public Behavior clone() {
+        return new Grudger();
+    }
 }

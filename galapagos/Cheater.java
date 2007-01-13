@@ -17,4 +17,8 @@ public class Cheater implements Behavior
     {
         
     }
+    
+    public Behavior clone() {
+        return new Cheater();
+    }
 }

@@ -33,4 +33,7 @@ public class TitForTat implements Behavior {
     finches.put(finch,action);
   }
   
+  public Behavior clone() {
+      return new TitForTat();
+  }
 }

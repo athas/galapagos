@@ -24,4 +24,8 @@ public class FlipFlopper implements Behavior {
     public void response(Finch finch, Action action) {
         
     }
+    
+    public Behavior clone() {
+        return new FlipFlopper();
+    }
 }

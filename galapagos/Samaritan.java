@@ -14,4 +14,8 @@ public class Samaritan implements Behavior {
     public void response(Finch finch, Action action) {
         
     }
+    
+    public Behavior clone() {
+        return new Samaritan();
+    }
 }
