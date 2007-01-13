@@ -87,7 +87,7 @@ public class Biotope extends Observable {
         for (Iterator<World<GalapagosFinch>.Place> i = world.randomIterator(); i.hasNext();) {
             World<GalapagosFinch>.Place place = i.next();
             GalapagosFinch finch = place.element();
-            if (finch != null && finch.age() > 0) {
+            if (finch != null && finch.age() > 0 && Math.random() <= breedingProbability) {
                 List<World<GalapagosFinch>.Place> neighbours = place.emptyNeighbours();
                 if (!neighbours.isEmpty()) {
                     int maxAge = ((int) (Math.random()*(maxMaxAge - minMaxAge))) + minMaxAge;
