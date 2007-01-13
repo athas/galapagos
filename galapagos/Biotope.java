@@ -28,7 +28,7 @@ public class Biotope extends Observable {
         minMaxAge = 10;
         maxMaxAge = 13;
         finchesPerBehavior = 40;
-        breedingPropability = 1.00/3.00,
+        breedingProbability = 1.00/3.00,
         finchBehaviors = behaviors;
         initialize();
     }
