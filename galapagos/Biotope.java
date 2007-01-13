@@ -71,7 +71,12 @@ public class Biotope extends Observable {
 
 
     public void runRound () {
+        breed();
         makeMeetings();
+        grimReaper();
+        round++;
+        setChanged();
+        notifyObservers();
     }
     
     private void breed () {
