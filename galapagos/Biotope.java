@@ -9,7 +9,7 @@ public class Biotope extends Observable {
     private int minMaxAge, maxMaxAge;
     private int finchesPerBehavior;
     private int round;
-    private World<Finch> world;
+    private World<GalapagosFinch> world;
     private List<Behavior> behaviors;
     private List<Integer> population;
     private List<Integer> born;
