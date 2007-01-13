@@ -13,12 +13,7 @@ public class Biotope extends Observable {
     private int round;
     private World<GalapagosFinch> world;
     private TreeMap<String,Statistics> statisticsTree;
-    
-    /*private List<Behavior> behaviors;
-    private List<Integer> population;
-    private List<Integer> born;
-    private List<Integer> deadByAge;
-    private List<Integer> deadByTicks;*/
+    private List<Behavior> finchBehaviors;
 
     private final static int HelpedGotHelpValue = 3;
     private final static int HelpedDidntGetHelpValue = 0;
@@ -73,40 +68,6 @@ public class Biotope extends Observable {
     }
 
 
-    /* OR:
-    public void setWorldSize (int width, int height) {
-        
-    }
-    
-    public void setBreedingProbability (double prob) {
-        
-    }
-    
-    public void setMaxHitpoints (int maxHitpoints) {
-        
-    }
-    
-    public void setInitialHitpoints (int initialHitpoints) {
-        
-    }
-    
-    public void setMinMaxAge (int minMaxAge) {
-        
-    }
-    
-    public void setMaxMaxAge (int maxMaxAge) {
-        
-    }
-    
-    public void setFinchesPerBehavior (int finchesPerBehavior) {
-        
-    }
-    
-    public void setBehaviors (List<Behavior> behaviors) {
-        
-    }
-    */
-    
     public void runRound () {
         makeMeetings();
     }
