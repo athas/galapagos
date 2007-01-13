@@ -146,6 +146,8 @@ public class World<T> implements Iterable<World<T>.Place> {
      * Return the place at offset x,y.
      */
     public Place getAt(int x, int y) {
+        assert(x < width);
+        assert(y < height);
         return array.get(x * height + y);
     }
 
