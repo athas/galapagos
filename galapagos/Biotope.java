@@ -87,12 +87,13 @@ public class Biotope extends Observable {
     }
     
     private void grimReaper () {
-        for (p : world) if (p.element != null) {
+        /*for (p : world) if (p.element != null) {
             GalapagosFinch f = (GalapagosFinch)p.element;
             f.addHitpoints(-hitpointsPerRound);
             if (f.status != FinchStatus.ALIVE) {
-                String s = f.behavior.toString();
-                statistics.get(s)
+                String behaviorString = f.behavior.toString();
+                Statistics s = statistics.get(behaviorString);
+          */      
             
     }
     
