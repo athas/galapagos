@@ -76,6 +76,8 @@ public class Biotope extends Observable {
 
 
     public void runRound () {
+        for (Statistics stat : statisticsTree.values())
+            stat.newRound();
         breed();
         makeMeetings();
         grimReaper();

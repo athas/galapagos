@@ -19,9 +19,12 @@ public class BiotopeTest extends TestCase {
             assertNotNull(stat);
             System.out.println("-----\nBehavior: " + be);
             System.out.println("Population: " + stat.getPopulation());
-            System.out.println("Born: " + stat.getBorn());
-            System.out.println("Dead of old age: " + stat.getDeadByAge());
-            System.out.println("Dead of sickness: " + stat.getDeadByTicks());
+            System.out.println("Born this round: " + stat.getBornThisRound());
+            System.out.println("Born total: " + stat.getBorn());
+            System.out.println("Dead of old age this round: " + stat.getDeadByAgeThisRound());
+            System.out.println("Dead of old age total: " + stat.getDeadByAge());
+            System.out.println("Dead of sickness this round: " + stat.getDeadByTicksThisRound());
+            System.out.println("Dead of sickness total: " + stat.getDeadByTicks());
         }
     }
 }
