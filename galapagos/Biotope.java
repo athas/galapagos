@@ -53,6 +53,9 @@ public class Biotope extends Observable {
         engagedFinches = new ArrayList(width * height);
         world = new World<GalapagosFinch>(width, height);
 
+        for (int i = 0; i < width * height; i++)
+            engagedFinches.add(false);
+
         for (int bcounter = 0; bcounter < numberOfBehaviors; bcounter++)
             for (int fcounter = 0; fcounter < finchesPerBehavior; fcounter++)
                 addRandomFinch(new Samaritan());
@@ -107,7 +110,7 @@ public class Biotope extends Observable {
     */
     
     public void runRound () {
-        
+        makeMeetings();
     }
     
     private void breed () {
@@ -125,12 +128,66 @@ public class Biotope extends Observable {
         }
     }
     
-    private void makeMeetings () {
-        
+    private void makeMeetings() {
+        clearEngagementKnowledge();
+        for (Iterator i = world.randomIterator(); i.hasNext(); ) {
+            World.Place p = (World.Place)i.next();
+            maybeMakeMeeting(p);
+        }
+    }
+
+    private void maybeMakeMeeting(World.Place place) {
+        List<World.Place> filledNeighbours = place.filledNeighbours();
+
+        for (World.Place p : filledNeighbours)
+            if (isUnengaged(p)) {
+                engage(p);
+                meet((GalapagosFinch)place.element(), (GalapagosFinch)p.element());
+                return;
+            }
+    }
+
+    private void clearEngagementKnowledge() {
+        for (int i = 0; i < engagedFinches.size(); i++)
+            engagedFinches.set(i, false);
+    }
+
+    private void engage(World.Place place) {
+        engagedFinches.set(place.xPosition() * height + place.yPosition(), true);
+    }
+
+    private boolean isUnengaged(World.Place place) {
+        return engagedFinches.get(place.xPosition() * height + place.yPosition());
     }
     
-    private void meeting (GalapagosFinch finch1, GalapagosFinch finch2) {
-        
+    private void meet(GalapagosFinch finch1, GalapagosFinch finch2) {
+        Action finch1Action = finch1.decide(finch2);
+        Action finch2Action = finch2.decide(finch1);
+
+        finch1.addHitpoints(getMeetingResult(finch1Action, finch2Action));
+        finch2.addHitpoints(getMeetingResult(finch2Action, finch1Action));
+
+        finch1.response(finch2, finch2Action);
+        finch2.response(finch1, finch1Action);
+    }
+
+    private int getMeetingResult(Action finch1Action, Action finch2Action) {
+        if (finch1Action == Action.CLEANING) {
+            if (finch2Action == Action.CLEANING) {
+                return HelpedGotHelpValue;
+            }
+            else if (finch2Action == Action.IGNORING) {
+                return HelpedDidntGetHelpValue;
+            }
+        } else if (finch1Action == Action.IGNORING) {
+            if (finch2Action == Action.CLEANING) {
+                return DidntHelpGotHelpValue;
+            }
+            else if (finch2Action == Action.IGNORING) {
+                return DidntHelpDidntGetHelpValue;
+            }
+        }
+        throw new Error("Unhandled Action combination");
     }
     
     /**
