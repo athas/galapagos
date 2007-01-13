@@ -48,8 +48,15 @@ public class GalapagosFinch implements Finch {
   /**
    * Make this finch older.
    */
-  public void getAge () {
+  public void makeOlder () {
     age++;
+  }
+  
+  /**
+   * The age of the GalapagosFinch. 
+   */
+  public int age () {
+      return age;
   }
   
   /**
