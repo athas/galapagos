@@ -1,7 +1,6 @@
 package galapagos;
 
 import java.util.*;
-import java.lang.*;
 
 /**
  * A torus world, a two-dimensional array containing "places" that can
@@ -9,8 +8,8 @@ import java.lang.*;
  * surroundings. Also provides an iterator-based facility for going
  * through the places of the world randomly.
  */
-public class World<T> implements Iterable<World.Place> {
-    private ArrayList<Place<T>> array;
+public class World<T> implements Iterable<World<T>.Place> {
+    private ArrayList<Place> array;
     private int width;
     private int height;
 
@@ -20,10 +19,10 @@ public class World<T> implements Iterable<World.Place> {
     public World(int worldWidth, int worldHeight) {
         width = worldWidth;
         height = worldHeight;
-        array = new ArrayList<Place<T>>(width * height);
+        array = new ArrayList<Place>(width * height);
         for (int x = 0; x < width; x++)
             for (int y = 0; y < height; y++)
-                array.add(new Place<T>(x, y));
+                array.add(new Place(x, y));
     }
 
     /**
@@ -51,7 +50,7 @@ public class World<T> implements Iterable<World.Place> {
      * this class are immutable, but may change when the setAt()
      * method of World is invoked.
      */
-    public class Place<T> {
+    public class Place {
         private T element;
         private int xPosition, yPosition;
 
@@ -112,11 +111,11 @@ public class World<T> implements Iterable<World.Place> {
          *
          * @return A list of non-empty neighbor places.
          */
-        public List<Place<T>> filledNeighbours() {
-            List<Place<T>> list = new ArrayList<Place<T>>(8);
+        public List<Place> filledNeighbours() {
+            List<Place> list = new ArrayList<Place>(8);
             for (int x = xPosition - 1; x <= xPosition + 1; x++)
                 for (int y = yPosition - 1; y <= yPosition + 1; y++) {
-                    Place<T> p = getAt(wrappedX(x), wrappedY(y));
+                    Place p = getAt(wrappedX(x), wrappedY(y));
                     if (!(p == null) && p.element != null)
                         list.add(getAt(wrappedX(x), wrappedY(y)));
                 }
@@ -139,7 +138,7 @@ public class World<T> implements Iterable<World.Place> {
         getAt(x, y).element = value;
     }
 
-    public Iterator iterator() {
+    public Iterator<Place> iterator() {
         return array.iterator();
     }
 
@@ -150,7 +149,7 @@ public class World<T> implements Iterable<World.Place> {
      * over.
      */
     public Iterator randomIterator() {
-        List<Place<T>> list = (List) array.clone();
+        List<Place> list = (List) array.clone();
         Collections.shuffle(list);
         return list.iterator();
     }
