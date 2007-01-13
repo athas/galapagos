@@ -111,12 +111,13 @@ public class Biotope extends Observable {
     }
 
     private void maybeMakeMeeting(World.Place place) {
-        if (place.element() != null) {
+        if (place.element() != null && isUnengaged(place)) {
             List<World.Place> filledNeighbours = place.filledNeighbours();
 
             for (World.Place p : filledNeighbours)
                 if (isUnengaged(p)) {
                     engage(p);
+                    engage(place);
                     meet((GalapagosFinch)place.element(), (GalapagosFinch)p.element());
                     return;
                 }
