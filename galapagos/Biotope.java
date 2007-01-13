@@ -5,30 +5,26 @@ import java.util.*;
 public class Biotope extends Observable {
     private int width, height;
     private double breedingProbability;
-    private int maxHitpoints, initialHitpoints;
+    private int maxHitpoints, initialHitpoints, hitpointsPerRound;
     private int minMaxAge, maxMaxAge;
     private int finchesPerBehavior;
     private int round;
     private World<GalapagosFinch> world;
-    private List<Behavior> behaviors;
+    private TreeMap<String,Statistics> statisticsTree;
+    
+    /*private List<Behavior> behaviors;
     private List<Integer> population;
     private List<Integer> born;
     private List<Integer> deadByAge;
     private List<Integer> deadByTicks;
-
-    private ArrayList<Boolean> engagedFinches;
-
-    private final static int HelpedGotHelpValue = 3;
-    private final static int HelpedDidntGetHelpValue = 0;
-    private final static int DidntHelpGotHelpValue = 5;
-    private final static int DidntHelpDidntGetHelpValue = 1;
     
     public Biotope () {
         
     }
     
     public Biotope (int width, int height /*eller Dimension*/, double breedingProbability, int maxHitpoints, 
-            int initialHitpoints, int minMaxAge, int maxMaxAge, int finchesPerBehavior, List<Behavior> behaviors) {
+            int initialHitpoints, int hitpointsPerRound, int minMaxAge, int maxMaxAge,
+            int finchesPerBehavior, List<Behavior> behaviors) {
         
     }
     
@@ -91,7 +87,13 @@ public class Biotope extends Observable {
     }
     
     private void grimReaper () {
-        
+        for (p : world) if (p.element != null) {
+            GalapagosFinch f = (GalapagosFinch)p.element;
+            f.addHitpoints(-hitpointsPerRound);
+            if (f.status != FinchStatus.ALIVE) {
+                String s = f.behavior.toString();
+                statistics.get(s)
+            
     }
     
     public List<Integer> population () {
