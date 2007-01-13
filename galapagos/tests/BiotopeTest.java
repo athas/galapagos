@@ -12,6 +12,16 @@ public class BiotopeTest extends TestCase {
         list.add(new Grudger());
         list.add(new FlipFlopper());
         Biotope b = new Biotope(list);
-        b.runRound();
+        for (int i = 0; i < 20; i++)
+            b.runRound();
+        for (Behavior be : list) {
+            Statistics stat = b.statistics(be);
+            assertNotNull(stat);
+            System.out.println("-----\nBehavior: " + be);
+            System.out.println("Population: " + stat.getPopulation());
+            System.out.println("Born: " + stat.getBorn());
+            System.out.println("Dead of old age: " + stat.getDeadByAge());
+            System.out.println("Dead of sickness: " + stat.getDeadByTicks());
+        }
     }
 }

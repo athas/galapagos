@@ -45,21 +45,24 @@ public class Biotope extends Observable {
     private void initialize () {
         numberOfBehaviors = 5;
         engagedFinches = new ArrayList(width * height);
+        statisticsTree = new TreeMap<String,Statistics>();
         world = new World<GalapagosFinch>(width, height);
 
         for (int i = 0; i < width * height; i++)
             engagedFinches.add(false);
 
         
-        for (Behavior b : finchBehaviors)
+        for (Behavior b : finchBehaviors) {
+            statisticsTree.put(b.toString(), new Statistics());
             for (int fcounter = 0; fcounter < finchesPerBehavior; fcounter++)
                 addRandomFinch(b.clone());
+        }
     }
     
     private void addRandomFinch (Behavior behavior) {
         int x = (int) (Math.random() * width);
         int y = (int) (Math.random() * height);
-
+        statisticsTree.get(behavior.toString()).incPopulation();
         if (world.getAt(x, y).element() == null) {
             world.setAt(x, y, new GalapagosFinch(initialHitpoints,
                                                  minMaxAge + (int)
@@ -167,6 +170,7 @@ public class Biotope extends Observable {
         for (World<GalapagosFinch>.Place p : world) if (p.element() != null) {
             GalapagosFinch f = p.element();
             f.addHitpoints(-hitpointsPerRound);
+            f.makeOlder();
             FinchStatus newStatus = f.status();
             if (newStatus != FinchStatus.ALIVE) {
                 Statistics s = statisticsTree.get(f.behavior().toString());
@@ -180,6 +184,7 @@ public class Biotope extends Observable {
     }
     
     public Statistics statistics(Behavior behavior) {
+        assert(finchBehaviors.contains(behavior));
         return statisticsTree.get(behavior.toString());
     }
     
