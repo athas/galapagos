@@ -33,8 +33,8 @@ public class GalapagosFinch implements Finch {
    * Is this finch dead or alive?
    */
   public FinchStatus status () {
-    if (hitpoints == 0) return FinchStatus.DEAD_TICKS;
-    if (age > maxAge) return FinchStatus.DEAD_AGE;
+    if (hitpoints <= 0) return FinchStatus.DEAD_TICKS;
+    if (age >= maxAge) return FinchStatus.DEAD_AGE;
       else return FinchStatus.ALIVE;
   }
   
