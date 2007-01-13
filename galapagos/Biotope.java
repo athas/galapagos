@@ -109,7 +109,8 @@ public class Biotope extends Observable {
     }
 
     private void maybeMakeMeeting(World.Place place) {
-        List<World.Place> filledNeighbours = place.filledNeighbours();
+        if (place.element() != null) {
+            List<World.Place> filledNeighbours = place.filledNeighbours();
 
         for (World.Place p : filledNeighbours)
             if (isUnengaged(p)) {
@@ -129,7 +130,7 @@ public class Biotope extends Observable {
     }
 
     private boolean isUnengaged(World.Place place) {
-        return engagedFinches.get(place.xPosition() * height + place.yPosition());
+        return !engagedFinches.get(place.xPosition() * height + place.yPosition());
     }
     
     private void meet(GalapagosFinch finch1, GalapagosFinch finch2) {
