@@ -11,6 +11,7 @@ public class GalapagosFrame extends JFrame implements Observer {
     private Biotope biotope;
     public TreeMap<String, Color> colorMap;
     public int pixelSize;
+    private JSpinner numberOfRounds;
     
     public GalapagosFrame()
     {
@@ -18,6 +19,29 @@ public class GalapagosFrame extends JFrame implements Observer {
         colorMap = createColorMap();
         this.setLayout(new BorderLayout());
         
+        area = new AreaPanel();
+        
+        Container controlButtons = new Container();
+        this.add(controlButtons, BorderLayout.NORTH);
+        controlButtons.setLayout(new FlowLayout());
+        JButton button = new JButton("New Biotope");
+        button.setActionCommand("newBiotope");
+        controlButtons.add(button);
+        button = new JButton("Next Round");
+        button.setActionCommand("nextRound");
+        controlButtons.add(button);
+        numberOfRounds = new JSpinner(new SpinnerNumberModel(50,0,Integer.MAX_VALUE,1));
+        numberOfRounds.setPreferredSize(new Dimension(100,22));
+        controlButtons.add(numberOfRounds);
+        button = new JButton("Compute Several Rounds");
+        button.setActionCommand("severalRounds");
+        controlButtons.add(button);
+        
+        Container container = new Container();
+        container.setLayout(new GridBagLayout());
+        container.add(area);
+        this.add(container,BorderLayout.CENTER);
+        this.doLayout();
         
         ArrayList<Behavior> behaviors = new ArrayList<Behavior>();
         behaviors.add(new Samaritan());
@@ -32,19 +56,11 @@ public class GalapagosFrame extends JFrame implements Observer {
         biotope = new Biotope(100,100,0.05,20,10,2,50,100,100,behaviors);
         biotope.addObserver(new BiotopeLogger());
         biotope.addObserver(this);
-        area = new AreaPanel();
-        this.add(new JButton("asd"), BorderLayout.NORTH);
-        
-        Container container = new Container();
-        container.setLayout(new GridBagLayout());
-        container.add(area);
-        this.add(container,BorderLayout.CENTER);
-        this.doLayout();
         
         area.reset(biotope.world.width(), biotope.world.height(), pixelSize);
         
         this.addWindowListener(new Terminator());
-        this.setSize(biotope.width*pixelSize, biotope.height * pixelSize);
+        this.setSize(biotope.width*pixelSize + 100, biotope.height * pixelSize + 100);
         
         this.setVisible(true);
         
