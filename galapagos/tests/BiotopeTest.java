@@ -15,7 +15,7 @@ public class BiotopeTest extends TestCase {
         for (int i = 0; i < 20; i++)
             b.runRound();
         for (Behavior be : list) {
-            Statistics stat = b.statistics(be);
+            Statistics stat = b.statistics(be.toString());
             assertNotNull(stat);
             System.out.println("-----\nBehavior: " + be);
             System.out.println("Population: " + stat.getPopulation());

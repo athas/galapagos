@@ -214,8 +214,8 @@ public class Biotope extends Observable {
         }
     }
     
-    public Statistics statistics(Behavior behavior) {
-        assert(finchBehaviors.contains(behavior));
+    public Statistics statistics(String behavior) {
+        assert(statisticsTree.containsKey(behavior));
         return statisticsTree.get(behavior.toString());
     }
     

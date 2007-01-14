@@ -12,6 +12,7 @@ public class GalapagosFrame extends JFrame implements Observer {
     public TreeMap<String, Color> colorMap;
     public int pixelSize;
     private JSpinner numberOfRounds;
+    private StatisticsPanel information;
     
     public GalapagosFrame()
     {
@@ -43,19 +44,23 @@ public class GalapagosFrame extends JFrame implements Observer {
         this.add(container,BorderLayout.CENTER);
         this.doLayout();
         
+        information = new StatisticsPanel(this);
+        this.add(information, BorderLayout.SOUTH);
+        
         ArrayList<Behavior> behaviors = new ArrayList<Behavior>();
         behaviors.add(new Samaritan());
         behaviors.add(new TitForTat());
         behaviors.add(new Grudger());
-        behaviors.add(new Cheater());
+        //behaviors.add(new Cheater());
         behaviors.add(new FlipFlopper());
         behaviors.add(new ProbingTitForTat());
-        behaviors.add(new RandomFinch());
+        //behaviors.add(new RandomFinch());
         behaviors.add(new SuspiciousTitForTat());
         
         biotope = new Biotope(100,100,0.05,20,10,2,50,100,100,behaviors);
         biotope.addObserver(new BiotopeLogger());
         biotope.addObserver(this);
+        biotope.addObserver(information);
         
         area.reset(biotope.world.width(), biotope.world.height(), pixelSize);
         

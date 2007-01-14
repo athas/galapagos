@@ -76,7 +76,7 @@ public class BiotopeLogger implements Observer {
         
         for (int i = 0; i < rows - 2; i++) {
             currentBehavior = behaviors.get(i);
-            currentStat = biotope.statistics(currentBehavior);
+            currentStat = biotope.statistics(currentBehavior.toString());
             currentRow = output[i+1];
             
             // The texts of the fields in the table are generated, and added to the output-array.
