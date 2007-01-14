@@ -214,4 +214,8 @@ public class Biotope extends Observable {
     public Iterator<World<GalapagosFinch>.Place> worldIterator () {
         return world.iterator();
     }
+    
+    public List<Behavior> behaviors () {
+        return finchBehaviors;
+    }
 }
