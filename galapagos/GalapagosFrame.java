@@ -2,20 +2,21 @@ package galapagos;
 
 import java.util.*;
 
-import javax.swing.JFrame;
-import java.awt.Color;
+import javax.swing.*;
+import java.awt.*;
 
 public class GalapagosFrame extends JFrame {
 
-    AreaPanel area;
-    Biotope biotope;
-    final TreeMap<String, Color> colorMap;
+    private AreaPanel area;
+    private Biotope biotope;
+    public TreeMap<String, Color> colorMap;
     public int pixelSize;
     
     public GalapagosFrame()
     {
         pixelSize = 5;
         colorMap = createColorMap();
+        this.setLayout(new BorderLayout());
         
         
         ArrayList<Behavior> behaviors = new ArrayList<Behavior>();
@@ -29,13 +30,16 @@ public class GalapagosFrame extends JFrame {
         behaviors.add(new SuspiciousTitForTat());
         
         biotope = new Biotope(100,100,0.2,20,10,4,10,15,100,behaviors);
-        biotope.addObserver(new BiotopeLogger());
+        //biotope.addObserver(new BiotopeLogger());
         area = new AreaPanel();
-        area.reset( biotope.width, biotope.height, pixelSize);
+        this.add(new JButton("asd"), BorderLayout.NORTH);
+        this.add(area,BorderLayout.CENTER);
+        
+        area.reset( biotope.width, biotope.height);
         
         this.addWindowListener(new Terminator());
         this.setSize(biotope.width*pixelSize, biotope.height * pixelSize);
-        this.add(area);
+        
         this.setVisible(true);
         
         run(10000);
@@ -75,7 +79,7 @@ public class GalapagosFrame extends JFrame {
         return c;
     }
     
-    public TreeMap<String, Color> createColorMap()
+    private TreeMap<String, Color> createColorMap()
     {
         TreeMap<String, Color> colorMap = new TreeMap<String, Color>();
         
