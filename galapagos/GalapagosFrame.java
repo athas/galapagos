@@ -9,75 +9,79 @@ public class GalapagosFrame extends JFrame {
 
     AreaPanel area;
     Biotope biotope;
-    final Color[] colors;
+    final TreeMap<String, Color> colorMap;
+    public int pixelSize;
     
     public GalapagosFrame()
     {
-        this.addWindowListener(new Terminator());
-        this.setVisible(true);
+        pixelSize = 4;
+        colorMap = createColorMap();
+        
+        
         ArrayList<Behavior> behaviors = new ArrayList<Behavior>();
-        behaviors.add(new Cheater());
+        behaviors.add(new Samaritan());
         behaviors.add(new TitForTat());
         behaviors.add(new Grudger());
         
-        int pixelSize = 4;
         biotope = new Biotope(behaviors);
-        this.setSize(biotope.width*pixelSize, biotope.height * pixelSize);
         area = new AreaPanel();
-        this.add(area);
         area.reset( biotope.width, biotope.height, 4);
         
+        this.addWindowListener(new Terminator());
+        this.setSize(biotope.width*pixelSize, biotope.height * pixelSize);
+        this.add(area);
+        this.setVisible(true);
         
-        
-        TreeMap<String, Color> behaviorColors = new TreeMap<String, Color>();
-        
-        colors = colorList();
-        int color = 0;
-        for(Behavior bhv : behaviors)
-        {
-            if(color > colors.length)
-                color = 0;
-            
-            behaviorColors.put(bhv.toString(), colors[color]);
-            
-            color++;
-        }
-        
-        Biotope biotope = new Biotope(behaviors);
-        
-        for (int i = 0; i < 100000; i++)
-        {
-            biotope.runRound();
-            
-            for(World<GalapagosFinch>.Place place : biotope.world)
-            {
-                if(place.element() != null)
-                    area.pixel(place.xPosition(), place.yPosition(), behaviorColors.get(place.element().behavior().toString()));
-                else
-                    area.pixel(place.xPosition(), place.yPosition(), Color.BLACK);
-            }
-            area.update();
-            this.setTitle((i+1) + "");
-        }
-        
-        
-        
+        run(10000);
     }
     
-    public Color[] colorList()
+    public void run(int count)
     {
-        Color[] colors = new Color[10];
-        colors[0] = Color.BLUE;
-        colors[1] = Color.YELLOW;
-        colors[2] = Color.RED;
-        colors[3] = Color.GREEN;
-        colors[4] = Color.PINK;
-        colors[5] = Color.ORANGE;
-        colors[6] = Color.WHITE;
-        colors[7] = Color.CYAN;
-        colors[8] = Color.MAGENTA;
-        colors[9] = Color.GRAY;
+        for (int i = 0; i < count; i++)
+        {
+            runOnce();
+            this.setTitle((i+1) + "");
+        }
+    }
+    
+    public void runOnce()
+    {
+        biotope.runRound();
         
-        return colors;
+        for(World<GalapagosFinch>.Place place : biotope.world)
+        {
+            GalapagosFinch element = place.element();
+            if(element != null)
+                area.pixel(place.xPosition(), place.yPosition(), colorByBehavior(element.behavior()));
+            else
+                area.pixel(place.xPosition(), place.yPosition(), Color.BLACK);
+        }
+        area.update();
+    }
+    
+    public Color colorByBehavior(Behavior bhv)
+    {
+        Color c = colorMap.get(bhv.toString());
+        
+        if(c == null)
+            throw new Error("Color not defined for this Behavior");
+        
+        return c;
+    }
+    
+    public TreeMap<String, Color> createColorMap()
+    {
+        TreeMap<String, Color> colorMap = new TreeMap<String, Color>();
+        
+        colorMap.put("Cheater", Color.BLUE);
+        colorMap.put("Samaritan", Color.RED);
+        colorMap.put("Grudger", Color.YELLOW);
+        colorMap.put("TitForTat", Color.GREEN);
+        colorMap.put("SuspiciousTitForTat", Color.ORANGE);
+        colorMap.put("ProbingTitForTat", Color.CYAN);
+        colorMap.put("FlipFlopper", Color.WHITE);
+        colorMap.put("RandomFinch", Color.MAGENTA);
+        
+        return colorMap;
     }
 }
