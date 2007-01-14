@@ -143,6 +143,9 @@ public class World<T> implements Iterable<World<T>.Place> {
             return list;
         }
         
+        /**
+         * Redefine this place's element.
+         */
         public void setElement (T element) {
             this.element = element;
         }

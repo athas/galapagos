@@ -1,14 +1,25 @@
 package galapagos;
 
+/**
+ * A class for remembering importent data about one type of finch
+ * (i.e. all the finches having one certain behavior).
+ */
 public class Statistics {
+    
+    // Vairables used through the whole simulation.
     private int population;
     private int born;
     private int deadByAge;
     private int deadByTicks;
+    
+    // Variables reset each round.
     private int bornThisRound;
     private int deadByAgeThisRound;
     private int deadByTicksThisRound;
     
+    /**
+     * Create statistics about a finch type.
+     */
     public Statistics () {
         population = 0;
         born = 0;
@@ -19,6 +30,9 @@ public class Statistics {
         deadByTicksThisRound = 0;
     }
     
+    /**
+     * Reset round variables.
+     */
     public void newRound () {
         bornThisRound = 0;
         deadByAgeThisRound = 0;
