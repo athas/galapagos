@@ -6,11 +6,11 @@ package galapagos;
 public class GalapagosFinch implements Finch {
   
   private int hitpoints;
-  private int maxHitpoints;
+  private final int maxHitpoints;
   private int age;
-  private int maxAge;
+  private final int maxAge;
   
-  private Behavior behavior;
+  private final Behavior behavior;
   
   /**
    * Make er new finch with specified hitpoints, maximal age and behavior.

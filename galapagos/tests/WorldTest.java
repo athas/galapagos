@@ -6,7 +6,7 @@ import java.util.*;
 
 public class WorldTest extends TestCase {
 
-    public void testContainsTheSame(List<World.Place> list1, List<Integer> list2) {
+    public void testContainsTheSame(List<World<Integer>.Place> list1, List<Integer> list2) {
         for (World.Place a: list1)
             assertTrue(list2.contains(a.element()));
     }

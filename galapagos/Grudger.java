@@ -3,7 +3,7 @@ package galapagos;
 import java.util.*;
 
 public class Grudger implements Behavior {
-    Set<Finch> enemies;
+    private final Set<Finch> enemies;
     
     public Grudger() {
         enemies = new HashSet<Finch>();

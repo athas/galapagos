@@ -3,7 +3,7 @@ package galapagos;
 import java.util.*;
 
 public class ProbingTitForTat implements Behavior {
-    private Map<Finch, Action> finches;
+    private final Map<Finch, Action> finches;
 
     private int count;
 

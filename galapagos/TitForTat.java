@@ -6,7 +6,7 @@ import java.util.*;
  * A behavior using the tit for tat-strategy.
  */
 public class TitForTat implements Behavior {
-    private Map<Finch,Action> finches;
+    private final Map<Finch,Action> finches;
     
     /**
      * Make a new tit for tat-behavior.

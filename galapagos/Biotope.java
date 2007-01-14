@@ -5,14 +5,14 @@ import java.lang.*;
 
 public class Biotope extends Observable {
     public final int width, height;
-    private double breedingProbability;
-    private int maxHitpoints, initialHitpoints, hitpointsPerRound;
-    private int minMaxAge, maxMaxAge;
-    private int finchesPerBehavior;
+    private final double breedingProbability;
+    private final int maxHitpoints, initialHitpoints, hitpointsPerRound;
+    private final int minMaxAge, maxMaxAge;
+    private final int finchesPerBehavior;
     private int round;
     public final World<GalapagosFinch> world;
-    private TreeMap<String,Statistics> statisticsTree;
-    private List<Behavior> finchBehaviors;
+    private final TreeMap<String,Statistics> statisticsTree;
+    private final List<Behavior> finchBehaviors;
 
     private final static int HelpedGotHelpValue = 3;
     private final static int HelpedDidntGetHelpValue = 0;
@@ -32,6 +32,7 @@ public class Biotope extends Observable {
         breedingProbability = 1.00/3.00;
         finchBehaviors = behaviors;
         world = new World<GalapagosFinch>(width, height);
+        statisticsTree = new TreeMap<String,Statistics>();
         initialize();
     }
     
@@ -49,6 +50,7 @@ public class Biotope extends Observable {
         this.finchesPerBehavior = finchesPerBehavior;
         this.finchBehaviors = behaviors;
         world = new World<GalapagosFinch>(width, height);
+        statisticsTree = new TreeMap<String,Statistics>();
         initialize();
     }
     
@@ -57,7 +59,6 @@ public class Biotope extends Observable {
      */
     private void initialize () {
         engagedFinches = new ArrayList<Boolean>(width * height);
-        statisticsTree = new TreeMap<String,Statistics>();
         
         for (int i = 0; i < width * height; i++)
             engagedFinches.add(false);

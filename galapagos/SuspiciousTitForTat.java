@@ -7,7 +7,7 @@ import java.util.*;
  tat-strategy.
  */
 public class SuspiciousTitForTat implements Behavior {
-    private Map<Finch,Action> finches;
+    private final Map<Finch,Action> finches;
     
     /**
      * Make a new tit for tat-behavior.
