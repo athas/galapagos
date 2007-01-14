@@ -34,6 +34,6 @@ public class RandomFinch implements Behavior {
     }
     
     public String toString() {
-        return "RandomFinch";
+        return "Random";
     }
 }

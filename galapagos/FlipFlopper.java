@@ -30,6 +30,6 @@ public class FlipFlopper implements Behavior {
     }
     
     public String toString() {
-        return "FlipFlopper";
+        return "Flip-Flopper";
     }
 }
