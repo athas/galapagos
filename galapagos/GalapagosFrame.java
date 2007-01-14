@@ -29,12 +29,17 @@ public class GalapagosFrame extends JFrame implements Observer {
         behaviors.add(new RandomFinch());
         behaviors.add(new SuspiciousTitForTat());
         
-        biotope = new Biotope(100,100,0.2,20,10,4,10,15,100,behaviors);
-        //biotope.addObserver(new BiotopeLogger());
+        biotope = new Biotope(100,100,0.05,20,10,2,50,100,100,behaviors);
+        biotope.addObserver(new BiotopeLogger());
         biotope.addObserver(this);
         area = new AreaPanel();
         this.add(new JButton("asd"), BorderLayout.NORTH);
-        this.add(area,BorderLayout.CENTER);
+        
+        Container container = new Container();
+        container.setLayout(new GridBagLayout());
+        container.add(area);
+        this.add(container,BorderLayout.CENTER);
+        this.doLayout();
         
         area.reset(biotope.world.width(), biotope.world.height(), pixelSize);
         
