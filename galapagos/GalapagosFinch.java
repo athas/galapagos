@@ -15,7 +15,7 @@ public class GalapagosFinch implements Finch {
   /**
    * Make er new finch with specified hitpoints, maximal age and behavior.
    */
-  GalapagosFinch (int hitpoints, int maxHitpoints, int maxAge, Behavior behavior) {
+  public GalapagosFinch (int hitpoints, int maxHitpoints, int maxAge, Behavior behavior) {
     this.hitpoints = hitpoints;
     this.maxHitpoints = maxHitpoints;
     this.age = 0;
@@ -41,8 +41,10 @@ public class GalapagosFinch implements Finch {
   
   /**
    * Change this finch's hitpoints.
+   * @require add >= 0
    */
   public void addHitpoints (int add) {
+      assert (add >= 0) : "Can't add a negative value";
     hitpoints += add;
     if (hitpoints > maxHitpoints)
         hitpoints = maxHitpoints;

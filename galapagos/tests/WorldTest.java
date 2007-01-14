@@ -6,37 +6,128 @@ import java.util.*;
 
 public class WorldTest extends TestCase {
 
-    public void testContainsTheSame(List<World<Integer>.Place> list1, List<Integer> list2) {
-        for (World.Place a: list1)
-            assertTrue(list2.contains(a.element()));
-    }
-
-    public void testWorld () {
-        World<Integer> w = new World<Integer>(3, 3);
-        List<Integer> list = new LinkedList<Integer>();
-
-        for (int x = 0; x < w.width(); x++)
-            for (int y = 0; y < w.height(); y++)
-                testContainsTheSame(w.getAt(x, y).filledNeighbours(), list);
-
-        for (int i = 0; i < 9; i++)
-            list.add(i);
-
-        for (int x = 0; x < w.width(); x++)
-            for (int y = 0; y < w.height(); y++)
-                w.setAt(x, y, x * w.width() + y);
-
-        for (int x = 0; x < w.width(); x++)
-            for (int y = 0; y < w.height(); y++)
-                testContainsTheSame(w.getAt(x, y).filledNeighbours(), list);
-
-        for (World.Place p : w) {
-            testContainsTheSame(p.filledNeighbours(), list);
+    public List<Integer> toIntegerList(List<World<Integer>.Place> list)
+    {
+        LinkedList<Integer> result = new LinkedList<Integer>();
+        for(World<Integer>.Place place : list)
+        {
+            result.add(place.element());
         }
-
-        for (Iterator i = w.randomIterator(); i.hasNext(); ) {
-            World.Place p = (World.Place)i.next();
-            testContainsTheSame(p.filledNeighbours(), list);
+        return result;
+    }
+    
+    public void containsTheSame (List<?> list1, List<?> list2)
+    {
+        assertTrue("list2 doesn't contain all elements of list1" , list2.containsAll(list1));
+        assertTrue("list1 doesn't contain all elements of list2" , list1.containsAll(list2));
+        assertEquals("The lists is different in size", list2.size(), list1.size());
+    }
+    
+    public World<Integer> world;
+    public List<Integer> list;
+    
+    public void setUp() {
+        world = new World<Integer>(3, 3);
+        list = new LinkedList<Integer>();
+    }
+    
+    /**
+     * Fills the world with integers so it looks like:
+     *      0 1 2
+     *      3 4 5
+     *      6 7 8
+     */
+    public void fillWorld()
+    {
+        for (int x = 0; x < world.width(); x++)
+            for (int y = 0; y < world.height(); y++)
+                world.setAt(x, y, x * world.width() + y);
+    }
+    
+    /**
+     * Get the 8 integers surrounding "a"
+     * 
+     * Example:
+     *   Input world:    a == 4
+     *            012
+     *            345
+     *            678
+     *   Output list: 0 1 2 3 5 6 7 8
+     * 
+     * @param a
+     * @return A List of the neighbours numbers
+     
+    public LinkedList<Integer> getNeighbours(int a) {
+        LinkedList<Integer> neighbours = new LinkedList<Integer>();
+        addWrapped(neighbours, a - world.width() - 1);
+        addWrapped(neighbours, a - world.width());
+        addWrapped(neighbours, a - world.width() + 1);
+        addWrapped(neighbours, a - 1);
+        addWrapped(neighbours, a + 1);
+        addWrapped(neighbours, a + world.width() - 1);
+        addWrapped(neighbours, a + world.width());
+        addWrapped(neighbours, a + world.width() + 1);
+        
+        return neighbours;
+    }
+    
+    public void addWrapped(List<Integer> list, int a) {
+            list.add(a);
+    }*/
+    
+    public void testfilledNeighbours()
+    {
+        fillWorld();
+        list.add(0);
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(5);
+        list.add(6);
+        list.add(7);
+        list.add(8);
+        
+        World.Place place = world.getAt(1,1);
+        assertEquals(4, (int)(Integer)place.element());
+        
+        containsTheSame(toIntegerList(world.getAt(1,1).filledNeighbours()), list);
+    }
+    
+    /**
+     * Test that RandomIterator goes through all elements
+     *
+     */
+    public void testRandomIterator() {
+        fillWorld();
+        //stores the elements it has passed
+        LinkedList<Integer> found = new LinkedList<Integer>();
+        
+        for (Iterator i = world.randomIterator(); i.hasNext(); ) {
+            World<Integer>.Place place = (World<Integer>.Place)i.next();
+            found.add(place.element());
+        }
+        
+        list.add(0);
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(4);
+        list.add(5);
+        list.add(6);
+        list.add(7);
+        list.add(8);
+        
+        containsTheSame(found, list);
+    }
+    
+    
+    /**
+     * When there is no elements in the world, no neighbours should be found.
+     */
+    public void testNoNeighboursInEmptyWorld() {
+        for(World<Integer>.Place place : world)
+        {
+            assertEquals(0, place.filledNeighbours().size());
         }
     }
 }
