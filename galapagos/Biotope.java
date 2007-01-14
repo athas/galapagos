@@ -66,14 +66,13 @@ public class Biotope extends Observable {
         int y = (int) (Math.random() * height);
         statisticsTree.get(behavior.toString()).incPopulation();
         if (world.getAt(x, y).element() == null) {
-            world.setAt(x, y, new GalapagosFinch(initialHitpoints,
-                                                 minMaxAge + (int)
-                                                 (Math.random() *
-                                                  (maxMaxAge - minMaxAge)),
-                                                 behavior));
+            world.setAt(x, y, new GalapagosFinch(initialHitpoints,randomMaxAge,behavior));
         } else addRandomFinch(behavior);
     }
 
+    private int randomMaxAge () {
+        return minMaxAge + (int)(Math.random() * (maxMaxAge - minMaxAge));
+    }
 
     public void runRound () {
         for (Statistics stat : statisticsTree.values())
@@ -93,9 +92,8 @@ public class Biotope extends Observable {
             if (finch != null && finch.age() > 0 && Math.random() <= breedingProbability) {
                 List<World<GalapagosFinch>.Place> neighbours = place.emptyNeighbours();
                 if (!neighbours.isEmpty()) {
-                    int maxAge = ((int) (Math.random()*(maxMaxAge - minMaxAge))) + minMaxAge;
-                    world.setAt(neighbours.get(0).xPosition(), neighbours.get(0).yPosition(), 
-                            new GalapagosFinch(initialHitpoints, maxAge, finch.behavior().clone()));
+                    world.setAt(neighbours.get(0).xPosition(), neighbours.get(0).yPosition(),
+                            new GalapagosFinch(initialHitpoints, randomMaxAge, finch.behavior().clone()));
                     Statistics stat = statisticsTree.get(finch.behavior().toString());
                     stat.incPopulation();
                     stat.incBorn();
