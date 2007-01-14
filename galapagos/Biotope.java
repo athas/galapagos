@@ -72,9 +72,9 @@ public class Biotope extends Observable {
     private void addRandomFinch (Behavior behavior) {
         int x = (int) (Math.random() * width);
         int y = (int) (Math.random() * height);
-        statisticsTree.get(behavior.toString()).incPopulation();
         World<GalapagosFinch>.Place p = world.getAt(x, y);
         if (p.element() == null) {
+            statisticsTree.get(behavior.toString()).incPopulation();
             p.setElement(new GalapagosFinch(initialHitpoints,maxHitpoints,randomMaxAge(),behavior));
         } else addRandomFinch(behavior);
     }
