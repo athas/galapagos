@@ -15,6 +15,7 @@ public class ProbingTitForTat implements Behavior {
     }
 
     public Action decide(Finch finch) {
+        cleanFinches();
         if (count == 0) {
             if (rand.nextInt(2) == 0) {
                 count = 5;
@@ -30,6 +31,11 @@ public class ProbingTitForTat implements Behavior {
             return Action.CLEANING;
     }
 
+    private void cleanFinches () {
+        for (Finch finch : finches.keySet())
+            if (finch.status() != FinchStatus.ALIVE) finches.remove(finch);
+    }
+    
     public void response(Finch finch, Action action) {
         finches.put(finch, action);
     }
