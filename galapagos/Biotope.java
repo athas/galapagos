@@ -56,14 +56,12 @@ public class Biotope extends Observable {
      * Do initialization of objects common to all constructors.
      */
     private void initialize () {
-        engagedFinches = new ArrayList(width * height);
+        engagedFinches = new ArrayList<Boolean>(width * height);
         statisticsTree = new TreeMap<String,Statistics>();
         
-
         for (int i = 0; i < width * height; i++)
             engagedFinches.add(false);
 
-        
         for (Behavior b : finchBehaviors) {
             statisticsTree.put(b.toString(), new Statistics());
             for (int fcounter = 0; fcounter < finchesPerBehavior; fcounter++)
@@ -124,7 +122,7 @@ public class Biotope extends Observable {
     private void makeMeetings() {
         clearEngagementKnowledge();
         for (Iterator i = world.randomIterator(); i.hasNext(); ) {
-            World.Place place = (World.Place)i.next();
+            World<GalapagosFinch>.Place place = (World<GalapagosFinch>.Place)i.next();
             if(place.element() != null && !isEngaged(place))
                 makeMeeting(place);
         }
@@ -137,17 +135,17 @@ public class Biotope extends Observable {
      * @ensure isEngaged(place)
      * @param place the place holding the unengaged finch
      */
-    private void makeMeeting(World.Place place) {
+    private void makeMeeting(World<GalapagosFinch>.Place place) {
         assert (place.element() != null) : "Can't engage a null-finch";
         assert (!isEngaged(place)) : "The finch is already engaged";
 
-        List<World.Place> filledNeighbours = place.filledNeighbours(); 
+        List<World<GalapagosFinch>.Place> filledNeighbours = place.filledNeighbours(); 
 
-        for (World.Place p : filledNeighbours)
+        for (World<GalapagosFinch>.Place p : filledNeighbours)
             if (!isEngaged(p)) {
                 engage(p);
                 engage(place);
-                meet((GalapagosFinch)place.element(), (GalapagosFinch)p.element());
+                meet(place.element(), p.element());
                 return;
             }
     }
