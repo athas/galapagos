@@ -142,6 +142,10 @@ public class World<T> implements Iterable<World<T>.Place> {
             Collections.shuffle(list);
             return list;
         }
+        
+        public void setElement (T element) {
+            this.element = element;
+        }
     }
 
     /**
