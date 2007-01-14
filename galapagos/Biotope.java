@@ -8,7 +8,6 @@ public class Biotope extends Observable {
     private double breedingProbability;
     private int maxHitpoints, initialHitpoints, hitpointsPerRound;
     private int minMaxAge, maxMaxAge;
-    private int numberOfBehaviors;
     private int finchesPerBehavior;
     private int round;
     public final World<GalapagosFinch> world;
@@ -36,18 +35,27 @@ public class Biotope extends Observable {
         initialize();
     }
     
-    public Biotope (int width, int height /*eller Dimension*/, double breedingProbability, int maxHitpoints, 
+    public Biotope (int width, int height, double breedingProbability, int maxHitpoints, 
             int initialHitpoints, int hitpointsPerRound, int minMaxAge, int maxMaxAge,
             int finchesPerBehavior, List<Behavior> behaviors) {
-        throw new Error("Unimplemented");
-        //initialize();
+        this.width = width;
+        this.height = height;
+        this.breedingProbability = breedingProbability;
+        this.maxHitpoints = maxHitpoints;
+        this.initialHitpoints = initialHitpoints;
+        this.hitpointsPerRound = hitpointsPerRound;
+        this.minMaxAge = minMaxAge;
+        this.maxMaxAge = maxMaxAge;
+        this.finchesPerBehavior = finchesPerBehavior;
+        this.finchBehaviors = behaviors;
+        world = new World<GalapagosFinch>(width, height);
+        initialize();
     }
     
     /**
      * Do initialization of objects common to all constructors.
      */
     private void initialize () {
-        numberOfBehaviors = 5;
         engagedFinches = new ArrayList(width * height);
         statisticsTree = new TreeMap<String,Statistics>();
         
