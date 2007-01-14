@@ -21,19 +21,7 @@ public class Biotope extends Observable {
     private ArrayList<Boolean> engagedFinches;
     
     public Biotope (List<Behavior> behaviors) {
-        width = 100;
-        height = 100;
-        initialHitpoints = 7;
-        maxHitpoints = 12;
-        hitpointsPerRound = 3;
-        minMaxAge = 10;
-        maxMaxAge = 13;
-        finchesPerBehavior = 40;
-        breedingProbability = 1.00/3.00;
-        finchBehaviors = behaviors;
-        world = new World<GalapagosFinch>(width, height);
-        statisticsTree = new TreeMap<String,Statistics>();
-        initialize();
+        this(100, 100, 1.00/3.00, 12, 7, 3, 10, 13, 40, behaviors);
     }
     
     public Biotope (int width, int height, double breedingProbability, int maxHitpoints, 
@@ -63,6 +51,11 @@ public class Biotope extends Observable {
         for (int i = 0; i < width * height; i++)
             engagedFinches.add(false);
         
+        addStartFinches();
+    }
+    
+    private void addStartFinches()
+    {
         Iterator<World<GalapagosFinch>.Place> worldIterator = world.randomIterator();
         
         for (Iterator<Behavior> bIterator = finchBehaviors.iterator();
@@ -70,11 +63,15 @@ public class Biotope extends Observable {
         {
             Behavior b = bIterator.next();
             statisticsTree.put(b.toString(),new Statistics());
-            for (int i = 0;i < finchesPerBehavior;i++)
-            {
-                World<GalapagosFinch>.Place p = worldIterator.next();
-                placeFinch(p,b,false);
-            }
+            
+            
+            for (int i = 0;i < finchesPerBehavior && worldIterator.hasNext();i++)
+                {   
+                    System.out.println(j++);
+                    World<GalapagosFinch>.Place p = worldIterator.next();
+                    placeFinch(p,b,false);
+                }
+
         }
     }
     
