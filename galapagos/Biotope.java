@@ -4,14 +4,14 @@ import java.util.*;
 import java.lang.*;
 
 public class Biotope extends Observable {
-    private int width, height;
+    public final int width, height;
     private double breedingProbability;
     private int maxHitpoints, initialHitpoints, hitpointsPerRound;
     private int minMaxAge, maxMaxAge;
     private int numberOfBehaviors;
     private int finchesPerBehavior;
     private int round;
-    private World<GalapagosFinch> world;
+    public final World<GalapagosFinch> world;
     private TreeMap<String,Statistics> statisticsTree;
     private List<Behavior> finchBehaviors;
 
@@ -22,8 +22,8 @@ public class Biotope extends Observable {
     private ArrayList<Boolean> engagedFinches;
     
     public Biotope (List<Behavior> behaviors) {
-        width = 300;
-        height = 200;
+        width = 100;
+        height = 100;
         initialHitpoints = 7;
         maxHitpoints = 12;
         hitpointsPerRound = 3;
@@ -32,6 +32,7 @@ public class Biotope extends Observable {
         finchesPerBehavior = 40;
         breedingProbability = 1.00/3.00;
         finchBehaviors = behaviors;
+        world = new World<GalapagosFinch>(width, height);
         initialize();
     }
     
@@ -49,7 +50,7 @@ public class Biotope extends Observable {
         numberOfBehaviors = 5;
         engagedFinches = new ArrayList(width * height);
         statisticsTree = new TreeMap<String,Statistics>();
-        world = new World<GalapagosFinch>(width, height);
+        
 
         for (int i = 0; i < width * height; i++)
             engagedFinches.add(false);
@@ -87,12 +88,16 @@ public class Biotope extends Observable {
         notifyObservers();
     }
     
+    /**
+     * Lets some of the finches breed.   if possible (A finch needs an empty neighbour place to breed).
+     *
+     */
     private void breed () {
         for (Iterator<World<GalapagosFinch>.Place> i = world.randomIterator(); i.hasNext();) {
             World<GalapagosFinch>.Place place = i.next();
             GalapagosFinch finch = place.element();
             if (finch != null && finch.age() > 0 && Math.random() <= breedingProbability) {
-                List<World<GalapagosFinch>.Place> neighbours = place.emptyNeighbours();
+                List<World<GalapagosFinch>.Place> neighbours = place.emptyNeighbours(); 
                 if (!neighbours.isEmpty()) {
                     neighbours.get(0).setElement(
                         new GalapagosFinch(initialHitpoints, maxHitpoints, randomMaxAge(), finch.behavior().clone()));
@@ -105,37 +110,38 @@ public class Biotope extends Observable {
     }
     
     /**
-     * Finds 
+     * Sets up meetings between the finches of the world. 
      *
      */
     private void makeMeetings() {
         clearEngagementKnowledge();
         for (Iterator i = world.randomIterator(); i.hasNext(); ) {
-            
             World.Place place = (World.Place)i.next();
-            if(place.element() != null && isUnengaged(place))
+            if(place.element() != null && !isEngaged(place))
                 makeMeeting(place);
         }
     }
 
     /**
-     * Finds a partner to the finch at the specified place
-     * @require place.element() != null
+     * Engages the finch at the specified place with one of its neighbours (if any). 
+     * And makes them meet eachother.
+     * @require place.element() != null && !isEngaged(place)
+     * @ensure isEngaged(place)
      * @param place the place holding the unengaged finch
      */
     private void makeMeeting(World.Place place) {
-        assert(place.element() != null);
+        assert (place.element() != null) : "Can't engage a null-finch";
+        assert (!isEngaged(place)) : "The finch is already engaged";
 
-        List<World.Place> filledNeighbours = place.filledNeighbours();
+        List<World.Place> filledNeighbours = place.filledNeighbours(); 
 
         for (World.Place p : filledNeighbours)
-            if (isUnengaged(p)) {
+            if (!isEngaged(p)) {
                 engage(p);
                 engage(place);
                 meet((GalapagosFinch)place.element(), (GalapagosFinch)p.element());
                 return;
             }
-        
     }
 
     private void clearEngagementKnowledge() {
@@ -147,17 +153,19 @@ public class Biotope extends Observable {
         engagedFinches.set(place.xPosition() * height + place.yPosition(), true);
     }
 
-    private boolean isUnengaged(World.Place place) {
-        return !engagedFinches.get(place.xPosition() * height + place.yPosition());
+    private boolean isEngaged(World.Place place) {
+        return engagedFinches.get(place.xPosition() * height + place.yPosition());
     }
     
     private void meet(GalapagosFinch finch1, GalapagosFinch finch2) {
+        //let both finches decide if they won't to help the other finch
         Action finch1Action = finch1.decide(finch2);
         Action finch2Action = finch2.decide(finch1);
-
+        
         finch1.addHitpoints(getMeetingResult(finch1Action, finch2Action));
         finch2.addHitpoints(getMeetingResult(finch2Action, finch1Action));
-
+        
+        //tell the finches what was done to them (so they eventually can learn)
         finch1.response(finch2, finch2Action);
         finch2.response(finch1, finch1Action);
     }
