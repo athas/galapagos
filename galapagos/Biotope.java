@@ -104,26 +104,38 @@ public class Biotope extends Observable {
         }
     }
     
+    /**
+     * Finds 
+     *
+     */
     private void makeMeetings() {
         clearEngagementKnowledge();
         for (Iterator i = world.randomIterator(); i.hasNext(); ) {
-            World.Place p = (World.Place)i.next();
-            maybeMakeMeeting(p);
+            
+            World.Place place = (World.Place)i.next();
+            if(place.element() != null && isUnengaged(place))
+                makeMeeting(place);
         }
     }
 
-    private void maybeMakeMeeting(World.Place place) {
-        if (place.element() != null && isUnengaged(place)) {
-            List<World.Place> filledNeighbours = place.filledNeighbours();
+    /**
+     * Finds a partner to the finch at the specified place
+     * @require place.element() != null
+     * @param place the place holding the unengaged finch
+     */
+    private void makeMeeting(World.Place place) {
+        assert(place.element() != null);
 
-            for (World.Place p : filledNeighbours)
-                if (isUnengaged(p)) {
-                    engage(p);
-                    engage(place);
-                    meet((GalapagosFinch)place.element(), (GalapagosFinch)p.element());
-                    return;
-                }
-        }
+        List<World.Place> filledNeighbours = place.filledNeighbours();
+
+        for (World.Place p : filledNeighbours)
+            if (isUnengaged(p)) {
+                engage(p);
+                engage(place);
+                meet((GalapagosFinch)place.element(), (GalapagosFinch)p.element());
+                return;
+            }
+        
     }
 
     private void clearEngagementKnowledge() {
