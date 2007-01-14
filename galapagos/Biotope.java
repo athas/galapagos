@@ -62,24 +62,30 @@ public class Biotope extends Observable {
         
         for (int i = 0; i < width * height; i++)
             engagedFinches.add(false);
-
-        for (Behavior b : finchBehaviors) {
-            statisticsTree.put(b.toString(), new Statistics());
-            for (int fcounter = 0; fcounter < finchesPerBehavior; fcounter++)
-                addRandomFinch(b.clone());
+        
+        Iterator<World<GalapagosFinch>.Place> worldIterator = world.randomIterator();
+        
+        for (Iterator<Behavior> bIterator = finchBehaviors.iterator();
+             bIterator.hasNext();)
+        {
+            Behavior b = bIterator.next();
+            statisticsTree.put(b.toString(),new Statistics());
+            for (int i = 0;i < finchesPerBehavior;i++)
+            {
+                World<GalapagosFinch>.Place p = worldIterator.next();
+                placeFinch(p,b,false);
+            }
         }
     }
     
-    private void addRandomFinch (Behavior behavior) {
-        int x = (int) (Math.random() * width);
-        int y = (int) (Math.random() * height);
-        World<GalapagosFinch>.Place p = world.getAt(x, y);
-        if (p.element() == null) {
-            statisticsTree.get(behavior.toString()).incPopulation();
-            p.setElement(new GalapagosFinch(initialHitpoints,maxHitpoints,randomMaxAge(),behavior));
-        } else addRandomFinch(behavior);
+    private void placeFinch (World<GalapagosFinch>.Place p,Behavior b,Boolean born)
+    {
+        p.setElement(new GalapagosFinch(initialHitpoints,maxHitpoints,randomMaxAge(),b));
+        Statistics stat = statisticsTree.get(b.toString());
+        stat.incPopulation();
+        if (born) stat.incBorn();
     }
-
+        
     private int randomMaxAge () {
         return minMaxAge + (int)(Math.random() * (maxMaxAge - minMaxAge));
     }
@@ -105,13 +111,8 @@ public class Biotope extends Observable {
             GalapagosFinch finch = place.element();
             if (finch != null && finch.age() > 0 && Math.random() <= breedingProbability) {
                 List<World<GalapagosFinch>.Place> neighbours = place.emptyNeighbours(); 
-                if (!neighbours.isEmpty()) {
-                    neighbours.get(0).setElement(
-                        new GalapagosFinch(initialHitpoints, maxHitpoints, randomMaxAge(), finch.behavior().clone()));
-                    Statistics stat = statisticsTree.get(finch.behavior().toString());
-                    stat.incPopulation();
-                    stat.incBorn();
-                }
+                if (!neighbours.isEmpty())
+                    placeFinch(neighbours.get(0), finch.behavior().clone(), true);
             }
         }
     }
