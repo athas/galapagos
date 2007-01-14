@@ -8,10 +8,11 @@ import java.util.Observer;
  * A BiotopeLogger prints (to System.out) a table containing statistics for the current round in a Biotope-simulation. 
  */
 public class BiotopeLogger implements Observer {
-    private static final int COLUMNS = 5; // The number of columns in the output-table.
+    private static final int COLUMNS = 8; // The number of columns in the output-table.
     private static int[] topRowSizes; // An array containing the sizes titles contained in the top row.
     
-    private static final String[] TOP_ROW = {"Behavior", "Population", "Born", "Dead by Age", "Dead by Ticks"};
+    private static final String[] TOP_ROW = {"Behavior", "Population", "Born", "Total Born", 
+        "Dead by Ticks", "Total Dead by Ticks", "Dead by Age", "Total Dead by Age"};
     // The top row of the table, containing headers of the table columns.
         
     public BiotopeLogger() {
@@ -64,10 +65,13 @@ public class BiotopeLogger implements Observer {
         output[0] = TOP_ROW; // The first row in the table is the header row.
         
         // Variables accumulating the data for the "totals"-row of the table.
-        Integer populationTotal = 0;
+        Integer population = 0;
+        Integer born = 0;
         Integer bornTotal = 0;
-        Integer deadByAgeTotal = 0;
+        Integer deadByTicks = 0;
         Integer deadByTicksTotal = 0;
+        Integer deadByAge = 0;
+        Integer deadByAgeTotal = 0;
         
         // Variables containing data of the current row in the table (and the corresponding Behavior).
         Statistics currentStat;
@@ -83,14 +87,20 @@ public class BiotopeLogger implements Observer {
             currentRow[0] = currentBehavior.toString();
             currentRow[1] = ((Integer) currentStat.getPopulation()).toString();
             currentRow[2] = ((Integer) currentStat.getBornThisRound()).toString();
-            currentRow[3] = ((Integer) currentStat.getDeadByAgeThisRound()).toString();
+            currentRow[3] = ((Integer) currentStat.getBorn()).toString();
             currentRow[4] = ((Integer) currentStat.getDeadByTicksThisRound()).toString();
+            currentRow[5] = ((Integer) currentStat.getDeadByTicks()).toString();
+            currentRow[6] = ((Integer) currentStat.getDeadByAgeThisRound()).toString();
+            currentRow[7] = ((Integer) currentStat.getDeadByAge()).toString();
             
             // The totals are accumulated.
-            populationTotal += currentStat.getPopulation();
-            bornTotal += currentStat.getBornThisRound();
-            deadByAgeTotal += currentStat.getDeadByAgeThisRound();
-            deadByTicksTotal += currentStat.getDeadByTicksThisRound();
+            population += currentStat.getPopulation();
+            born += currentStat.getBornThisRound();
+            bornTotal += currentStat.getBorn();
+            deadByTicks += currentStat.getDeadByTicksThisRound();
+            deadByTicksTotal += currentStat.getDeadByTicks();
+            deadByAge += currentStat.getDeadByAgeThisRound();
+            deadByAgeTotal += currentStat.getDeadByAge();
             
             // The column sizes are increased if necessary.
             for (int j = 0; j < COLUMNS; j++)
@@ -101,10 +111,13 @@ public class BiotopeLogger implements Observer {
         // The texts of the totals row are generated, and the column sizes are increased if necessary.
         currentRow = output[rows-1];
         currentRow[0] = "Total";
-        currentRow[1] = populationTotal.toString();
-        currentRow[2] = bornTotal.toString();
-        currentRow[3] = deadByAgeTotal.toString();
-        currentRow[4] = deadByTicksTotal.toString();
+        currentRow[1] = population.toString();
+        currentRow[2] = born.toString();
+        currentRow[3] = bornTotal.toString();
+        currentRow[4] = deadByTicks.toString();
+        currentRow[5] = deadByTicksTotal.toString();
+        currentRow[6] = deadByAge.toString();
+        currentRow[7] = deadByAgeTotal.toString();
         for (int j = 0; j < COLUMNS; j++)
             if (currentRow[j].length() > columnSizes[j])
                 columnSizes[j] = currentRow[j].length();
