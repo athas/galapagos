@@ -44,5 +44,9 @@ public class ProbingTitForTat implements Behavior {
     {
         return new ProbingTitForTat();
     }
+    
+    public String toString() {
+        return "ProbingTitForTat";
+    }
 
 }
