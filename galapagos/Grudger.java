@@ -21,8 +21,9 @@ public class Grudger implements Behavior {
     }
     
     private void cleanEnemies () {
-        for (Finch finch : enemies)
-            if (finch.status() != FinchStatus.ALIVE) enemies.remove(finch);
+        for (Iterator<Finch> iterator = enemies.iterator(); iterator.hasNext();)
+            if (iterator.next().status() != FinchStatus.ALIVE)
+                iterator.remove();
     }
     
     /**

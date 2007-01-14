@@ -13,20 +13,19 @@ public class GalapagosFrame extends JFrame {
     
     public GalapagosFrame()
     {
+        this.addWindowListener(new Terminator());
         this.setVisible(true);
         ArrayList<Behavior> behaviors = new ArrayList<Behavior>();
         behaviors.add(new Cheater());
-        behaviors.add(new Samaritan());
-        behaviors.add(new Grudger());
-        behaviors.add(new FlipFlopper());
         behaviors.add(new TitForTat());
-        behaviors.add(new SuspiciousTitForTat());
+        behaviors.add(new Grudger());
         
+        int pixelSize = 4;
         biotope = new Biotope(behaviors);
-        this.setSize(500, 500);
+        this.setSize(biotope.width*pixelSize, biotope.height * pixelSize);
         area = new AreaPanel();
         this.add(area);
-        area.reset( biotope.width, biotope.height, 5);
+        area.reset( biotope.width, biotope.height, 4);
         
         
         
@@ -46,7 +45,7 @@ public class GalapagosFrame extends JFrame {
         
         Biotope biotope = new Biotope(behaviors);
         
-        for (int i = 0; i < 1000; i++)
+        for (int i = 0; i < 100000; i++)
         {
             biotope.runRound();
             

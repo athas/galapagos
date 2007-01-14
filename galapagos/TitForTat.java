@@ -28,8 +28,9 @@ public class TitForTat implements Behavior {
     }
     
     private void cleanFinches () {
-        for (Finch finch : finches.keySet())
-            if (finch.status() != FinchStatus.ALIVE) finches.remove(finch);
+        for (Iterator<Finch> iterator = finches.keySet().iterator(); iterator.hasNext();)
+            if (iterator.next().status() != FinchStatus.ALIVE)
+                iterator.remove();
     }
     
     /**
