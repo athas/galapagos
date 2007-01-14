@@ -67,7 +67,6 @@ public class Biotope extends Observable {
             
             for (int i = 0;i < finchesPerBehavior && worldIterator.hasNext();i++)
                 {   
-                    System.out.println(j++);
                     World<GalapagosFinch>.Place p = worldIterator.next();
                     placeFinch(p,b,false);
                 }
