@@ -100,11 +100,11 @@ public class GalapagosFrame extends JFrame implements Observer {
         colorMap.put("Cheater", Color.BLUE);
         colorMap.put("Samaritan", Color.RED);
         colorMap.put("Grudger", Color.YELLOW);
-        colorMap.put("TitForTat", Color.GREEN);
-        colorMap.put("SuspiciousTitForTat", Color.ORANGE);
-        colorMap.put("ProbingTitForTat", Color.CYAN);
-        colorMap.put("FlipFlopper", Color.WHITE);
-        colorMap.put("RandomFinch", Color.MAGENTA);
+        colorMap.put("Tit for Tat", Color.GREEN);
+        colorMap.put("Suspicious Tit for Tat", Color.ORANGE);
+        colorMap.put("Probing Tit for Tat", Color.CYAN);
+        colorMap.put("Flip-Flopper", Color.WHITE);
+        colorMap.put("Random", Color.MAGENTA);
         
         return colorMap;
     }
