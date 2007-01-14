@@ -14,7 +14,7 @@ public class GalapagosFrame extends JFrame {
     
     public GalapagosFrame()
     {
-        pixelSize = 4;
+        pixelSize = 5;
         colorMap = createColorMap();
         
         
@@ -22,10 +22,16 @@ public class GalapagosFrame extends JFrame {
         behaviors.add(new Samaritan());
         behaviors.add(new TitForTat());
         behaviors.add(new Grudger());
+        behaviors.add(new Cheater());
+        behaviors.add(new FlipFlopper());
+        behaviors.add(new ProbingTitForTat());
+        behaviors.add(new RandomFinch());
+        behaviors.add(new SuspiciousTitForTat());
         
-        biotope = new Biotope(behaviors);
+        biotope = new Biotope(100,100,0.2,20,10,4,10,15,100,behaviors);
+        biotope.addObserver(new BiotopeLogger());
         area = new AreaPanel();
-        area.reset( biotope.width, biotope.height, 4);
+        area.reset( biotope.width, biotope.height, pixelSize);
         
         this.addWindowListener(new Terminator());
         this.setSize(biotope.width*pixelSize, biotope.height * pixelSize);
