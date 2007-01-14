@@ -5,7 +5,7 @@ import java.util.*;
 import javax.swing.*;
 import java.awt.*;
 
-public class GalapagosFrame extends JFrame {
+public class GalapagosFrame extends JFrame implements Observer {
 
     private AreaPanel area;
     private Biotope biotope;
@@ -31,34 +31,27 @@ public class GalapagosFrame extends JFrame {
         
         biotope = new Biotope(100,100,0.2,20,10,4,10,15,100,behaviors);
         //biotope.addObserver(new BiotopeLogger());
+        biotope.addObserver(this);
         area = new AreaPanel();
         this.add(new JButton("asd"), BorderLayout.NORTH);
         this.add(area,BorderLayout.CENTER);
         
-        area.reset( biotope.width, biotope.height);
+        area.reset(biotope.world.width(), biotope.world.height(), pixelSize);
         
         this.addWindowListener(new Terminator());
         this.setSize(biotope.width*pixelSize, biotope.height * pixelSize);
         
         this.setVisible(true);
         
-        run(10000);
+        for(int i = 0; i < 1000; i++)
+            biotope.runRound();
     }
     
-    public void run(int count)
+    public void update(Observable biotope, Object arg)
     {
-        for (int i = 0; i < count; i++)
-        {
-            runOnce();
-            this.setTitle((i+1) + "");
-        }
-    }
-    
-    public void runOnce()
-    {
-        biotope.runRound();
-        
-        for(World<GalapagosFinch>.Place place : biotope.world)
+        Biotope bio = (Biotope) biotope;
+        setTitle(((Integer) bio.round()).toString());
+        for(World<GalapagosFinch>.Place place : bio.world)
         {
             GalapagosFinch element = place.element();
             if(element != null)
