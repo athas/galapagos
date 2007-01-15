@@ -42,6 +42,8 @@ public class BiotopeController implements ActionListener {
             roundTimer.start();
         } else if (command.equals("stopRounds")) {
             roundTimer.stop();
+        } else if (command.equals("newBiotope")) {
+            frame.biotopeCreator.createBiotope();
         }
     }
 }
