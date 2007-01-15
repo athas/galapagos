@@ -61,6 +61,10 @@ public class GalapagosFrame extends JFrame implements Observer {
         button.setActionCommand("severalRounds");
         button.addActionListener(controller);
         controlButtons.add(button);
+        button = new JButton("Stop Simulation");
+        button.setActionCommand("stopRounds");
+        button.addActionListener(controller);
+        controlButtons.add(button);
         
         Container container = new Container();
         container.setLayout(new GridBagLayout());

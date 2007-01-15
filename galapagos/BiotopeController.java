@@ -34,11 +34,14 @@ public class BiotopeController implements ActionListener {
         }
         
         String command = e.getActionCommand();
-        if (command.equals("nextRound"))
+        if (command.equals("nextRound")) {
+            roundTimer.stop();
             biotope.runRound();
-        else if (command.equals("severalRounds")) {
+        } else if (command.equals("severalRounds")) {
             roundsToGo += frame.getNumberOfRounds();
             roundTimer.start();
+        } else if (command.equals("stopRounds")) {
+            roundTimer.stop();
         }
     }
 }
