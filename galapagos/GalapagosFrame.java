@@ -12,7 +12,8 @@ public class GalapagosFrame extends JFrame implements Observer {
     public TreeMap<String, Color> colorMap;
     public int pixelSize;
     private JSpinner numberOfRounds;
-    private StatisticsPanel information;
+    private StatisticsPanel statistics;
+    private BiotopeController controller;
     
     public GalapagosFrame()
     {
@@ -22,20 +23,43 @@ public class GalapagosFrame extends JFrame implements Observer {
         
         area = new AreaPanel();
         
+        ArrayList<Behavior> behaviors = new ArrayList<Behavior>();
+        behaviors.add(new Samaritan());
+        behaviors.add(new TitForTat());
+        behaviors.add(new Grudger());
+        behaviors.add(new Cheater());
+        behaviors.add(new FlipFlopper());
+        behaviors.add(new ProbingTitForTat());
+        behaviors.add(new RandomFinch());
+        behaviors.add(new SuspiciousTitForTat());
+        
+        statistics = new StatisticsPanel(this);
+        this.add(statistics, BorderLayout.SOUTH);
+        
+        biotope = new Biotope(100,100,0.05,20,10,2,50,100,100,behaviors);
+        biotope.addObserver(new BiotopeLogger());
+        biotope.addObserver(this);
+        biotope.addObserver(statistics);
+        
+        controller = new BiotopeController(this, biotope);
+        
         Container controlButtons = new Container();
         this.add(controlButtons, BorderLayout.NORTH);
         controlButtons.setLayout(new FlowLayout());
         JButton button = new JButton("New Biotope");
         button.setActionCommand("newBiotope");
+        button.addActionListener(controller);
         controlButtons.add(button);
         button = new JButton("Next Round");
         button.setActionCommand("nextRound");
+        button.addActionListener(controller);
         controlButtons.add(button);
         numberOfRounds = new JSpinner(new SpinnerNumberModel(50,0,Integer.MAX_VALUE,1));
         numberOfRounds.setPreferredSize(new Dimension(100,22));
         controlButtons.add(numberOfRounds);
         button = new JButton("Compute Several Rounds");
         button.setActionCommand("severalRounds");
+        button.addActionListener(controller);
         controlButtons.add(button);
         
         Container container = new Container();
@@ -44,33 +68,12 @@ public class GalapagosFrame extends JFrame implements Observer {
         this.add(container,BorderLayout.CENTER);
         this.doLayout();
         
-        information = new StatisticsPanel(this);
-        this.add(information, BorderLayout.SOUTH);
-        
-        ArrayList<Behavior> behaviors = new ArrayList<Behavior>();
-        behaviors.add(new Samaritan());
-        behaviors.add(new TitForTat());
-        behaviors.add(new Grudger());
-        //behaviors.add(new Cheater());
-        behaviors.add(new FlipFlopper());
-        behaviors.add(new ProbingTitForTat());
-        //behaviors.add(new RandomFinch());
-        behaviors.add(new SuspiciousTitForTat());
-        
-        biotope = new Biotope(100,100,0.05,20,10,2,50,100,100,behaviors);
-        biotope.addObserver(new BiotopeLogger());
-        biotope.addObserver(this);
-        biotope.addObserver(information);
-        
         area.reset(biotope.world.width(), biotope.world.height(), pixelSize);
         
         this.addWindowListener(new Terminator());
         this.setSize(biotope.width*pixelSize + 100, biotope.height * pixelSize + 100);
         
         this.setVisible(true);
-        
-        for(int i = 0; i < 1000; i++)
-            biotope.runRound();
     }
     
     public void update(Observable biotope, Object arg)
@@ -112,5 +115,9 @@ public class GalapagosFrame extends JFrame implements Observer {
         colorMap.put("Random", Color.MAGENTA);
         
         return colorMap;
+    }
+    
+    public Integer getNumberOfRounds () {
+        return (Integer) ((SpinnerNumberModel) numberOfRounds.getModel()).getNumber();
     }
 }
