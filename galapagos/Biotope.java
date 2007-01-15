@@ -76,10 +76,14 @@ public class Biotope extends Observable {
     
     private void placeFinch (World<GalapagosFinch>.Place p,Behavior b,Boolean born)
     {
-        p.setElement(new GalapagosFinch(initialHitpoints,maxHitpoints,randomMaxAge(),b));
         Statistics stat = statisticsTree.get(b.toString());
         stat.incPopulation();
-        if (born) stat.incBorn();
+        GalapagosFinch finch = new GalapagosFinch(initialHitpoints,maxHitpoints,randomMaxAge(),b);
+        if (born) 
+            stat.incBorn();
+        else
+            finch.makeOlder();
+        p.setElement(finch);
     }
         
     private int randomMaxAge () {
