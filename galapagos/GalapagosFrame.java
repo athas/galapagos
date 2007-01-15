@@ -3,20 +3,32 @@ package galapagos;
 import java.util.*;
 
 import javax.swing.*;
+
 import java.awt.*;
+import java.awt.event.*;
 
 public class GalapagosFrame extends JFrame implements Observer {
 
     private AreaPanel area;
     private Biotope biotope;
+    public static final Behavior[] behaviors = {new Cheater(), new FlipFlopper(), new Grudger(), new ProbingTitForTat(),
+                                          new RandomFinch(), new Samaritan(), new SuspiciousTitForTat(), new TitForTat()};
     public TreeMap<String, Color> colorMap;
     public int pixelSize;
-    private JSpinner numberOfRounds;
     private StatisticsPanel statistics;
     private BiotopeController controller;
     
+    private JButton newBiotope;
+    private JButton nextRound;
+    private JSpinner numberOfRounds;
+    private JButton severalRounds;
+    private JButton stopRounds;
+    
+    private static final Dimension minimumButtonDimension = new Dimension(0,30);
+    
     public GalapagosFrame()
     {
+        setTitle("Galapagos Finch Simulator");
         pixelSize = 5;
         colorMap = createColorMap();
         this.setLayout(new BorderLayout());
@@ -43,28 +55,34 @@ public class GalapagosFrame extends JFrame implements Observer {
         
         controller = new BiotopeController(this, biotope);
         
-        Container controlButtons = new Container();
+        Container controlButtons = Box.createHorizontalBox();
         this.add(controlButtons, BorderLayout.NORTH);
-        controlButtons.setLayout(new FlowLayout());
-        JButton button = new JButton("New Biotope");
-        button.setActionCommand("newBiotope");
-        button.addActionListener(controller);
-        controlButtons.add(button);
-        button = new JButton("Next Round");
-        button.setActionCommand("nextRound");
-        button.addActionListener(controller);
-        controlButtons.add(button);
+        controlButtons.add(Box.createGlue());
+        newBiotope = new JButton("New Biotope");
+        newBiotope.setActionCommand("newBiotope");
+        newBiotope.addActionListener(controller);
+        newBiotope.setMinimumSize(minimumButtonDimension);
+        controlButtons.add(newBiotope);
+        nextRound = new JButton("Next Round");
+        nextRound.setActionCommand("nextRound");
+        nextRound.addActionListener(controller);
+        nextRound.setMinimumSize(minimumButtonDimension);
+        controlButtons.add(nextRound);
         numberOfRounds = new JSpinner(new SpinnerNumberModel(50,0,Integer.MAX_VALUE,1));
-        numberOfRounds.setPreferredSize(new Dimension(100,22));
+        numberOfRounds.setMaximumSize(new Dimension(100,30));
+        numberOfRounds.setMinimumSize(minimumButtonDimension);
         controlButtons.add(numberOfRounds);
-        button = new JButton("Compute Several Rounds");
-        button.setActionCommand("severalRounds");
-        button.addActionListener(controller);
-        controlButtons.add(button);
-        button = new JButton("Stop Simulation");
-        button.setActionCommand("stopRounds");
-        button.addActionListener(controller);
-        controlButtons.add(button);
+        severalRounds = new JButton("Compute Several Rounds");
+        severalRounds.setActionCommand("severalRounds");
+        severalRounds.addActionListener(controller);
+        severalRounds.setMinimumSize(minimumButtonDimension);
+        controlButtons.add(severalRounds);
+        stopRounds = new JButton("Stop Simulation");
+        stopRounds.setActionCommand("stopRounds");
+        stopRounds.addActionListener(controller);
+        stopRounds.setMinimumSize(minimumButtonDimension);
+        controlButtons.add(stopRounds);
+        controlButtons.add(Box.createGlue());
         
         Container container = new Container();
         container.setLayout(new GridBagLayout());
@@ -80,11 +98,10 @@ public class GalapagosFrame extends JFrame implements Observer {
         this.setVisible(true);
     }
     
-    public void update(Observable biotope, Object arg)
+    public void update(Observable observableBiotope, Object arg)
     {
-        Biotope bio = (Biotope) biotope;
-        setTitle(((Integer) bio.round()).toString());
-        for(World<GalapagosFinch>.Place place : bio.world)
+        Biotope biotope = (Biotope) observableBiotope;
+        for(World<GalapagosFinch>.Place place : biotope.world)
         {
             GalapagosFinch element = place.element();
             if(element != null)
@@ -123,5 +140,26 @@ public class GalapagosFrame extends JFrame implements Observer {
     
     public Integer getNumberOfRounds () {
         return (Integer) ((SpinnerNumberModel) numberOfRounds.getModel()).getNumber();
+    }
+    
+    public void disableButtons() {
+        newBiotope.setEnabled(false);
+        nextRound.setEnabled(false);
+        numberOfRounds.setEnabled(false);
+        severalRounds.setEnabled(false);
+        stopRounds.doClick();
+        stopRounds.setEnabled(false);
+    }
+    
+    public void enableButtons() {
+        newBiotope.setEnabled(true);
+        nextRound.setEnabled(true);
+        numberOfRounds.setEnabled(true);
+        severalRounds.setEnabled(true);
+        stopRounds.setEnabled(true);
+    }
+    
+    public void setBiotope() {
+        
     }
 }
