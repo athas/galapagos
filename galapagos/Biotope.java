@@ -230,4 +230,9 @@ public class Biotope extends Observable {
     public List<Behavior> behaviors () {
         return finchBehaviors;
     }
+    
+    public void doNotifyObservers () {
+        setChanged();
+        notifyObservers();
+    }
 }

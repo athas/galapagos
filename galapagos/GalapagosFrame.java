@@ -1,6 +1,7 @@
 package galapagos;
 
 import java.util.*;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -10,12 +11,12 @@ import java.awt.event.*;
 public class GalapagosFrame extends JFrame implements Observer {
 
     private AreaPanel area;
-    private Biotope biotope;
     public static Behavior[] behaviors = {new Cheater(), new FlipFlopper(), new Grudger(), new ProbingTitForTat(),
                                           new RandomFinch(), new Samaritan(), new SuspiciousTitForTat(), new TitForTat()};
     public TreeMap<String, Color> colorMap;
     public int pixelSize;
     private StatisticsPanel statistics;
+    private BiotopeLogger logger;
     private BiotopeController controller;
     public final BiotopeCreator biotopeCreator;
     
@@ -38,22 +39,17 @@ public class GalapagosFrame extends JFrame implements Observer {
         area = new AreaPanel();
         
         ArrayList<Behavior> behaviors = new ArrayList<Behavior>();
-        behaviors.add(new Samaritan());
-        behaviors.add(new TitForTat());
-        behaviors.add(new Grudger());
-        behaviors.add(new Cheater());
-        behaviors.add(new FlipFlopper());
-        behaviors.add(new ProbingTitForTat());
-        behaviors.add(new RandomFinch());
-        behaviors.add(new SuspiciousTitForTat());
-        
+        logger = new BiotopeLogger();
         statistics = new StatisticsPanel(this);
         this.add(statistics, BorderLayout.SOUTH);
         
-        biotope = new Biotope(100,100,0.05,20,10,2,50,100,100,behaviors);
-        biotope.addObserver(new BiotopeLogger());
+        Biotope biotope = new Biotope(0,0,0,0,0,0,0,0,0,behaviors);
+        biotope.addObserver(logger);
         biotope.addObserver(this);
         biotope.addObserver(statistics);
+        area.reset(biotope.world.width(), biotope.world.height(), pixelSize);
+        
+        biotope.doNotifyObservers();
         
         controller = new BiotopeController(this, biotope);
         
@@ -93,10 +89,8 @@ public class GalapagosFrame extends JFrame implements Observer {
         this.add(container,BorderLayout.CENTER);
         this.doLayout();
         
-        area.reset(biotope.world.width(), biotope.world.height(), pixelSize);
-        
         this.addWindowListener(new Terminator());
-        this.setSize(biotope.width*pixelSize + 100, biotope.height * pixelSize + 100);
+        this.setSize(650, 400);
         
         biotopeCreator = new BiotopeCreator(this);
         
@@ -224,9 +218,9 @@ public class GalapagosFrame extends JFrame implements Observer {
             minMaxAge.setPreferredSize(standardSpinnerSize);
             maxMaxAge = new JSpinner(new SpinnerNumberModel(20,0,Integer.MAX_VALUE,1));
             maxMaxAge.setPreferredSize(standardSpinnerSize);
-            optionGroup.add(new JLabel("Least possible max. age",SwingConstants.CENTER), getConstraints(0,0));
+            optionGroup.add(new JLabel("Least maximum age",SwingConstants.CENTER), getConstraints(0,0));
             optionGroup.add(minMaxAge, getConstraints(0,1));
-            optionGroup.add(new JLabel("Greatest possible max. age",SwingConstants.CENTER), getConstraints(1,0));
+            optionGroup.add(new JLabel("Greatest maximum age",SwingConstants.CENTER), getConstraints(1,0));
             optionGroup.add(maxMaxAge, getConstraints(1,1));
             options.add(optionGroup, getConstraints(1,1));
                         
@@ -278,13 +272,82 @@ public class GalapagosFrame extends JFrame implements Observer {
         }
 
         public void createBiotope() {
+            int width = (Integer) this.width.getValue();
+            int height = (Integer) this.height.getValue();
+            double breedingProbability = (Double) this.breedingProbability.getValue();
+            int maxHitpoints = (Integer) this.maxHitpoints.getValue();
+            int initialHitpoints = (Integer) this.initialHitpoints.getValue();
+            int hitpointsPerRound = (Integer) this.hitpointsPerRound.getValue();
+            int minMaxAge = (Integer) this.minMaxAge.getValue();
+            int maxMaxAge = (Integer) this.maxMaxAge.getValue();
+            int finchesPerBehavior = (Integer) this.finchesPerBehavior.getValue();
+            List<Behavior> finchBehaviors = new LinkedList<Behavior>();
+            for (int i = 0; i < behaviors.length; i++) {
+                if (behaviors[i].isSelected())
+                    finchBehaviors.add(GalapagosFrame.behaviors[i].clone());
+            }
+            if (checkStartFinches(width, height, finchesPerBehavior, finchBehaviors.size()) 
+                    & checkAge(minMaxAge, maxMaxAge) & checkHitpoints(maxHitpoints, initialHitpoints)) {
+                Biotope biotope = new Biotope(width,height,breedingProbability,
+                        maxHitpoints,initialHitpoints,hitpointsPerRound,minMaxAge,
+                        maxMaxAge,finchesPerBehavior,finchBehaviors);
+                biotope.addObserver(GalapagosFrame.this);
+                biotope.addObserver(statistics);
+                biotope.addObserver(logger);
+                controller.setBiotope(biotope);
+                area.reset(biotope.world.width(), biotope.world.height(), pixelSize);
+                biotope.doNotifyObservers();
+                
+                int frameWidth = Math.max(biotope.width*pixelSize + 100, 650);
+                int frameHeight = Math.max(biotope.height*pixelSize + 250, 400);
+                GalapagosFrame.this.setSize(frameWidth, frameHeight);
+                GalapagosFrame.this.validate();
+                enableButtons();
+                this.setVisible(false);
+            }
+        }
+        
+        public void openPanel() {
             disableButtons();
             this.setVisible(true);
         }
 
-        private void abort() {
+        public void abort() {
             enableButtons();
             setVisible(false);
+        }
+        
+        public boolean checkStartFinches(int width, int height, int finchesPerBehavior, int numberOfBehaviors) {
+            if (width * height >= finchesPerBehavior * numberOfBehaviors) {
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "There is not enough room in the world for the initial amount of finches.",
+                        "Impossible to create biotope", JOptionPane.WARNING_MESSAGE);
+                return false;
+            }
+        }
+        
+        public boolean checkAge(int minMaxAge, int maxMaxAge) {
+            if (minMaxAge <= maxMaxAge) {
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "The greatest maksimum age must be at least as large as the least maksimum age.",
+                        "Impossible to create biotope", JOptionPane.WARNING_MESSAGE);
+                return false;
+            }
+        }
+        
+        public boolean checkHitpoints(int maxHitpoints, int initialHitpoints) {
+            if (initialHitpoints <= maxHitpoints) {
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "The initial amount of hitpoints may at most be the maksimum amount of hitpoints.",
+                        "Impossible to create biotope", JOptionPane.WARNING_MESSAGE);
+                return false;
+            }
         }
     }
 }

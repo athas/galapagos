@@ -43,6 +43,10 @@ public class BiotopeController implements ActionListener {
         } else if (command.equals("stopRounds")) {
             roundTimer.stop();
         } else if (command.equals("newBiotope")) {
+            frame.biotopeCreator.openPanel();
+        } else if (command.equals("cancelButton")) {
+            frame.biotopeCreator.abort();
+        } else if (command.equals("okButton")) {
             frame.biotopeCreator.createBiotope();
         }
     }
