@@ -13,7 +13,7 @@ public class BiotopeController implements ActionListener {
     public BiotopeController (GalapagosFrame frame, Biotope biotope) {
         this.frame = frame;
         this.biotope = biotope;
-        roundTimer = new Timer(500, this);
+        roundTimer = new Timer(200, this);
         roundTimer.stop();
         roundsToGo = 0;
     }
