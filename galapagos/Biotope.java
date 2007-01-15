@@ -166,8 +166,8 @@ public class Biotope extends Observable {
         Action finch1Action = finch1.decide(finch2);
         Action finch2Action = finch2.decide(finch1);
         
-        finch1.addHitpoints(getMeetingResult(finch1Action, finch2Action));
-        finch2.addHitpoints(getMeetingResult(finch2Action, finch1Action));
+        finch1.changeHitpoints(getMeetingResult(finch1Action, finch2Action));
+        finch2.changeHitpoints(getMeetingResult(finch2Action, finch1Action));
         
         //tell the finches what was done to them (so they eventually can learn)
         finch1.response(finch2, finch2Action);
@@ -200,7 +200,7 @@ public class Biotope extends Observable {
     private void grimReaper () {
         for (World<GalapagosFinch>.Place p : world) if (p.element() != null) {
             GalapagosFinch f = p.element();
-            f.addHitpoints(-hitpointsPerRound);
+            f.changeHitpoints(-hitpointsPerRound);
             f.makeOlder();
             FinchStatus newStatus = f.status();
             if (newStatus != FinchStatus.ALIVE) {

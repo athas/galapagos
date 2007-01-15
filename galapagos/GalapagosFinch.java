@@ -40,12 +40,10 @@ public class GalapagosFinch implements Finch {
   }
   
   /**
-   * Change this finch's hitpoints.
-   * @require add >= 0
+   * Change this finch's hitpoints by the specified amount.
    */
-  public void addHitpoints (int add) {
-      assert (add >= 0) : "Can't add a negative value";
-    hitpoints += add;
+  public void changeHitpoints (int change) {
+    hitpoints += change;
     if (hitpoints > maxHitpoints)
         hitpoints = maxHitpoints;
   }
