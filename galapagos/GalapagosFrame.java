@@ -394,7 +394,7 @@ public class GalapagosFrame extends JFrame implements Observer {
                 area.reset(biotope.world.width(), biotope.world.height(), pixelSize);
                 biotope.doNotifyObservers();
                 
-                int frameWidth = Math.max(biotope.width*pixelSize + 100, 650);
+                int frameWidth = Math.max(biotope.width*pixelSize + 300, 650);
                 int frameHeight = Math.max(biotope.height*pixelSize + 250, 400);
                 GalapagosFrame.this.setSize(frameWidth, frameHeight);
                 GalapagosFrame.this.validate();
