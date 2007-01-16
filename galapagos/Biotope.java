@@ -55,7 +55,9 @@ public class Biotope extends Observable {
      * initially be created for each behavior.
      * @param behaviors A list of behavior objects that will be cloned
      * to create the actual behaviors for the finches.
-     *
+     * 
+     * @require 0 < width
+     * @require 0 < height
      * @require 0.0 <= breedingProbability <= 1.0
      * @require 0 < initialHitpoints <= maxHitpoints
      * @require 0 <= hitPointsPerRound
