@@ -57,7 +57,6 @@ public class Biotope extends Observable {
     private void addStartFinches()
     {
         Iterator<World<GalapagosFinch>.Place> worldIterator = world.randomIterator();
-        
         for (Iterator<Behavior> bIterator = finchBehaviors.iterator();
              bIterator.hasNext();)
         {
