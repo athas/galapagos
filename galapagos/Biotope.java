@@ -61,7 +61,7 @@ public class Biotope extends Observable {
      * @require 0.0 <= breedingProbability <= 1.0
      * @require 0 < initialHitpoints <= maxHitpoints
      * @require 0 <= hitPointsPerRound
-     * @require 0 < minMaxAge <= maxMaxAge
+     * @require 1 < minMaxAge <= maxMaxAge
      * @require 0 <= finchesPerBehavior
      */
     public Biotope (int width, int height, double breedingProbability, int maxHitpoints, 
