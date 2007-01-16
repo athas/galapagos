@@ -293,13 +293,13 @@ public class GalapagosFrame extends JFrame implements Observer {
             ageOptionGroup.add(new JLabel("Greatest maximum age",SwingConstants.CENTER), getConstraints(1,0));
             ageOptionGroup.add(maxMaxAgeSpinner, getConstraints(1,1));
                    
-            // Breeding propability and Finches per Behavior.
+            // Breeding probability and Finches per Behavior.
             JPanel otherOptionGroup = new JPanel(new GridBagLayout());
             otherOptionGroup.setBorder(BorderFactory.createTitledBorder("Other parametres"));
             breedingProbabilitySpinner = new JSpinner(new SpinnerNumberModel(0.33,0.0,1.0,0.01));
             breedingProbabilitySpinner.setPreferredSize(new Dimension(50,22));
             finchesPerBehaviorSpinner = newIntegerSpinner(30, 1, 1);
-            otherOptionGroup.add(new JLabel("Breeding propability",SwingConstants.CENTER), getConstraints(0,0));
+            otherOptionGroup.add(new JLabel("Breeding probability",SwingConstants.CENTER), getConstraints(0,0));
             otherOptionGroup.add(breedingProbabilitySpinner, getConstraints(0,1));
             otherOptionGroup.add(new JLabel("Finches per behavior",SwingConstants.CENTER), getConstraints(1,0));
             otherOptionGroup.add(finchesPerBehaviorSpinner, getConstraints(1,1));
@@ -315,7 +315,7 @@ public class GalapagosFrame extends JFrame implements Observer {
             
             // OK and CANCEL.
             JPanel buttonPanel = new JPanel(new FlowLayout());
-            okButton = new JButton("Create biotope");
+            okButton = new JButton("Genesis!");
             okButton.setActionCommand("okButton");
             okButton.addActionListener(controller);
             cancelButton = new JButton("Abort creation");
