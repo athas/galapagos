@@ -11,17 +11,23 @@ public class Cheater implements Behavior
     }
 
     /**
-     * 
+     * Doesn't use the other finch's action.
      */
     public void response(Finch finch, Action action)
     {
         
     }
     
+    /**
+     * A new cheater behavior.
+     */
     public Behavior clone() {
         return new Cheater();
     }
     
+    /**
+     * A toString method.
+     */
     public String toString() {
         return "Cheater";
     }
