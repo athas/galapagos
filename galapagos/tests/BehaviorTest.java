@@ -22,9 +22,4 @@ public abstract class BehaviorTest extends TestCase {
         
         assertEquals(behavior.getClass().toString(), clone.getClass().toString());
     }
-    
-    /*public void testToString()
-    {
-        assertEquals(behavior.getClass().getSimpleName(), behavior.toString());
-    }*/
 }

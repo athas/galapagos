@@ -12,4 +12,9 @@ public class RandomFinchTest extends BehaviorTest {
     public Behavior getBehavior() {
         return new RandomFinch();
     }
+    
+
+    public void testToString () {
+    	assertEquals(behavior.toString(),"Random");
+    }
 }

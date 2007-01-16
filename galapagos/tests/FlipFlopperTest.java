@@ -26,4 +26,8 @@ public class FlipFlopperTest extends BehaviorTest {
     public Behavior getBehavior() {
         return new FlipFlopper();
     }
+
+    public void testToString () {
+    	assertEquals(behavior.toString(),"Flip-Flopper");
+    }
 }

@@ -32,4 +32,9 @@ public class GrudgerTest extends BehaviorTest {
     public Behavior getBehavior() {
         return new Grudger();
     }
+    
+
+    public void testToString () {
+    	assertEquals(behavior.toString(),"Grudger");
+    }
 }

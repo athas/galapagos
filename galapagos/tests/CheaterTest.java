@@ -19,4 +19,8 @@ public class CheaterTest extends BehaviorTest {
     public Behavior getBehavior() {
         return new Cheater();
     }
+    
+    public void testToString () {
+    	assertEquals(behavior.toString(),"Cheater");
+    }
 }
