@@ -2,6 +2,9 @@ package galapagos;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * A Terminator stop the program when a monitored window is closed.
+ */
 class Terminator extends WindowAdapter
 {
   
