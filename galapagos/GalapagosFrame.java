@@ -28,7 +28,7 @@ public class GalapagosFrame extends JFrame implements Observer {
     private JCheckBox toggleDisplayRefresh;
 
     private ButtonGroup behaviorButtons;
-    private JPanel behaviorButtonsPanel;
+    private Container behaviorButtonsBox;
     private Behavior selectedBehavior;
 
     private boolean isLogging;
@@ -102,8 +102,6 @@ public class GalapagosFrame extends JFrame implements Observer {
                 }
             });
 
-        behaviorButtonsPanel = new JPanel(new GridLayout(0, 1));
-
         Container topContainer = Box.createHorizontalBox();
         topContainer.add(Box.createGlue());
         topContainer.add(newBiotope);
@@ -124,14 +122,13 @@ public class GalapagosFrame extends JFrame implements Observer {
         leftContainer.add(toggleDisplayRefresh);
         leftContainer.add(Box.createGlue());
 
-        Container rightContainer = Box.createVerticalBox();
-        rightContainer.add(behaviorButtonsPanel);
+        behaviorButtonsBox = Box.createVerticalBox();
         
         this.add(topContainer, BorderLayout.NORTH);
         this.add(centerContainer,BorderLayout.CENTER);
         this.add(statistics, BorderLayout.SOUTH);
         this.add(leftContainer, BorderLayout.WEST);
-        this.add(rightContainer, BorderLayout.EAST);
+        this.add(behaviorButtonsBox, BorderLayout.EAST);
     }
     
     /**
@@ -376,7 +373,8 @@ public class GalapagosFrame extends JFrame implements Observer {
 
                 behaviorButtons = new ButtonGroup();
 
-                behaviorButtonsPanel.removeAll();
+                behaviorButtonsBox.removeAll();
+                behaviorButtonsBox.add(Box.createGlue());
 
                 for (final Behavior b : finchBehaviors) {
                     JRadioButton button = new JRadioButton(b.toString());
@@ -386,10 +384,10 @@ public class GalapagosFrame extends JFrame implements Observer {
                             }
                         });
                     behaviorButtons.add(button);
-                    behaviorButtonsPanel.add(button);
+                    behaviorButtonsBox.add(button);
                 }
 
-                behaviorButtonsPanel.add(Box.createGlue());
+                behaviorButtonsBox.add(Box.createGlue());
 
                 selectedBehavior = null;
                 controller.setBiotope(biotope);
