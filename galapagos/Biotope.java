@@ -108,7 +108,7 @@ public class Biotope extends Observable {
     private void breed () {
         for (Iterator<World<GalapagosFinch>.Place> i = world.randomIterator(); i.hasNext();) {
             World<GalapagosFinch>.Place place = i.next();
-            GalapagosFinch finch = place.element();
+            GalapagosFinch finch = place.getElement();
             if (finch != null && finch.age() > 0 && Math.random() <= breedingProbability) {
                 List<World<GalapagosFinch>.Place> neighbours = place.emptyNeighbours(); 
                 if (!neighbours.isEmpty())
@@ -124,8 +124,8 @@ public class Biotope extends Observable {
     private void makeMeetings() {
         clearEngagementKnowledge();
         for (Iterator i = world.randomIterator(); i.hasNext(); ) {
-            World<GalapagosFinch>.Place place = (World<GalapagosFinch>.Place)i.next();
-            if(place.element() != null && !isEngaged(place))
+            World<GalapagosFinch>.Place place = (World.Place) i.next();
+            if(place.getElement() != null && !isEngaged(place))
                 makeMeeting(place);
         }
     }
@@ -133,12 +133,12 @@ public class Biotope extends Observable {
     /**
      * Engages the finch at the specified place with one of its neighbours (if any). 
      * And makes them meet eachother.
-     * @require place.element() != null && !isEngaged(place)
+     * @require place.getElement() != null && !isEngaged(place)
      * @ensure isEngaged(place)
      * @param place the place holding the unengaged finch
      */
     private void makeMeeting(World<GalapagosFinch>.Place place) {
-        assert (place.element() != null) : "Can't engage a null-finch";
+        assert (place.getElement() != null) : "Can't engage a null-finch";
         assert (!isEngaged(place)) : "The finch is already engaged";
 
         List<World<GalapagosFinch>.Place> filledNeighbours = place.filledNeighbours(); 
@@ -147,7 +147,7 @@ public class Biotope extends Observable {
             if (!isEngaged(p)) {
                 engage(p);
                 engage(place);
-                meet(place.element(), p.element());
+                meet(place.getElement(), p.getElement());
                 return;
             }
     }
@@ -202,8 +202,8 @@ public class Biotope extends Observable {
      * and remove them from world, and store the changes in statisticsTree.
      */
     private void grimReaper () {
-        for (World<GalapagosFinch>.Place p : world) if (p.element() != null) {
-            GalapagosFinch f = p.element();
+        for (World<GalapagosFinch>.Place p : world) if (p.getElement() != null) {
+            GalapagosFinch f = p.getElement();
             f.changeHitpoints(-hitpointsPerRound);
             f.makeOlder();
             FinchStatus newStatus = f.status();

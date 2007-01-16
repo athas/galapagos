@@ -102,7 +102,7 @@ public class GalapagosFrame extends JFrame implements Observer {
         Biotope biotope = (Biotope) observableBiotope;
         for(World<GalapagosFinch>.Place place : biotope.world)
         {
-            GalapagosFinch element = place.element();
+            GalapagosFinch element = place.getElement();
             if(element != null)
                 area.pixel(place.xPosition(), place.yPosition(), colorByBehavior(element.behavior()));
             else

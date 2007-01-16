@@ -61,20 +61,21 @@ public class World<T> implements Iterable<World<T>.Place> {
             yPosition = y;
         }
 
-        private Place(int x, int y, T object) {
-            xPosition = x;
-            yPosition = y;
-            element = object;
-        }
-
         /**
          * Get the element of the place.
          *
          * @return The element at the place, may be null, meaning that
          * the place is empty.
          */
-        public T element() {
+        public T getElement() {
             return element;
+        }
+
+        /**
+         * Redefine this place's element.
+         */
+        public void setElement (T element) {
+            this.element = element;
         }
 
         /**
@@ -141,13 +142,6 @@ public class World<T> implements Iterable<World<T>.Place> {
                 }
             Collections.shuffle(list);
             return list;
-        }
-        
-        /**
-         * Redefine this place's element.
-         */
-        public void setElement (T element) {
-            this.element = element;
         }
     }
 
