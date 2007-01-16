@@ -54,8 +54,9 @@ public class GalapagosFrame extends JFrame implements Observer {
         
         area = new AreaPanel();
         MouseInputAdapter listener = new MouseInputAdapter () {
-                public void maybeAddFinchAt(int x, int y, Behavior b) {
-                    biotope.putFinch(x, y, b.clone());;
+                public void maybeAddFinchAt(int x, int y, Behavior b) { 
+                    if (x < biotope.width && y < biotope.height)
+                        biotope.putFinch(x, y, b.clone());
                 }
                 public void mouseClicked(MouseEvent e) {
                     if (e.getX() >= 0 && e.getY() >= 0 && selectedBehavior != null) {
