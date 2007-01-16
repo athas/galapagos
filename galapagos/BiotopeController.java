@@ -5,10 +5,10 @@ import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
 public class BiotopeController implements ActionListener {
-    Biotope biotope;
-    GalapagosFrame frame;
-    Timer roundTimer;
-    int roundsToGo;
+    private Biotope biotope;
+    private final GalapagosFrame frame;
+    private final Timer roundTimer;
+    private int roundsToGo;
     
     /**
      * Create a new BiotopeController, controlling the specified Biotope according to data from frame.
