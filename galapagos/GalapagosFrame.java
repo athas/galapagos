@@ -27,6 +27,10 @@ public class GalapagosFrame extends JFrame implements Observer {
     private JCheckBox toggleLogging;
     private JCheckBox toggleDisplayRefresh;
 
+    private ButtonGroup behaviorButtons;
+    private JPanel behaviorButtonsPanel;
+    private Behavior selectedBehavior;
+
     private boolean isLogging;
     private boolean isRefreshing;
     
@@ -43,29 +47,22 @@ public class GalapagosFrame extends JFrame implements Observer {
         
         colorMap = createColorMap(behaviors);
         pixelSize = 5;
-
         isRefreshing = true;
         
-        //create a new standard Biotope 
-        biotope = new Biotope(100,100,0.33,10,5,3,10,20,30,this.behaviors);
-        
         area = new AreaPanel();
-        area.reset(biotope.world.width(), biotope.world.height(), pixelSize);
         statistics = new StatisticsPanel(this);
         logger = new BiotopeLogger();
         controller = new BiotopeController(this, biotope);
-        biotopeCreator = new BiotopeCreator(this);
-        
-        biotope.addObserver(this);
-        biotope.addObserver(statistics);
-        biotope.doNotifyObservers();
-        
+
         this.setLayout(new BorderLayout());
+
         initializeControls();
+        biotopeCreator = new BiotopeCreator(this);
+        biotopeCreator.createBiotope();
+
         this.doLayout();
         
         this.addWindowListener(new Terminator());
-        this.setSize(650, 400);
         this.setTitle("Galapagos Finch Simulator");
         this.setVisible(true);
     }
@@ -105,6 +102,8 @@ public class GalapagosFrame extends JFrame implements Observer {
                 }
             });
 
+        behaviorButtonsPanel = new JPanel(new GridLayout(0, 1));
+
         Container topContainer = Box.createHorizontalBox();
         topContainer.add(Box.createGlue());
         topContainer.add(newBiotope);
@@ -120,13 +119,19 @@ public class GalapagosFrame extends JFrame implements Observer {
         centerContainer.add(area);
 
         Container leftContainer = Box.createVerticalBox();
+        leftContainer.add(Box.createGlue());
         leftContainer.add(toggleLogging);
         leftContainer.add(toggleDisplayRefresh);
+        leftContainer.add(Box.createGlue());
+
+        Container rightContainer = Box.createVerticalBox();
+        rightContainer.add(behaviorButtonsPanel);
         
         this.add(topContainer, BorderLayout.NORTH);
         this.add(centerContainer,BorderLayout.CENTER);
         this.add(statistics, BorderLayout.SOUTH);
         this.add(leftContainer, BorderLayout.WEST);
+        this.add(rightContainer, BorderLayout.EAST);
     }
     
     /**
@@ -282,7 +287,7 @@ public class GalapagosFrame extends JFrame implements Observer {
             behaviorsOptionGroup.setBorder(BorderFactory.createTitledBorder("Behaviors"));
             behaviorCheckboxes = new JCheckBox[GalapagosFrame.this.behaviors.size()];
             for (int i = 0; i < behaviorCheckboxes.length; i++) {
-                behaviorCheckboxes[i] = new JCheckBox(GalapagosFrame.this.behaviors.get(i).toString());
+                behaviorCheckboxes[i] = new JCheckBox(GalapagosFrame.this.behaviors.get(i).toString(),true);
                 behaviorsOptionGroup.add(behaviorCheckboxes[i]);
             }
             
@@ -360,8 +365,8 @@ public class GalapagosFrame extends JFrame implements Observer {
             if (checkStartFinches(width, height, finchesPerBehavior, finchBehaviors.size()) 
                     & checkAge(minMaxAge, maxMaxAge) & checkHitpoints(maxHitpoints, initialHitpoints)) {
                 biotope = new Biotope(width,height,breedingProbability,
-                        maxHitpoints,initialHitpoints,hitpointsPerRound,minMaxAge,
-                        maxMaxAge,finchesPerBehavior,finchBehaviors);
+                                      maxHitpoints,initialHitpoints,hitpointsPerRound,minMaxAge,
+                                      maxMaxAge,finchesPerBehavior,finchBehaviors);
                 biotope.addObserver(statistics);
                 
                 if (isLogging)
@@ -369,6 +374,24 @@ public class GalapagosFrame extends JFrame implements Observer {
                 if (isRefreshing)
                     biotope.addObserver(GalapagosFrame.this);
 
+                behaviorButtons = new ButtonGroup();
+
+                behaviorButtonsPanel.removeAll();
+
+                for (final Behavior b : finchBehaviors) {
+                    JRadioButton button = new JRadioButton(b.toString());
+                    button.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                selectedBehavior = b;
+                            }
+                        });
+                    behaviorButtons.add(button);
+                    behaviorButtonsPanel.add(button);
+                }
+
+                behaviorButtonsPanel.add(Box.createGlue());
+
+                selectedBehavior = null;
                 controller.setBiotope(biotope);
                 area.reset(biotope.world.width(), biotope.world.height(), pixelSize);
                 biotope.doNotifyObservers();
