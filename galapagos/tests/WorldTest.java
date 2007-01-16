@@ -11,7 +11,7 @@ public class WorldTest extends TestCase {
         LinkedList<Integer> result = new LinkedList<Integer>();
         for(World<Integer>.Place place : list)
         {
-            result.add(place.element());
+            result.add(place.getElement());
         }
         return result;
     }
@@ -88,7 +88,7 @@ public class WorldTest extends TestCase {
         list.add(8);
         
         World.Place place = world.getAt(1,1);
-        assertEquals(4, (int)(Integer)place.element());
+        assertEquals(4, (int)(Integer)place.getElement());
         
         containsTheSame(toIntegerList(world.getAt(1,1).filledNeighbours()), list);
     }
@@ -103,8 +103,8 @@ public class WorldTest extends TestCase {
         LinkedList<Integer> found = new LinkedList<Integer>();
         
         for (Iterator i = world.randomIterator(); i.hasNext(); ) {
-            World<Integer>.Place place = (World<Integer>.Place)i.next();
-            found.add(place.element());
+            World<Integer>.Place place = (World.Place) i.next();
+            found.add(place.getElement());
         }
         
         list.add(0);
