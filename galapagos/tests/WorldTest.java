@@ -11,7 +11,7 @@ public class WorldTest extends TestCase {
         LinkedList<Integer> result = new LinkedList<Integer>();
         for(World<Integer>.Place place : list)
         {
-            result.add(place.element());
+            result.add(place.getElement());
         }
         return result;
     }
@@ -20,7 +20,7 @@ public class WorldTest extends TestCase {
     {
         assertTrue("list2 doesn't contain all elements of list1" , list2.containsAll(list1));
         assertTrue("list1 doesn't contain all elements of list2" , list1.containsAll(list2));
-        assertEquals("The lists is different in size", list2.size(), list1.size());
+        assertEquals("The lists are different in size", list2.size(), list1.size());
     }
     
     public World<Integer> world;
@@ -33,9 +33,9 @@ public class WorldTest extends TestCase {
     
     /**
      * Fills the world with integers so it looks like:
-     *      0 1 2
-     *      3 4 5
-     *      6 7 8
+     *      0 3 6
+     *      1 4 7
+     *      2 5 8
      */
     public void fillWorld()
     {
@@ -88,7 +88,7 @@ public class WorldTest extends TestCase {
         list.add(8);
         
         World.Place place = world.getAt(1,1);
-        assertEquals(4, (int)(Integer)place.element());
+        assertEquals(4, (int)(Integer)place.getElement());
         
         containsTheSame(toIntegerList(world.getAt(1,1).filledNeighbours()), list);
     }
@@ -103,8 +103,8 @@ public class WorldTest extends TestCase {
         LinkedList<Integer> found = new LinkedList<Integer>();
         
         for (Iterator i = world.randomIterator(); i.hasNext(); ) {
-            World<Integer>.Place place = (World<Integer>.Place)i.next();
-            found.add(place.element());
+            World<Integer>.Place place = (World.Place) i.next();
+            found.add(place.getElement());
         }
         
         list.add(0);
@@ -122,12 +122,27 @@ public class WorldTest extends TestCase {
     
     
     /**
-     * When there is no elements in the world, no neighbours should be found.
+     * When there are no elements in the world, no neighbours should
+     * be found.
      */
     public void testNoNeighboursInEmptyWorld() {
         for(World<Integer>.Place place : world)
         {
             assertEquals(0, place.filledNeighbours().size());
         }
+    }
+
+    public void testMutablePlaces () {
+        fillWorld();
+        
+        World.Place p = world.getAt(2,2);
+
+        assertEquals(8, p.getElement());
+
+        world.setAt(2,2,42);
+        assertEquals(42, p.getElement());
+
+        p.setElement(39);
+        assertEquals(39, p.getElement());;
     }
 }
