@@ -14,7 +14,7 @@ public class GalapagosFrame extends JFrame implements Observer {
     private AreaPanel area;
     public TreeMap<String, Color> colorMap;
     public int pixelSize;
-    private StatisticsPanel statistics;
+    private NicerStatisticsPanel statistics;
     private BiotopeLogger logger;
     private BiotopeController controller;
     public final BiotopeCreator biotopeCreator;
@@ -74,7 +74,7 @@ public class GalapagosFrame extends JFrame implements Observer {
             };
         area.addMouseListener(listener);
         area.addMouseMotionListener(listener);
-        statistics = new StatisticsPanel(this);
+        statistics = new NicerStatisticsPanel(colorMap);
         logger = new BiotopeLogger();
         controller = new BiotopeController(this, biotope);
 
