@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.List;
 
 import javax.swing.*;
+import javax.swing.event.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -50,6 +51,25 @@ public class GalapagosFrame extends JFrame implements Observer {
         isRefreshing = true;
         
         area = new AreaPanel();
+        MouseInputAdapter listener = new MouseInputAdapter () {
+                public void maybeAddFinchAt(int x, int y, Behavior b) {
+                    biotope.putFinch(x, y, b.clone());;
+                }
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getX() >= 0 && e.getY() >= 0 && selectedBehavior != null) {
+                        maybeAddFinchAt(e.getX() / pixelSize, e.getY() / pixelSize, 
+                                   selectedBehavior);
+                    }
+                }
+                public void mouseDragged(MouseEvent e) {
+                    if (e.getX() >= 0 && e.getY() >= 0 && selectedBehavior != null) {
+                        maybeAddFinchAt(e.getX() / pixelSize, e.getY() / pixelSize, 
+                                   selectedBehavior);
+                    }
+                }
+            };
+        area.addMouseListener(listener);
+        area.addMouseMotionListener(listener);
         statistics = new StatisticsPanel(this);
         logger = new BiotopeLogger();
         controller = new BiotopeController(this, biotope);
