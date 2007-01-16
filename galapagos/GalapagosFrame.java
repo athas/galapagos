@@ -11,8 +11,6 @@ import java.awt.event.*;
 public class GalapagosFrame extends JFrame implements Observer {
 
     private AreaPanel area;
-    public static Behavior[] behaviors = {new Cheater(), new FlipFlopper(), new Grudger(), new ProbingTitForTat(),
-                                          new RandomFinch(), new Samaritan(), new SuspiciousTitForTat(), new TitForTat()};
     public TreeMap<String, Color> colorMap;
     public int pixelSize;
     private StatisticsPanel statistics;
@@ -33,42 +31,50 @@ public class GalapagosFrame extends JFrame implements Observer {
     private static final Dimension minimumButtonDimension = new Dimension(0,30);
     private static final Dimension standardSpinnerSize = new Dimension(100,22);
     
-    public GalapagosFrame()
+    private List<Behavior> behaviors;
+    
+    public GalapagosFrame(Map<Behavior, Color> behaviors)
     {
-        setTitle("Galapagos Finch Simulator");
+        this.behaviors = new ArrayList<Behavior>(behaviors.size());
+        for(Behavior bhv : behaviors.keySet())
+            this.behaviors.add(bhv);
+        
+        colorMap = createColorMap(behaviors);
         pixelSize = 5;
-        colorMap = createColorMap();
-        this.setLayout(new BorderLayout());
+        
+        //create a new standard Biotope 
+        Biotope biotope = new Biotope(100,100,0.33,10,5,3,10,20,30,new ArrayList<Behavior>(0));
         
         area = new AreaPanel();
-        
-        ArrayList<Behavior> behaviors = new ArrayList<Behavior>();
-        logger = new BiotopeLogger();
+        area.reset(biotope.world.width(), biotope.world.height(), pixelSize);
         statistics = new StatisticsPanel(this);
-        this.add(statistics, BorderLayout.SOUTH);
+        controller = new BiotopeController(this, biotope);
+        biotopeCreator = new BiotopeCreator(this);
         
-        biotope = new Biotope(0,0,0,0,0,0,0,0,0,behaviors);
+        Biotope biotope = new Biotope(0,0,0,0,0,0,0,0,0,behaviors);
+        biotope.addObserver(logger);
         biotope.addObserver(this);
         biotope.addObserver(statistics);
-        area.reset(biotope.world.width(), biotope.world.height(), pixelSize);
-        
         biotope.doNotifyObservers();
         
-        controller = new BiotopeController(this, biotope);
+        this.setLayout(new BorderLayout());
+        initializeControls();
+        this.doLayout();
         
-        Container controlButtons = Box.createHorizontalBox();
-        this.add(controlButtons, BorderLayout.NORTH);
-        controlButtons.add(Box.createGlue());
-        newBiotope = new JButton("New Biotope");
-        newBiotope.setActionCommand("newBiotope");
-        newBiotope.addActionListener(controller);
-        newBiotope.setMinimumSize(minimumButtonDimension);
-        controlButtons.add(newBiotope);
-        nextRound = new JButton("Next Round");
-        nextRound.setActionCommand("nextRound");
-        nextRound.addActionListener(controller);
-        nextRound.setMinimumSize(minimumButtonDimension);
-        controlButtons.add(nextRound);
+        this.addWindowListener(new Terminator());
+        this.setSize(650, 400);
+        this.setTitle("Galapagos Finch Simulator");
+        this.setVisible(true);
+    }
+    
+    private void initializeControls()
+    {
+        //create top controls
+        newBiotope = newButton ("New Biotope", "newBiotope");
+        nextRound = newButton ("Next Round", "nextRound");
+        severalRounds = newButton ("Compute Several Rounds", "severalRounds");
+        stopRounds = newButton ("Stop Simulation", "stopRounds");
+        
         numberOfRounds = new JSpinner(new SpinnerNumberModel(50,0,Integer.MAX_VALUE,10));
         numberOfRounds.setPreferredSize(standardSpinnerSize);
         numberOfRounds.setMaximumSize(new Dimension(100,30));
@@ -85,31 +91,42 @@ public class GalapagosFrame extends JFrame implements Observer {
         stopRounds.setMinimumSize(minimumButtonDimension);
         controlButtons.add(stopRounds);
         controlButtons.add(Box.createGlue());
-        toggleLogging = new JCheckBox("Perform logging");
-        toggleLogging.addActionListener(new ActionListener () {
-                public void actionPerformed(ActionEvent e) {
-                    if (isLogging)
-                        biotope.deleteObserver(logger);
-                    else
-                        biotope.addObserver(logger);
-                    isLogging = !isLogging;
-                }
-            });
-        controlButtons.add(toggleLogging);
         
         
-        Container container = new Container();
-        container.setLayout(new GridBagLayout());
-        container.add(area);
-        this.add(container,BorderLayout.CENTER);
-        this.doLayout();
+        Container topContainer = Box.createHorizontalBox();
+        topContainer.add(Box.createGlue());
+        topContainer.add(newBiotope);
+        topContainer.add(nextRound);
+        topContainer.add(numberOfRounds);
+        topContainer.add(severalRounds);
+        topContainer.add(stopRounds);
+        topContainer.add(Box.createGlue());
         
-        this.addWindowListener(new Terminator());
-        this.setSize(650, 400);
+        //this container's only purpose is to centralize area
+        Container centerContainer = new Container();
+        centerContainer.setLayout(new GridBagLayout());
+        centerContainer.add(area);
         
-        biotopeCreator = new BiotopeCreator(this);
+        this.add(topContainer, BorderLayout.NORTH);
+        this.add(centerContainer,BorderLayout.CENTER);
+        this.add(statistics, BorderLayout.SOUTH);
+    }
+    
+    /**
+     * Create a new JButton with the specified text and actionCommand.
+     * 
+     * @param text The button's text
+     * @param command The button's actionCommand
+     * @return The new JButton
+     */
+    public JButton newButton(String text, String command)
+    {
+        JButton button = new JButton(text);
+        button.setActionCommand(command);
+        button.addActionListener(this.controller);
+        button.setMinimumSize(minimumButtonDimension);
         
-        this.setVisible(true);
+        return button;
     }
     
     public void update(Observable observableBiotope, Object arg)
@@ -126,9 +143,14 @@ public class GalapagosFrame extends JFrame implements Observer {
         area.update();
     }
     
-    public Color colorByBehavior(Behavior bhv)
+    /**
+     * Get the color associated with the behavior
+     * @param behavior The behavior to look-up in the ColorMap
+     * @return The color associated with behavior.
+     */
+    public Color colorByBehavior(Behavior behavior)
     {
-        Color c = colorMap.get(bhv.toString());
+        Color c = colorMap.get(behavior.toString());
         
         if(c == null)
             throw new Error("Color not defined for this Behavior");
@@ -136,24 +158,26 @@ public class GalapagosFrame extends JFrame implements Observer {
         return c;
     }
     
-    private TreeMap<String, Color> createColorMap()
+    /**
+     * Maps each color in the behaviors-map to the associated behaviors name (Behavior.toString()).
+     * @return A color map with behavior-names as keys.
+     */
+    private TreeMap<String, Color> createColorMap(Map<Behavior, Color> behaviors)
     {
         TreeMap<String, Color> colorMap = new TreeMap<String, Color>();
-        
-        colorMap.put("Cheater", Color.BLUE);
-        colorMap.put("Samaritan", Color.RED);
-        colorMap.put("Grudger", Color.YELLOW);
-        colorMap.put("Tit for Tat", Color.GREEN);
-        colorMap.put("Suspicious Tit for Tat", Color.ORANGE);
-        colorMap.put("Probing Tit for Tat", Color.CYAN);
-        colorMap.put("Flip-Flopper", Color.WHITE);
-        colorMap.put("Random", Color.MAGENTA);
+        //go through all the behaviors in the behaviors-map and add its string representation to new map 
+        for(Map.Entry<Behavior, Color> entry: behaviors.entrySet())
+            colorMap.put(entry.getKey().toString(), entry.getValue());
         
         return colorMap;
     }
     
-    public Integer getNumberOfRounds () {
-        return (Integer) ((SpinnerNumberModel) numberOfRounds.getModel()).getNumber();
+    /**
+     * Get the number of rounds specified by the numberOfRounds-textfield
+     * @return
+     */
+    public int getNumberOfRounds () {
+        return ((SpinnerNumberModel) numberOfRounds.getModel()).getNumber().intValue();
     }
     
     public void disableButtons() {
@@ -173,134 +197,149 @@ public class GalapagosFrame extends JFrame implements Observer {
         stopRounds.setEnabled(true);
     }
     
-    public void setBiotope() {
-        
-    }
-    
+    /**
+     * A Dialog
+     *
+     */
     public class BiotopeCreator extends JFrame {
-        private final JSpinner width, height;
-        private final JSpinner breedingProbability;
-        private final JSpinner maxHitpoints, initialHitpoints, hitpointsPerRound;
-        private final JSpinner minMaxAge, maxMaxAge;
-        private final JSpinner finchesPerBehavior;
-        private final JCheckBox[] behaviors;
+        private final JSpinner widthSpinner, heightSpinner;
+        private final JSpinner breedingProbabilitySpinner;
+        private final JSpinner maxHitpointsSpinner, initialHitpointsSpinner, hitpointsPerRoundSpinner;
+        private final JSpinner minMaxAgeSpinner, maxMaxAgeSpinner;
+        private final JSpinner finchesPerBehaviorSpinner;
+        private final JCheckBox[] behaviorCheckboxes;
         private final JButton okButton, cancelButton;
         
         private BiotopeCreator(GalapagosFrame frame) {
+            //Enables GalapagosFrame buttons when the dialog is closed
             this.addWindowListener(new WindowAdapter() {
                 public void windowClosing(WindowEvent e) {enableButtons();}
             });
             
-            setTitle("Biotope Creator");
-            this.setLayout(new BorderLayout());
-            JPanel options = new JPanel(new GridBagLayout());
-            this.add(options, BorderLayout.CENTER);
-            
             // The world size options.
-            JPanel optionGroup = new JPanel(new GridBagLayout());
-            optionGroup.setBorder(BorderFactory.createTitledBorder("World size"));
-            width = new JSpinner(new SpinnerNumberModel(100,0,Integer.MAX_VALUE,10));
-            width.setPreferredSize(standardSpinnerSize);
-            height = new JSpinner(new SpinnerNumberModel(100,0,Integer.MAX_VALUE,10));
-            height.setPreferredSize(standardSpinnerSize);
-            optionGroup.add(new JLabel("Width",SwingConstants.CENTER), getConstraints(0,0));
-            optionGroup.add(width, getConstraints(0,1));
-            optionGroup.add(new JLabel("Height",SwingConstants.CENTER), getConstraints(1,0));
-            optionGroup.add(height, getConstraints(1,1));
-            options.add(optionGroup, getConstraints(0,0));
+            JPanel sizeOptionGroup = new JPanel(new GridBagLayout());
+            sizeOptionGroup.setBorder(BorderFactory.createTitledBorder("World size"));
+            widthSpinner = newIntegerSpinner(100, 10, 1);
+            heightSpinner = newIntegerSpinner(100, 10, 1);
+            sizeOptionGroup.add(new JLabel("Width",SwingConstants.CENTER), getConstraints(0,0));
+            sizeOptionGroup.add(widthSpinner, getConstraints(0,1));
+            sizeOptionGroup.add(new JLabel("Height",SwingConstants.CENTER), getConstraints(1,0));
+            sizeOptionGroup.add(heightSpinner, getConstraints(1,1));
             
             // Hitpoint options.
-            optionGroup = new JPanel(new GridBagLayout());
-            optionGroup.setBorder(BorderFactory.createTitledBorder("Finch hitpoints"));
-            initialHitpoints = new JSpinner(new SpinnerNumberModel(5,0,Integer.MAX_VALUE,1));
-            initialHitpoints.setPreferredSize(standardSpinnerSize);
-            maxHitpoints = new JSpinner(new SpinnerNumberModel(10,0,Integer.MAX_VALUE,1));
-            maxHitpoints.setPreferredSize(standardSpinnerSize);
-            hitpointsPerRound = new JSpinner(new SpinnerNumberModel(3,0,Integer.MAX_VALUE,1));
-            hitpointsPerRound.setPreferredSize(standardSpinnerSize);
-            optionGroup.add(new JLabel("Initial hitpoints",SwingConstants.CENTER), getConstraints(0,0));
-            optionGroup.add(initialHitpoints, getConstraints(0,1));
-            optionGroup.add(new JLabel("Max. hitpoints",SwingConstants.CENTER), getConstraints(1,0));
-            optionGroup.add(maxHitpoints, getConstraints(1,1));
-            optionGroup.add(new JLabel("Hitpoints lost per round",SwingConstants.CENTER), getConstraints(2,0));
-            optionGroup.add(hitpointsPerRound, getConstraints(2,1));
-            options.add(optionGroup, getConstraints(0,1));
+            JPanel hitpointsOptionGroup = new JPanel(new GridBagLayout());
+            hitpointsOptionGroup.setBorder(BorderFactory.createTitledBorder("Finch hitpoints"));
+            initialHitpointsSpinner = newIntegerSpinner(5, 1, 1);
+            maxHitpointsSpinner = newIntegerSpinner(10, 1, 1);
+            hitpointsPerRoundSpinner = newIntegerSpinner(3, 1, 0);
+            hitpointsOptionGroup.add(new JLabel("Initial hitpoints",SwingConstants.CENTER), getConstraints(0,0));
+            hitpointsOptionGroup.add(initialHitpointsSpinner, getConstraints(0,1));
+            hitpointsOptionGroup.add(new JLabel("Max. hitpoints",SwingConstants.CENTER), getConstraints(1,0));
+            hitpointsOptionGroup.add(maxHitpointsSpinner, getConstraints(1,1));
+            hitpointsOptionGroup.add(new JLabel("Hitpoints lost per round",SwingConstants.CENTER), getConstraints(2,0));
+            hitpointsOptionGroup.add(hitpointsPerRoundSpinner, getConstraints(2,1));
             
             // Age options.
-            optionGroup = new JPanel(new GridBagLayout());
-            optionGroup.setBorder(BorderFactory.createTitledBorder("Finch age"));
-            minMaxAge = new JSpinner(new SpinnerNumberModel(10,0,Integer.MAX_VALUE,1));
-            minMaxAge.setPreferredSize(standardSpinnerSize);
-            maxMaxAge = new JSpinner(new SpinnerNumberModel(20,0,Integer.MAX_VALUE,1));
-            maxMaxAge.setPreferredSize(standardSpinnerSize);
-            optionGroup.add(new JLabel("Least maximum age",SwingConstants.CENTER), getConstraints(0,0));
-            optionGroup.add(minMaxAge, getConstraints(0,1));
-            optionGroup.add(new JLabel("Greatest maximum age",SwingConstants.CENTER), getConstraints(1,0));
-            optionGroup.add(maxMaxAge, getConstraints(1,1));
-            options.add(optionGroup, getConstraints(1,1));
-                        
+            JPanel ageOptionGroup = new JPanel(new GridBagLayout());
+            ageOptionGroup.setBorder(BorderFactory.createTitledBorder("Finch age"));
+            minMaxAgeSpinner = newIntegerSpinner(10, 1, 2);
+            maxMaxAgeSpinner = newIntegerSpinner(20, 1, 2);
+            ageOptionGroup.add(new JLabel("Least maximum age",SwingConstants.CENTER), getConstraints(0,0));
+            ageOptionGroup.add(minMaxAgeSpinner, getConstraints(0,1));
+            ageOptionGroup.add(new JLabel("Greatest maximum age",SwingConstants.CENTER), getConstraints(1,0));
+            ageOptionGroup.add(maxMaxAgeSpinner, getConstraints(1,1));
+                   
             // Breeding propability and Finches per Behavior.
-            optionGroup = new JPanel(new GridBagLayout());
-            optionGroup.setBorder(BorderFactory.createTitledBorder("Other parametres"));
-            breedingProbability = new JSpinner(new SpinnerNumberModel(0.5,0.0,1.0,0.01));
-            breedingProbability.setPreferredSize(new Dimension(50,22));
-            finchesPerBehavior = new JSpinner(new SpinnerNumberModel(30,0,Integer.MAX_VALUE,1));
-            finchesPerBehavior.setPreferredSize(standardSpinnerSize);
-            optionGroup.add(new JLabel("Breeding propability",SwingConstants.CENTER), getConstraints(0,0));
-            optionGroup.add(breedingProbability, getConstraints(0,1));
-            optionGroup.add(new JLabel("Finches per behavior",SwingConstants.CENTER), getConstraints(1,0));
-            optionGroup.add(finchesPerBehavior, getConstraints(1,1));
-            options.add(optionGroup, getConstraints(1,0));
+            JPanel otherOptionGroup = new JPanel(new GridBagLayout());
+            otherOptionGroup.setBorder(BorderFactory.createTitledBorder("Other parametres"));
+            breedingProbabilitySpinner = new JSpinner(new SpinnerNumberModel(0.33,0.0,1.0,0.01));
+            breedingProbabilitySpinner.setPreferredSize(new Dimension(50,22));
+            finchesPerBehaviorSpinner = newIntegerSpinner(30, 1, 1);
+            otherOptionGroup.add(new JLabel("Breeding propability",SwingConstants.CENTER), getConstraints(0,0));
+            otherOptionGroup.add(breedingProbabilitySpinner, getConstraints(0,1));
+            otherOptionGroup.add(new JLabel("Finches per behavior",SwingConstants.CENTER), getConstraints(1,0));
+            otherOptionGroup.add(finchesPerBehaviorSpinner, getConstraints(1,1));
             
             // Behavior selection.
-            optionGroup = new JPanel(new FlowLayout());
-            optionGroup.setBorder(BorderFactory.createTitledBorder("Behaviors"));
-            behaviors = new JCheckBox[GalapagosFrame.behaviors.length];
-            for (int i = 0; i < behaviors.length; i++) {
-                behaviors[i] = new JCheckBox(GalapagosFrame.behaviors[i].toString());
-                optionGroup.add(behaviors[i]);
+            JPanel behaviorsOptionGroup = new JPanel(new FlowLayout());
+            behaviorsOptionGroup.setBorder(BorderFactory.createTitledBorder("Behaviors"));
+            behaviorCheckboxes = new JCheckBox[GalapagosFrame.this.behaviors.size()];
+            for (int i = 0; i < behaviorCheckboxes.length; i++) {
+                behaviorCheckboxes[i] = new JCheckBox(GalapagosFrame.this.behaviors.get(i).toString());
+                behaviorsOptionGroup.add(behaviorCheckboxes[i]);
             }
-            options.add(optionGroup, new GridBagConstraints(0,2,2,1,1.0,1.0,GridBagConstraints.CENTER,GridBagConstraints.NONE,new Insets(5,5,5,5),0,0));
             
             // OK and CANCEL.
-            optionGroup = new JPanel(new FlowLayout());
+            JPanel buttonPanel = new JPanel(new FlowLayout());
             okButton = new JButton("Create biotope");
             okButton.setActionCommand("okButton");
             okButton.addActionListener(controller);
             cancelButton = new JButton("Abort creation");
             cancelButton.setActionCommand("cancelButton");
             cancelButton.addActionListener(controller);
-            optionGroup.add(okButton);
-            optionGroup.add(cancelButton);
-            this.add(optionGroup, BorderLayout.SOUTH);
+            buttonPanel.add(okButton);
+            buttonPanel.add(cancelButton);
+            
+            JPanel options = new JPanel(new GridBagLayout());
+            options.add(sizeOptionGroup, getConstraints(0,0));
+            options.add(hitpointsOptionGroup, getConstraints(0,1));
+            options.add(ageOptionGroup, getConstraints(1,1));
+            options.add(otherOptionGroup, getConstraints(1,0));
+            options.add(behaviorsOptionGroup, new GridBagConstraints(0,2,2,1,1.0,1.0,GridBagConstraints.CENTER,GridBagConstraints.NONE,new Insets(5,5,5,5),0,0));
+            
+            this.setLayout(new BorderLayout());
+            this.add(options, BorderLayout.CENTER);
+            this.add(buttonPanel, BorderLayout.SOUTH);
+            this.setTitle("Biotope Creator");
             
             this.setSize(getPreferredSize().width + 20, getPreferredSize().height + 40);
+        }
+        
+        /**
+         * Create a new spinner with a startValue, stepSize and minValue.
+         * The max value is set to Integer.MAX_VALUE.
+         * @param startValue The spinner's start-value.
+         * @param stepSize The step size of the spinner.
+         * @return The created spinner.
+         */
+        private JSpinner newIntegerSpinner(int startValue, int stepSize, int minValue)
+        {
+            JSpinner spinner = new JSpinner(new SpinnerNumberModel(startValue, minValue, Integer.MAX_VALUE, stepSize));
+            spinner.setPreferredSize(standardSpinnerSize);
+            
+            return spinner;
         }
         
         /**
          * A set of GridBagConstraints for use with the GridBagLayout.
          * @param x the horisontal position of the component.
          * @param y the vertical position of the component.
-         */
+         */            
+        
         private GridBagConstraints getConstraints (int x, int y) {
-            return new GridBagConstraints(x,y,1,1,1.0,1.0,GridBagConstraints.CENTER,GridBagConstraints.NONE,new Insets(5,5,5,5),0,0);
+            return new GridBagConstraints(x, y, 1, 1, 1.0, 1.0, 
+                                            GridBagConstraints.CENTER,
+                                            GridBagConstraints.NONE,
+                                            new Insets(5,5,5,5),
+                                            0, 0);
         }
 
         public void createBiotope() {
-            int width = (Integer) this.width.getValue();
-            int height = (Integer) this.height.getValue();
-            double breedingProbability = (Double) this.breedingProbability.getValue();
-            int maxHitpoints = (Integer) this.maxHitpoints.getValue();
-            int initialHitpoints = (Integer) this.initialHitpoints.getValue();
-            int hitpointsPerRound = (Integer) this.hitpointsPerRound.getValue();
-            int minMaxAge = (Integer) this.minMaxAge.getValue();
-            int maxMaxAge = (Integer) this.maxMaxAge.getValue();
-            int finchesPerBehavior = (Integer) this.finchesPerBehavior.getValue();
+            int width = (Integer) this.widthSpinner.getValue();
+            int height = (Integer) this.heightSpinner.getValue();
+            double breedingProbability = (Double) this.breedingProbabilitySpinner.getValue();
+            int maxHitpoints = (Integer) this.maxHitpointsSpinner.getValue();
+            int initialHitpoints = (Integer) this.initialHitpointsSpinner.getValue();
+            int hitpointsPerRound = (Integer) this.hitpointsPerRoundSpinner.getValue();
+            int minMaxAge = (Integer) this.minMaxAgeSpinner.getValue();
+            int maxMaxAge = (Integer) this.maxMaxAgeSpinner.getValue();
+            int finchesPerBehavior = (Integer) this.finchesPerBehaviorSpinner.getValue();
             List<Behavior> finchBehaviors = new LinkedList<Behavior>();
-            for (int i = 0; i < behaviors.length; i++) {
-                if (behaviors[i].isSelected())
-                    finchBehaviors.add(GalapagosFrame.behaviors[i].clone());
-            }
+            
+            for(int i = 0; i < behaviors.size(); ++i)
+                if(behaviorCheckboxes[i].isSelected())
+                    finchBehaviors.add(behaviors.get(i).clone());
+            
             if (checkStartFinches(width, height, finchesPerBehavior, finchBehaviors.size()) 
                     & checkAge(minMaxAge, maxMaxAge) & checkHitpoints(maxHitpoints, initialHitpoints)) {
                 biotope = new Biotope(width,height,breedingProbability,
@@ -308,6 +347,7 @@ public class GalapagosFrame extends JFrame implements Observer {
                                       maxMaxAge,finchesPerBehavior,finchBehaviors);
                 biotope.addObserver(GalapagosFrame.this);
                 biotope.addObserver(statistics);
+                biotope.addObserver(logger);
                 controller.setBiotope(biotope);
                 area.reset(biotope.world.width(), biotope.world.height(), pixelSize);
                 biotope.doNotifyObservers();
@@ -325,7 +365,8 @@ public class GalapagosFrame extends JFrame implements Observer {
             disableButtons();
             this.setVisible(true);
         }
-
+        
+        
         public void abort() {
             enableButtons();
             setVisible(false);
@@ -338,7 +379,8 @@ public class GalapagosFrame extends JFrame implements Observer {
                 JOptionPane.showMessageDialog(this,
                         "There is not enough room in the world for the initial amount of finches.",
                         "Impossible to create biotope", JOptionPane.WARNING_MESSAGE);
-                return false;
+                return false;            
+                
             }
         }
         

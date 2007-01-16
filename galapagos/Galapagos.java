@@ -1,5 +1,8 @@
 package galapagos;
 
+import java.util.HashMap;
+import java.awt.Color;
+
 public class Galapagos {
 
     /**
@@ -7,8 +10,19 @@ public class Galapagos {
      */
     public static void main(String[] args) {
         // TODO Auto-generated method stub
-        GalapagosFrame frame = new GalapagosFrame();
-        frame.setVisible(true);
+        
+        HashMap<Behavior, Color> behaviors = new HashMap<Behavior, Color>();
+        behaviors.put(new Samaritan(), Color.RED);
+        behaviors.put(new Cheater(), Color.BLUE);
+        behaviors.put(new FlipFlopper(), Color.DARK_GRAY);
+        behaviors.put(new RandomFinch(), Color.MAGENTA);
+        behaviors.put(new Grudger(), Color.ORANGE.darker());
+        behaviors.put(new TitForTat(), Color.GREEN);
+        behaviors.put(new ProbingTitForTat(), Color.CYAN);
+        behaviors.put(new SuspiciousTitForTat(), Color.ORANGE);
+        
+        GalapagosFrame frame = new GalapagosFrame(behaviors);
+
     }
 
 }
