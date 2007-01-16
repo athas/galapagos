@@ -31,6 +31,7 @@ public class GalapagosFrame extends JFrame implements Observer {
 
     private ButtonGroup behaviorButtons;
     private Container behaviorButtonsBox;
+    private JLabel behaviorButtonsLabel;
     private Behavior selectedBehavior;
 
     private boolean isLogging;
@@ -146,6 +147,7 @@ public class GalapagosFrame extends JFrame implements Observer {
         leftContainer.add(Box.createGlue());
 
         behaviorButtonsBox = Box.createVerticalBox();
+        behaviorButtonsLabel = new JLabel("Pencil for freehand finch drawing");
         
         this.add(topContainer, BorderLayout.NORTH);
         this.add(centerContainer,BorderLayout.CENTER);
@@ -400,6 +402,7 @@ public class GalapagosFrame extends JFrame implements Observer {
 
                 behaviorButtonsBox.removeAll();
                 behaviorButtonsBox.add(Box.createGlue());
+                behaviorButtonsBox.add(behaviorButtonsLabel);
 
                 for (final Behavior b : finchBehaviors) {
                     JRadioButton button = new JRadioButton(b.toString());
