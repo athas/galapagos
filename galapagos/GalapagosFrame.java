@@ -59,7 +59,7 @@ public class GalapagosFrame extends JFrame implements Observer {
                     if (x < biotope.width && y < biotope.height)
                         biotope.putFinch(x, y, b.clone());
                 }
-                public void mouseClicked(MouseEvent e) {
+                public void mousePressed(MouseEvent e) {
                     if (e.getX() >= 0 && e.getY() >= 0 && selectedBehavior != null) {
                         maybeAddFinchAt(e.getX() / pixelSize, e.getY() / pixelSize, 
                                    selectedBehavior);
