@@ -4,6 +4,10 @@ package galapagos;
  * The interface of the finch behaviors.
  */
 public interface Behavior extends Cloneable {
+    
+    /**
+     * This finch's choice of action in the meeting with the argument finch.
+     */
     public Action decide (Finch finch);
     
     /**
