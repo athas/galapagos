@@ -98,13 +98,27 @@ public class World<T> implements Iterable<World<T>.Place> {
             return yPosition;
         }
 
+        /**
+         * Return x wrapped to the width of the World of this
+         * Place. An x value off to the side of the actual edge of the
+         * World will be wrapped to the other side.
+         *
+         * @return An integer in the range [0; width of world[.
+         */
         private int wrappedX(int x) {
-            if (x < 0) return width + x;
+            if (x < 0) return wrappedX(width + x);
             else return x % width;
         }
-
+        
+        /**
+         * Return y wrapped to the width of the World of this
+         * Place. An y value above or below the actual edges of the
+         * World will be wrapped to the other side.
+         *
+         * @return An integer in the range [0; height of world[.
+         */
         private int wrappedY(int y) {
-            if (y < 0) return height + y;
+            if (y < 0) return wrappedY(height + y);
             return y % height;
         }
 
