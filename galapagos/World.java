@@ -175,6 +175,10 @@ public class World<T> implements Iterable<World<T>.Place> {
         getAt(x, y).element = value;
     }
 
+    /**
+     * Return an iterator that will iterate through the places of the
+     * world from the top left to the bottom right (row by row).
+     */
     public Iterator<Place> iterator() {
         return array.iterator();
     }
