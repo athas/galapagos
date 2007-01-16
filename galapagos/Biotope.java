@@ -71,7 +71,7 @@ public class Biotope extends Observable {
             : "breedingProbability must be between 0 and 1, inclusive.";
         assert (0 < initialHitpoints)
             : "initialHitpoints must be greater than zero.";
-        assert (initialHitpoints < maxHitpoints)
+        assert (initialHitpoints <= maxHitpoints)
             : "maxHitpoints must be greater than initialHitpoints.";
         assert (0 <= hitpointsPerRound)
             : "hitPointsPerRound must be greater than zero.";
