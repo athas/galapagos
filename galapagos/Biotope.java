@@ -79,7 +79,7 @@ public class Biotope extends Observable {
             : "The lower bound on the maximum age must be greater than zero";
         assert (minMaxAge <= maxMaxAge)
             : "The upper bound on the maximum age must be greater than the lower bound.";
-        assert (0 < finchesPerBehavior)
+        assert (0 <= finchesPerBehavior)
             : "At least one finch per behavior must be specified.";
         this.width = width;
         this.height = height;

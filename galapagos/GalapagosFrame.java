@@ -335,7 +335,7 @@ public class GalapagosFrame extends JFrame implements Observer {
             otherOptionGroup.setBorder(BorderFactory.createTitledBorder("Other parametres"));
             breedingProbabilitySpinner = new JSpinner(new SpinnerNumberModel(0.33,0.0,1.0,0.01));
             breedingProbabilitySpinner.setPreferredSize(new Dimension(50,22));
-            finchesPerBehaviorSpinner = newIntegerSpinner(30, 1, 1);
+            finchesPerBehaviorSpinner = newIntegerSpinner(30, 1, 0);
             otherOptionGroup.add(new JLabel("Breeding probability",SwingConstants.CENTER), getConstraints(0,0));
             otherOptionGroup.add(breedingProbabilitySpinner, getConstraints(0,1));
             otherOptionGroup.add(new JLabel("Finches per behavior",SwingConstants.CENTER), getConstraints(1,0));
