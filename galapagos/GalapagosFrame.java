@@ -25,8 +25,10 @@ public class GalapagosFrame extends JFrame implements Observer {
     private JButton severalRounds;
     private JButton stopRounds;
     private JCheckBox toggleLogging;
+    private JCheckBox toggleDisplayRefresh;
 
     private boolean isLogging;
+    private boolean isRefreshing;
     
     private static final Dimension minimumButtonDimension = new Dimension(0,30);
     private static final Dimension standardSpinnerSize = new Dimension(100,22);
@@ -41,6 +43,8 @@ public class GalapagosFrame extends JFrame implements Observer {
         
         colorMap = createColorMap(behaviors);
         pixelSize = 5;
+
+        isRefreshing = true;
         
         //create a new standard Biotope 
         biotope = new Biotope(100,100,0.33,10,5,3,10,20,30,this.behaviors);
@@ -79,7 +83,7 @@ public class GalapagosFrame extends JFrame implements Observer {
         numberOfRounds.setMaximumSize(new Dimension(100,30));
         numberOfRounds.setMinimumSize(minimumButtonDimension);
         
-        toggleLogging = new JCheckBox("Perform logging");
+        toggleLogging = new JCheckBox("Perform logging", isLogging);
         toggleLogging.addActionListener(new ActionListener () {
                 public void actionPerformed(ActionEvent e) {
                     if (isLogging)
@@ -89,8 +93,18 @@ public class GalapagosFrame extends JFrame implements Observer {
                     isLogging = !isLogging;
                 }
             });
-        
-        
+
+        toggleDisplayRefresh = new JCheckBox("Update display", isRefreshing);
+        toggleDisplayRefresh.addActionListener(new ActionListener () {
+                public void actionPerformed(ActionEvent e) {
+                    if (isRefreshing)
+                        biotope.deleteObserver(GalapagosFrame.this);
+                    else
+                        biotope.addObserver(GalapagosFrame.this);
+                    isRefreshing = !isRefreshing;
+                }
+            });
+
         Container topContainer = Box.createHorizontalBox();
         topContainer.add(Box.createGlue());
         topContainer.add(newBiotope);
@@ -98,17 +112,21 @@ public class GalapagosFrame extends JFrame implements Observer {
         topContainer.add(numberOfRounds);
         topContainer.add(severalRounds);
         topContainer.add(stopRounds);
-        topContainer.add(toggleLogging);
         topContainer.add(Box.createGlue());
         
         //this container's only purpose is to centralize area
         Container centerContainer = new Container();
         centerContainer.setLayout(new GridBagLayout());
         centerContainer.add(area);
+
+        Container leftContainer = Box.createVerticalBox();
+        leftContainer.add(toggleLogging);
+        leftContainer.add(toggleDisplayRefresh);
         
         this.add(topContainer, BorderLayout.NORTH);
         this.add(centerContainer,BorderLayout.CENTER);
         this.add(statistics, BorderLayout.SOUTH);
+        this.add(leftContainer, BorderLayout.WEST);
     }
     
     /**
@@ -344,8 +362,12 @@ public class GalapagosFrame extends JFrame implements Observer {
                 biotope = new Biotope(width,height,breedingProbability,
                         maxHitpoints,initialHitpoints,hitpointsPerRound,minMaxAge,
                         maxMaxAge,finchesPerBehavior,finchBehaviors);
-                biotope.addObserver(GalapagosFrame.this);
                 biotope.addObserver(statistics);
+                
+                if (isLogging)
+                    biotope.addObserver(logger);
+                if (isRefreshing)
+                    biotope.addObserver(GalapagosFrame.this);
 
                 controller.setBiotope(biotope);
                 area.reset(biotope.world.width(), biotope.world.height(), pixelSize);
