@@ -9,6 +9,7 @@ public class BiotopeController implements ActionListener {
     private final GalapagosFrame frame;
     private final Timer roundTimer;
     private int roundsToGo;
+    private boolean unlimited;
     
     /**
      * Create a new BiotopeController, controlling the specified Biotope according to data from frame.
@@ -30,23 +31,36 @@ public class BiotopeController implements ActionListener {
     
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == roundTimer) {
-            if (roundsToGo > 0) {
-                roundsToGo--;
+            if (unlimited) {
                 biotope.runRound();
+            } else {
+                if (roundsToGo > 0) {
+                    roundsToGo--;
+                    biotope.runRound();
+                }
+                if (roundsToGo <= 0)
+                    roundTimer.stop();
             }
-            if (roundsToGo <= 0)
-                roundTimer.stop();
             return;
         }
         
         String command = e.getActionCommand();
         if (command.equals("nextRound")) {
+            unlimited = false;
+            roundsToGo = 0;
             roundTimer.stop();
             biotope.runRound();
         } else if (command.equals("severalRounds")) {
+            unlimited = false;
             roundsToGo += frame.getNumberOfRounds();
             roundTimer.start();
+        } else if (command.equals("unlimitedRounds")) {
+            unlimited = true;
+            roundsToGo = 0;
+            roundTimer.start();
         } else if (command.equals("stopRounds")) {
+            unlimited = false;
+            roundsToGo = 0;
             roundTimer.stop();
         } else if (command.equals("newBiotope")) {
             frame.biotopeCreator.openPanel();

@@ -24,6 +24,7 @@ public class GalapagosFrame extends JFrame implements Observer {
     private JButton nextRound;
     private JSpinner numberOfRounds;
     private JButton severalRounds;
+    private JButton unlimitedRounds;
     private JButton stopRounds;
     private JCheckBox toggleLogging;
     private JCheckBox toggleDisplayRefresh;
@@ -93,6 +94,7 @@ public class GalapagosFrame extends JFrame implements Observer {
         newBiotope = newButton ("New Biotope", "newBiotope");
         nextRound = newButton ("Next Round", "nextRound");
         severalRounds = newButton ("Compute Several Rounds", "severalRounds");
+        unlimitedRounds = newButton ("Go!", "unlimitedRounds");
         stopRounds = newButton ("Stop Simulation", "stopRounds");
         
         numberOfRounds = new JSpinner(new SpinnerNumberModel(50,0,Integer.MAX_VALUE,10));
@@ -128,6 +130,7 @@ public class GalapagosFrame extends JFrame implements Observer {
         topContainer.add(nextRound);
         topContainer.add(numberOfRounds);
         topContainer.add(severalRounds);
+        topContainer.add(unlimitedRounds);
         topContainer.add(stopRounds);
         topContainer.add(Box.createGlue());
         
@@ -224,6 +227,7 @@ public class GalapagosFrame extends JFrame implements Observer {
         nextRound.setEnabled(false);
         numberOfRounds.setEnabled(false);
         severalRounds.setEnabled(false);
+        unlimitedRounds.setEnabled(false);
         stopRounds.doClick();
         stopRounds.setEnabled(false);
     }
@@ -233,6 +237,7 @@ public class GalapagosFrame extends JFrame implements Observer {
         nextRound.setEnabled(true);
         numberOfRounds.setEnabled(true);
         severalRounds.setEnabled(true);
+        unlimitedRounds.setEnabled(true);
         stopRounds.setEnabled(true);
     }
     
