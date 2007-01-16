@@ -15,10 +15,16 @@ public class TitForTat extends MemoryBehavior {
         add(finch,action);
     }
     
+    /**
+     * A new instance of the tit-for-tat behavior.
+     */
     public Behavior clone() {
         return new TitForTat();
     }
     
+    /**
+     * A toString method.
+     */
     public String toString() {
         return "Tit for Tat";
     }

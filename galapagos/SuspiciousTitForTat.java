@@ -16,10 +16,16 @@ public class SuspiciousTitForTat extends MemoryBehavior {
         add(finch,action);
     }
     
+    /**
+     * A new instance of the suspecious tit-for-tat behavior.
+     */
     public Behavior clone() {
         return new SuspiciousTitForTat();
     }
     
+    /**
+     * A toString method.
+     */
     public String toString() {
         return "Suspicious Tit for Tat";
     }
