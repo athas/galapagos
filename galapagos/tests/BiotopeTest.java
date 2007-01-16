@@ -48,7 +48,7 @@ public class BiotopeTest extends TestCase {
         }
         
         // Delete all finches in the world, and remember the last place as p.
-        World<GalapagosFinch>.Place p;
+        World<GalapagosFinch>.Place p = null;
         for (Iterator<World<GalapagosFinch>.Place> it = b.worldIterator();
     		it.hasNext();)
         {		
@@ -56,6 +56,7 @@ public class BiotopeTest extends TestCase {
         	i.setElement(null);
         	p = i;
         }
-        p.setElement(new GalapagosFinch(5, 10, 10, new Samaritan()));
+        if (p != null)
+            p.setElement(new GalapagosFinch(5, 10, 10, new Samaritan()));
     }
 }
