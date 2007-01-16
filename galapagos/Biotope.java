@@ -135,8 +135,7 @@ public class Biotope extends Observable {
      *
      * @ensure p.getElement() == null
      */
-    private void placeFinch (World<GalapagosFinch>.Place p, Behavior b, Boolean born)
-    {
+    private void placeFinch (World<GalapagosFinch>.Place p, Behavior b, Boolean born) {
         Statistics stat = statisticsTree.get(b.toString());
         stat.incPopulation();
         GalapagosFinch finch = new GalapagosFinch(initialHitpoints,
@@ -148,6 +147,17 @@ public class Biotope extends Observable {
         else
             finch.makeOlder();
         p.setElement(finch);
+    }
+    
+    /**
+     * Put a new finch in the world at position x, y. The finch will
+     * have the provided behavior, and it will overwrite any already
+     * existing finch at the position.
+     */
+    public void putFinch (int x, int y, Behavior b) {
+        placeFinch(world.getAt(x, y), b, false);
+        setChanged();
+        notifyObservers();
     }
 
     /**
