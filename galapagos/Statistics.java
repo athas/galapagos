@@ -31,10 +31,9 @@ public class Statistics {
     }
     
     /**
-     * Represents a element in a statistic
-     *
+     * Represents an element in a Statistic.
      */
-    public enum StatisticsElement {
+    public enum StatisticElement {
         POPULATION ("Population"),
         BORN_THIS_ROUND ("Born"),
         DEAD_TICKS_THIS_ROUND ("Dead by ticks"),
@@ -44,15 +43,19 @@ public class Statistics {
         DEAD_AGE_TOTAL ("Total dead by age");
         
         public final String name;
-        StatisticsElement (String name)
+        StatisticElement (String name)
         {
             this.name = name;
         }
     }
     
-    public int getStatByElement(StatisticsElement element) {
-        switch(element)
-        {
+    /**
+     * Get the specified StatisticElement's associated value.
+     * @param element The element to get the value of
+     * @return The value associated with the element.
+     */
+    public int getStatByElement(StatisticElement element) {
+        switch(element) {
             case POPULATION:
                 return population;
                 
@@ -60,10 +63,10 @@ public class Statistics {
                 return bornThisRound;
                 
             case DEAD_TICKS_THIS_ROUND:
-                return deadByAgeThisRound;
+                return deadByTicksThisRound;
                 
             case DEAD_AGE_THIS_ROUND:
-                return deadByTicksThisRound;
+                return deadByAgeThisRound;
                 
             case BORN_TOTAL:
                 return born;
