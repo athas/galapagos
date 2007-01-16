@@ -8,17 +8,31 @@ import java.util.Observer;
  * A BiotopeLogger prints (to System.out) a table containing statistics for the current round in a Biotope-simulation. 
  */
 public class BiotopeLogger implements Observer {
-    private static final int COLUMNS = 8; // The number of columns in the output-table.
-    private static int[] topRowSizes; // An array containing the sizes titles contained in the top row.
+    //The number of columns in the output-table, computed by the number of StatisticElements
+    private static final int COLUMNS;
+    private static final char COLUMN_SEPERATOR = '|';
+    private static final char ROW_SEPERATOR = 'X';
     
-    private static final String[] TOP_ROW = {"Behavior", "Population", "Born", "Total Born", 
-        "Dead by Ticks", "Total Dead by Ticks", "Dead by Age", "Total Dead by Age"};
-    // The top row of the table, containing headers of the table columns.
+    //The top row of the table, containing headers of the table columns.
+    private static final String[] TITLE_ROW;
+    
+    static {
+        //the number of columns is the number of statistic elements + one for the behaviornames
+        Statistics.StatisticsElement[] statElements = Statistics.StatisticsElement.values();
+        COLUMNS = 1 + statElements.length;
+        TITLE_ROW = new String[COLUMNS];
         
+        //First column title
+        TITLE_ROW[0] = "Behavior";
+        
+        //The statisticelement names next
+        for(int i = 0; i < statElements.length; ++i) {
+            TITLE_ROW[i+1] = statElements[i].name;
+        }
+    }
+    
     public BiotopeLogger() {
-        topRowSizes = new int[COLUMNS];
-        for (int i = 0; i < COLUMNS; i++)
-            topRowSizes[i] = TOP_ROW[i].length();
+        
     }
     
     /**
@@ -56,103 +70,124 @@ public class BiotopeLogger implements Observer {
     public void update(Observable observableBiotope, Object arg) {
         Biotope biotope = (Biotope) observableBiotope;
         List<Behavior> behaviors = biotope.behaviors();
-        int rows = behaviors.size() + 2; // The number of rows in the output table - including the header row and a row containing totals.
-        int[] columnSizes = topRowSizes; /* An array for containing the column sizes in the output table, 
-                                          * i.e. the maximum size of a field in the respective columns.
-                                          */
-        String[][] output = new String[rows][COLUMNS]; // An array for containing the text in the fields of the table.
+        Statistics.StatisticsElement[] statElements = Statistics.StatisticsElement.values();
+
+        int numberOfRows = behaviors.size() + 2; // The number of rows in the output table - including the header row and a row containing totals.
+
+        // An array for the text in the tablecells.
+        String[][] outputTable = new String[numberOfRows][COLUMNS]; 
         
-        output[0] = TOP_ROW; // The first row in the table is the header row.
+        // The first row in the table is the title row.
+        outputTable[0] = TITLE_ROW;
         
-        // Variables accumulating the data for the "totals"-row of the table.
-        Integer population = 0;
-        Integer born = 0;
-        Integer bornTotal = 0;
-        Integer deadByTicks = 0;
-        Integer deadByTicksTotal = 0;
-        Integer deadByAge = 0;
-        Integer deadByAgeTotal = 0;
+        // Array accumulating the data for the "totals"-row of the table.
+        int totals[] = new int[statElements.length];
         
-        // Variables containing data of the current row in the table (and the corresponding Behavior).
-        Statistics currentStat;
-        Behavior currentBehavior;
-        String[] currentRow = new String[COLUMNS];
-        
-        for (int i = 0; i < rows - 2; i++) {
-            currentBehavior = behaviors.get(i);
-            currentStat = biotope.statistics(currentBehavior.toString());
-            currentRow = output[i+1];
-            
-            // The texts of the fields in the table are generated, and added to the output-array.
-            currentRow[0] = currentBehavior.toString();
-            currentRow[1] = ((Integer) currentStat.getPopulation()).toString();
-            currentRow[2] = ((Integer) currentStat.getBornThisRound()).toString();
-            currentRow[3] = ((Integer) currentStat.getBorn()).toString();
-            currentRow[4] = ((Integer) currentStat.getDeadByTicksThisRound()).toString();
-            currentRow[5] = ((Integer) currentStat.getDeadByTicks()).toString();
-            currentRow[6] = ((Integer) currentStat.getDeadByAgeThisRound()).toString();
-            currentRow[7] = ((Integer) currentStat.getDeadByAge()).toString();
-            
-            // The totals are accumulated.
-            population += currentStat.getPopulation();
-            born += currentStat.getBornThisRound();
-            bornTotal += currentStat.getBorn();
-            deadByTicks += currentStat.getDeadByTicksThisRound();
-            deadByTicksTotal += currentStat.getDeadByTicks();
-            deadByAge += currentStat.getDeadByAgeThisRound();
-            deadByAgeTotal += currentStat.getDeadByAge();
-            
-            // The column sizes are increased if necessary.
-            for (int j = 0; j < COLUMNS; j++)
-                if (currentRow[j].length() > columnSizes[j])
-                    columnSizes[j] = currentRow[j].length();
+        { //iterate through behaviors and create a statistic rows
+            int i = 0;
+            for (Behavior currentBehavior : behaviors) {
+                // Variables containing data of the current row in the table (and the corresponding Behavior).
+                Statistics currentStat = biotope.statistics(currentBehavior.toString());
+                String[] currentRow = outputTable[i+1];
+                
+                // The texts of the fields in the table are generated, and added to the output-array.
+                currentRow[0] = currentBehavior.toString();
+                
+                for(Statistics.StatisticsElement element : statElements)
+                {
+                    int value = currentStat.getStatByElement(element);
+                    currentRow[element.ordinal()+1] = Integer.toString(value);
+                    
+                    //The totals are accumulated.
+                    totals[element.ordinal()] += value;
+                }
+                i++;
+            }
         }
         
         // The texts of the totals row are generated, and the column sizes are increased if necessary.
-        currentRow = output[rows-1];
-        currentRow[0] = "Total";
-        currentRow[1] = population.toString();
-        currentRow[2] = born.toString();
-        currentRow[3] = bornTotal.toString();
-        currentRow[4] = deadByTicks.toString();
-        currentRow[5] = deadByTicksTotal.toString();
-        currentRow[6] = deadByAge.toString();
-        currentRow[7] = deadByAgeTotal.toString();
-        for (int j = 0; j < COLUMNS; j++)
-            if (currentRow[j].length() > columnSizes[j])
-                columnSizes[j] = currentRow[j].length();
+        String[] totalsRow = new String[COLUMNS];
+        totalsRow[0] = "Total"; //first column is the columnname
+        
+        //the rest is found in totals[]
+        for(int i = 0; i < totals.length; ++i)
+            totalsRow[i+1] = Integer.toString(totals[i]); 
+        
+        outputTable[numberOfRows-1] = totalsRow;
+        
+        int[] columnSizes = computeColumnSizes(outputTable);
+        
+        //compute the complete width of the table, for the horizontal line
+        int outputWidth = 0;
+        for (int j = 0; j < COLUMNS; ++j)
+            outputWidth += columnSizes[j];
+        //Column seperator compensation
+        outputWidth += (COLUMNS - 1) * 3;
         
         // Initial lines of output before the table.
-        System.out.println("----------------");
         System.out.println("Round number " + biotope.round() + ":");
+        System.out.println(repeatCharacter(ROW_SEPERATOR, 30));
         
-        // The current line of the output.
-        StringBuilder currentLine;
-        
-        // The lines of the table (except the totals line) are created and printed.
-        for (int i = 0; i < rows - 1; i++) {
-            currentRow = output[i];
-            currentLine = flushLeft(currentRow[0], columnSizes[0]);
-            for (int j = 1; j < COLUMNS; j++)
-                currentLine.append(" | ").append(flushRight(currentRow[j], columnSizes[j])); // The " | " are column seperators.
-            System.out.println(currentLine);
+        // The lines of the table are created and printed.
+        for (int i = 0; i < numberOfRows; i++) {
+            //Create a horizontal line just before the last row
+            if(i == numberOfRows - 1) 
+                System.out.println(repeatCharacter(ROW_SEPERATOR, outputWidth));
+            
+            
+            System.out.println(createTableRow(outputTable[i], columnSizes));
         }
+        System.out.println(repeatCharacter(ROW_SEPERATOR, outputWidth));
+    }
+    
+    /**
+     * Compute the column sizes of a String-table. 
+     * @return An array containing the widths of the columns.
+     */
+    private int[] computeColumnSizes(String[][] table) {
+        int[] columnSizes = new int[COLUMNS];
         
-        // A horizontal line of '-'s spanning the table is created and printed.
-        currentLine = new StringBuilder();
-        int outputWidth = 0;
-        for (int j = 0; j < COLUMNS; j++)
-            outputWidth += columnSizes[j];
-        outputWidth += (COLUMNS - 1) * 3; // To compensate for the column seperators.
-        for (int i = 0; i < outputWidth; i++)
-            currentLine.append('-');
-        System.out.println(currentLine);
+        for(String[] row : table)
+            for(int i = 0; i < COLUMNS; ++i)
+            {
+                //note this cells size if it is bigger than the noted for the column
+                if(row[i] != null && row[i].length() > columnSizes[i])
+                    columnSizes[i] = row[i].length();
+            }
+        return columnSizes;
+    }
+    
+    /**
+     * Creates a string representation of a row in the output table, adding column delimiters.
+     * @param row The row in the table.
+     * @param columnSizes The sizes of the columns.
+     * @return The string representation of the row
+     */
+    private String createTableRow(String[] row, int[] columnSizes) {
+        // the first row should be left-orientated
+        StringBuilder currentLine = flushLeft(row[0], columnSizes[0]);
+        for (int j = 1; j < COLUMNS; j++) {
+            //add a seperator before each column
+            currentLine.append(' ');
+            currentLine.append(COLUMN_SEPERATOR);
+            currentLine.append(' ');
+
+            //the values should be right-orientated 
+            currentLine.append(flushRight(row[j], columnSizes[j])); 
+        }
+        return currentLine.toString();
+    }
+    
+    /**
+     * Create a string with a specific number of repetitions of a character
+     * @param character The character that should be repeated
+     * @param times How many times the character should be repeated
+     */
+    private String repeatCharacter(char character, int times) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < times; i++)
+            builder.append(character);
         
-        // The totals row of the table is created and printed.
-        currentRow = output[rows - 1];
-        currentLine = flushLeft(currentRow[0], columnSizes[0]);
-        for (int j = 1; j < COLUMNS; j++)
-            currentLine.append(" | ").append(flushRight(currentRow[j], columnSizes[j]));
-        System.out.println(currentLine);
+        return builder.toString();
     }
 }

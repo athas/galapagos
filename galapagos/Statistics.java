@@ -31,6 +31,55 @@ public class Statistics {
     }
     
     /**
+     * Represents a element in a statistic
+     *
+     */
+    public enum StatisticsElement {
+        POPULATION ("Population"),
+        BORN_THIS_ROUND ("Born"),
+        DEAD_TICKS_THIS_ROUND ("Dead by ticks"),
+        DEAD_AGE_THIS_ROUND ("Dead by age"),
+        BORN_TOTAL ("Total born"),
+        DEAD_TICKS_TOTAL ("Total dead by ticks"),
+        DEAD_AGE_TOTAL ("Total dead by age");
+        
+        public final String name;
+        StatisticsElement (String name)
+        {
+            this.name = name;
+        }
+    }
+    
+    public int getStatByElement(StatisticsElement element) {
+        switch(element)
+        {
+            case POPULATION:
+                return population;
+                
+            case BORN_THIS_ROUND:
+                return bornThisRound;
+                
+            case DEAD_TICKS_THIS_ROUND:
+                return deadByAgeThisRound;
+                
+            case DEAD_AGE_THIS_ROUND:
+                return deadByTicksThisRound;
+                
+            case BORN_TOTAL:
+                return born;
+                
+            case DEAD_TICKS_TOTAL:
+                return deadByTicks;
+                
+            case DEAD_AGE_TOTAL:
+                return deadByAge;
+                
+            default:
+                return 0;
+        }
+    }
+    
+    /**
      * Reset round variables.
      */
     public void newRound () {
