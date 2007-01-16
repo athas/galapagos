@@ -9,16 +9,22 @@ public class Samaritan implements Behavior {
     }
 
     /**
-     * 
+     * Doesn't use the finch's action.
      */
     public void response(Finch finch, Action action) {
         
     }
     
+    /**
+     * A new instance of the samaritan behavior.
+     */
     public Behavior clone() {
         return new Samaritan();
     }
     
+    /**
+     * A toString method.
+     */
     public String toString() {
         return "Samaritan";
     }

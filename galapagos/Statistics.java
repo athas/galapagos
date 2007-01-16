@@ -39,52 +39,91 @@ public class Statistics {
         deadByTicksThisRound = 0;
     }
     
+    /**
+     * The number of finches.
+     */
     public int getPopulation () {
         return population;
     }
     
+    /**
+     * The number of finches born.
+     */
     public int getBorn () {
         return born;
     }
     
+    /**
+     * The number of finches that has died by age.
+     */
     public int getDeadByAge () {
         return deadByAge;
     }
     
+    /**
+     * The number of finches that has died by ticks.
+     */
     public int getDeadByTicks () {
         return deadByTicks;
     }
     
+    /**
+     * The number of finches born in this round.
+     */
     public int getBornThisRound () {
         return bornThisRound;
     }
     
+    /**
+     * The number number of finches dead by age in this round.
+     */
     public int getDeadByAgeThisRound () {
         return deadByAgeThisRound;
     }
     
+    /**
+     * The number of finches dead by ticks in this round.
+     */
     public int getDeadByTicksThisRound () {
         return deadByTicksThisRound;
     }
     
+    /**
+     * Increase the population by 1.
+     */
     public void incPopulation () {
         population++;
     }
     
+    /**
+     * Decrease the population by 1.
+     */
     public void decPopulation () {
         population--;
     }
     
+    /**
+     * Increase the number of finches born in total and the number of finches
+     * born this round by one.
+     */
     public void incBorn () {
         born++;
         bornThisRound++;
     }
     
+    /**
+     * Increase the number of finches dead by age in total and the number of finches
+     * dead by age this round by 1.
+     */
     public void incDeadByAge () {
         deadByAge++;
         deadByAgeThisRound++;
     }
     
+    /**
+     * Increase the number of finches dead by ticks in total and the number of finches
+     * dead by ticks this round by 1.
+     */
     public void incDeadByTicks () {
         deadByTicks++;
         deadByTicksThisRound++;

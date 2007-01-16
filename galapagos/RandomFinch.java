@@ -23,16 +23,22 @@ public class RandomFinch implements Behavior {
     }
 
     /**
-     * 
+     * Doesn't use the finch's action.
      */
     public void response(Finch finch, Action action) {
         
     }
     
+    /**
+     * A new instance of this behavior.
+     */
     public Behavior clone() {
         return new RandomFinch();
     }
     
+    /**
+     * A toString method.
+     */
     public String toString() {
         return "Random";
     }
