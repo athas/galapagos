@@ -19,12 +19,16 @@ public class GalapagosFrame extends JFrame implements Observer {
     private BiotopeLogger logger;
     private BiotopeController controller;
     public final BiotopeCreator biotopeCreator;
+    private Biotope biotope;
     
     private JButton newBiotope;
     private JButton nextRound;
     private JSpinner numberOfRounds;
     private JButton severalRounds;
     private JButton stopRounds;
+    private JCheckBox toggleLogging;
+
+    private boolean isLogging;
     
     private static final Dimension minimumButtonDimension = new Dimension(0,30);
     private static final Dimension standardSpinnerSize = new Dimension(100,22);
@@ -43,8 +47,7 @@ public class GalapagosFrame extends JFrame implements Observer {
         statistics = new StatisticsPanel(this);
         this.add(statistics, BorderLayout.SOUTH);
         
-        Biotope biotope = new Biotope(0,0,0,0,0,0,0,0,0,behaviors);
-        biotope.addObserver(logger);
+        biotope = new Biotope(0,0,0,0,0,0,0,0,0,behaviors);
         biotope.addObserver(this);
         biotope.addObserver(statistics);
         area.reset(biotope.world.width(), biotope.world.height(), pixelSize);
@@ -82,6 +85,18 @@ public class GalapagosFrame extends JFrame implements Observer {
         stopRounds.setMinimumSize(minimumButtonDimension);
         controlButtons.add(stopRounds);
         controlButtons.add(Box.createGlue());
+        toggleLogging = new JCheckBox("Perform logging");
+        toggleLogging.addActionListener(new ActionListener () {
+                public void actionPerformed(ActionEvent e) {
+                    if (isLogging)
+                        biotope.deleteObserver(logger);
+                    else
+                        biotope.addObserver(logger);
+                    isLogging = !isLogging;
+                }
+            });
+        controlButtons.add(toggleLogging);
+        
         
         Container container = new Container();
         container.setLayout(new GridBagLayout());
@@ -288,12 +303,11 @@ public class GalapagosFrame extends JFrame implements Observer {
             }
             if (checkStartFinches(width, height, finchesPerBehavior, finchBehaviors.size()) 
                     & checkAge(minMaxAge, maxMaxAge) & checkHitpoints(maxHitpoints, initialHitpoints)) {
-                Biotope biotope = new Biotope(width,height,breedingProbability,
-                        maxHitpoints,initialHitpoints,hitpointsPerRound,minMaxAge,
-                        maxMaxAge,finchesPerBehavior,finchBehaviors);
+                biotope = new Biotope(width,height,breedingProbability,
+                                      maxHitpoints,initialHitpoints,hitpointsPerRound,minMaxAge,
+                                      maxMaxAge,finchesPerBehavior,finchBehaviors);
                 biotope.addObserver(GalapagosFrame.this);
                 biotope.addObserver(statistics);
-                biotope.addObserver(logger);
                 controller.setBiotope(biotope);
                 area.reset(biotope.world.width(), biotope.world.height(), pixelSize);
                 biotope.doNotifyObservers();
