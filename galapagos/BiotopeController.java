@@ -1,10 +1,10 @@
 package galapagos;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import javax.swing.Timer;
+import javax.swing.event.*;
 
-public class BiotopeController implements ActionListener {
+public class BiotopeController implements ActionListener, ChangeListener {
     private Biotope biotope;
     private final GalapagosFrame frame;
     private final Timer roundTimer;
@@ -69,5 +69,9 @@ public class BiotopeController implements ActionListener {
         } else if (command.equals("okButton")) {
             frame.biotopeCreator.createBiotope();
         }
+    }
+    
+    public void stateChanged (ChangeEvent e) {
+        roundTimer.setDelay(frame.getTimerInterval());
     }
 }

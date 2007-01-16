@@ -28,6 +28,7 @@ public class GalapagosFrame extends JFrame implements Observer {
     private JButton stopRounds;
     private JCheckBox toggleLogging;
     private JCheckBox toggleDisplayRefresh;
+    private JSpinner timerInterval;
 
     private ButtonGroup behaviorButtons;
     private Container behaviorButtonsBox;
@@ -125,7 +126,13 @@ public class GalapagosFrame extends JFrame implements Observer {
                     isRefreshing = !isRefreshing;
                 }
             });
-
+        
+        timerInterval = new JSpinner(new SpinnerNumberModel(200,0,Integer.MAX_VALUE,100));
+        timerInterval.setPreferredSize(standardSpinnerSize);
+        timerInterval.setMaximumSize(new Dimension(100,30));
+        timerInterval.setMinimumSize(minimumButtonDimension);
+        timerInterval.addChangeListener(controller);
+        
         Container topContainer = Box.createHorizontalBox();
         topContainer.add(Box.createGlue());
         topContainer.add(newBiotope);
@@ -141,11 +148,16 @@ public class GalapagosFrame extends JFrame implements Observer {
         centerContainer.setLayout(new GridBagLayout());
         centerContainer.add(area);
 
-        Container leftContainer = Box.createVerticalBox();
-        leftContainer.add(Box.createGlue());
-        leftContainer.add(toggleLogging);
-        leftContainer.add(toggleDisplayRefresh);
-        leftContainer.add(Box.createGlue());
+        JPanel leftContainer = new JPanel(new GridBagLayout());
+        leftContainer.add(toggleLogging, getConstraints(0,0));
+        leftContainer.add(toggleDisplayRefresh, getConstraints(0,1));
+        leftContainer.add(new JLabel("Milliseconds between rounds"), getConstraints(0,2));
+        leftContainer.add(timerInterval,getConstraints(0,3));
+        leftContainer.setMaximumSize(leftContainer.getPreferredSize());
+        Container outerLeftContainer = Box.createVerticalBox();
+        outerLeftContainer.add(Box.createGlue());
+        outerLeftContainer.add(leftContainer);
+        outerLeftContainer.add(Box.createGlue());
 
         behaviorButtonsBox = Box.createVerticalBox();
         behaviorButtonsLabel = new JLabel("Pencil for freehand finch drawing");
@@ -153,7 +165,7 @@ public class GalapagosFrame extends JFrame implements Observer {
         this.add(topContainer, BorderLayout.NORTH);
         this.add(centerContainer,BorderLayout.CENTER);
         this.add(statistics, BorderLayout.SOUTH);
-        this.add(leftContainer, BorderLayout.WEST);
+        this.add(outerLeftContainer, BorderLayout.WEST);
         this.add(behaviorButtonsBox, BorderLayout.EAST);
     }
     
@@ -172,6 +184,20 @@ public class GalapagosFrame extends JFrame implements Observer {
         button.setMinimumSize(minimumButtonDimension);
         
         return button;
+    }
+    
+    /**
+     * A set of GridBagConstraints for use with the GridBagLayout.
+     * @param x the horisontal position of the component.
+     * @param y the vertical position of the component.
+     */            
+    
+    private GridBagConstraints getConstraints (int x, int y) {
+        return new GridBagConstraints(x, y, 1, 1, 1.0, 1.0, 
+                                        GridBagConstraints.CENTER,
+                                        GridBagConstraints.NONE,
+                                        new Insets(5,5,5,5),
+                                        0, 0);
     }
     
     public void update(Observable observableBiotope, Object arg)
@@ -223,6 +249,14 @@ public class GalapagosFrame extends JFrame implements Observer {
      */
     public int getNumberOfRounds () {
         return ((SpinnerNumberModel) numberOfRounds.getModel()).getNumber().intValue();
+    }
+    
+    /**
+     * Get the timer interval specified by the timerInterval-textfield
+     * @return
+     */
+    public int getTimerInterval () {
+        return ((SpinnerNumberModel) timerInterval.getModel()).getNumber().intValue();
     }
     
     public void disableButtons() {
@@ -355,20 +389,6 @@ public class GalapagosFrame extends JFrame implements Observer {
             spinner.setPreferredSize(standardSpinnerSize);
             
             return spinner;
-        }
-        
-        /**
-         * A set of GridBagConstraints for use with the GridBagLayout.
-         * @param x the horisontal position of the component.
-         * @param y the vertical position of the component.
-         */            
-        
-        private GridBagConstraints getConstraints (int x, int y) {
-            return new GridBagConstraints(x, y, 1, 1, 1.0, 1.0, 
-                                            GridBagConstraints.CENTER,
-                                            GridBagConstraints.NONE,
-                                            new Insets(5,5,5,5),
-                                            0, 0);
         }
 
         public void createBiotope() {
