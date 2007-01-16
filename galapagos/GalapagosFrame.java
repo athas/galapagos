@@ -259,6 +259,9 @@ public class GalapagosFrame extends JFrame implements Observer {
         return ((SpinnerNumberModel) timerInterval.getModel()).getNumber().intValue();
     }
     
+    /**
+     * Disable the control buttons of this frame. The biotope-simulation is stopped.
+     */
     public void disableButtons() {
         newBiotope.setEnabled(false);
         nextRound.setEnabled(false);
@@ -269,6 +272,9 @@ public class GalapagosFrame extends JFrame implements Observer {
         stopRounds.setEnabled(false);
     }
     
+    /**
+     * Enable the control buttons of this frame. The biotope-simulation is stopped.
+     */
     public void enableButtons() {
         newBiotope.setEnabled(true);
         nextRound.setEnabled(true);
@@ -276,6 +282,22 @@ public class GalapagosFrame extends JFrame implements Observer {
         severalRounds.setEnabled(true);
         unlimitedRounds.setEnabled(true);
         stopRounds.setEnabled(true);
+    }
+    
+    /**
+     * Get the combined size of all components preferred sizes plus 50 extra pixels in width and height.
+     */
+    public Dimension combinedSize() {
+        BorderLayout layout = (BorderLayout) this.getContentPane().getLayout();
+        Dimension centerDim = layout.getLayoutComponent(BorderLayout.CENTER).getPreferredSize();
+        Dimension topDim = layout.getLayoutComponent(BorderLayout.NORTH).getPreferredSize();
+        Dimension leftDim = layout.getLayoutComponent(BorderLayout.WEST).getPreferredSize();
+        Dimension rightDim = layout.getLayoutComponent(BorderLayout.EAST).getPreferredSize();
+        Dimension bottomDim = layout.getLayoutComponent(BorderLayout.SOUTH).getPreferredSize();
+        
+        int width = 50 + Math.max(leftDim.width + centerDim.width + rightDim.width, Math.max(topDim.width, bottomDim.width));
+        int height = 50 + Math.max(topDim.height + centerDim.height + bottomDim.height, Math.max(leftDim.height, rightDim.height));
+        return new Dimension(width, height);
     }
     
     /**
@@ -443,9 +465,7 @@ public class GalapagosFrame extends JFrame implements Observer {
                 area.reset(biotope.world.width(), biotope.world.height(), pixelSize);
                 biotope.doNotifyObservers();
                 
-                int frameWidth = Math.max(biotope.width*pixelSize + 300, 650);
-                int frameHeight = Math.max(biotope.height*pixelSize + 250, 400);
-                GalapagosFrame.this.setSize(frameWidth, frameHeight);
+                GalapagosFrame.this.setSize(combinedSize());
                 GalapagosFrame.this.validate();
                 enableButtons();
                 this.setVisible(false);

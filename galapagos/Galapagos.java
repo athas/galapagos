@@ -14,7 +14,7 @@ public class Galapagos {
         HashMap<Behavior, Color> behaviors = new HashMap<Behavior, Color>();
         behaviors.put(new Samaritan(), Color.RED);
         behaviors.put(new Cheater(), Color.BLUE);
-        behaviors.put(new FlipFlopper(), Color.DARK_GRAY);
+        behaviors.put(new FlipFlopper(), Color.getHSBColor(0, 0, (float)0.5));
         behaviors.put(new RandomFinch(), Color.MAGENTA);
         behaviors.put(new Grudger(), Color.ORANGE.darker());
         behaviors.put(new TitForTat(), Color.GREEN);
