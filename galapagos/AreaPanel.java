@@ -90,10 +90,8 @@ public class AreaPanel extends JPanel
     /**
      * Override the Panel paint component. This is not used directly
      */
-    
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        
+
+    public void paint(Graphics g) {
         g.drawImage( image, 0, 0, this );
     }
     
@@ -104,4 +102,15 @@ public class AreaPanel extends JPanel
     private Image image;
     private int[] pixels;
     private MemoryImageSource source;
+
+
+
+
+
+
+
+
+
+
+
 }
