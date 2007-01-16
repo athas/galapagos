@@ -10,6 +10,9 @@ public class BiotopeController implements ActionListener {
     Timer roundTimer;
     int roundsToGo;
     
+    /**
+     * Create a new BiotopeController, controlling the specified Biotope according to data from frame.
+     */
     public BiotopeController (GalapagosFrame frame, Biotope biotope) {
         this.frame = frame;
         this.biotope = biotope;
@@ -18,6 +21,9 @@ public class BiotopeController implements ActionListener {
         roundsToGo = 0;
     }
     
+    /**
+     * Specify a new Biotope for this BiotopeController to control.
+     */
     public void setBiotope (Biotope biotope) {
         this.biotope = biotope;
     }

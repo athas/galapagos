@@ -32,7 +32,7 @@ public class Biotope extends Observable {
     }
     
     /**
-     * Create a Biotype object with the environment values specified
+     * Create a Biotope object with the environment values specified
      * by the arguments.
      *
      * @param width The width of the simulated game world in
