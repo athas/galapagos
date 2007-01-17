@@ -45,11 +45,8 @@ public class GalapagosFrame extends JFrame implements Observer {
     
     public GalapagosFrame(Map<Behavior, Color> behaviors)
     {
-        this.behaviors = new ArrayList<Behavior>(behaviors.size());
-        for(Behavior bhv : behaviors.keySet())
-            this.behaviors.add(bhv);
+        makeBehaviorListAndColorMap(behaviors);
         
-        colorMap = createColorMap(behaviors);
         pixelSize = 5;
         isRefreshing = true;
         
@@ -149,10 +146,10 @@ public class GalapagosFrame extends JFrame implements Observer {
         centerContainer.add(area);
 
         JPanel leftContainer = new JPanel(new GridBagLayout());
-        leftContainer.add(toggleLogging, getConstraints(0,0));
-        leftContainer.add(toggleDisplayRefresh, getConstraints(0,1));
-        leftContainer.add(new JLabel("Milliseconds between rounds"), getConstraints(0,2));
-        leftContainer.add(timerInterval,getConstraints(0,3));
+        leftContainer.add(toggleLogging, getComponentConstraints(0,0));
+        leftContainer.add(toggleDisplayRefresh, getComponentConstraints(0,1));
+        leftContainer.add(new JLabel("Milliseconds between rounds"), getComponentConstraints(0,2));
+        leftContainer.add(timerInterval,getComponentConstraints(0,3));
         leftContainer.setMaximumSize(leftContainer.getPreferredSize());
         Container outerLeftContainer = Box.createVerticalBox();
         outerLeftContainer.add(Box.createGlue());
@@ -187,16 +184,32 @@ public class GalapagosFrame extends JFrame implements Observer {
     }
     
     /**
-     * A set of GridBagConstraints for use with the GridBagLayout.
+     * A set of GridBagConstraints for use with the GridBagLayout. Recommended for single components.
      * @param x the horisontal position of the component.
      * @param y the vertical position of the component.
      */            
-    
-    private GridBagConstraints getConstraints (int x, int y) {
+    private GridBagConstraints getComponentConstraints (int x, int y) {
         return new GridBagConstraints(x, y, 1, 1, 1.0, 1.0, 
                                         GridBagConstraints.CENTER,
                                         GridBagConstraints.NONE,
                                         new Insets(5,5,5,5),
+                                        0, 0);
+    }
+    
+    /**
+     * A set of GridBagConstraints for use with the GridBagLayout. Recommended for containers.
+     * @param x the horisontal position of the component.
+     * @param y the vertical position of the component.
+     * @param xSize the horisontal size of the component. How many columns the component
+     * covers in the layout.
+     * @param ySize the vertical size of the component. How many rows the component
+     * covers in the layout.
+     */            
+    private GridBagConstraints getContainerConstraints (int x, int y, int xSize, int ySize) {
+        return new GridBagConstraints(x, y, xSize, ySize, 1.0, 1.0, 
+                                        GridBagConstraints.CENTER,
+                                        GridBagConstraints.BOTH,
+                                        new Insets(0,0,0,0),
                                         0, 0);
     }
     
@@ -230,17 +243,23 @@ public class GalapagosFrame extends JFrame implements Observer {
     }
     
     /**
-     * Maps each color in the behaviors-map to the associated behaviors name (Behavior.toString()).
-     * @return A color map with behavior-names as keys.
+     * Maps each color in the behaviors-map to the associated behaviors name (Behavior.toString());
+     * and creates a list of the Behaviors, adding a specific behavior only if there isn't already a
+     * Behavior in the list with the same name (Behavior.toString()).
      */
-    private TreeMap<String, Color> createColorMap(Map<Behavior, Color> behaviors)
+    private void makeBehaviorListAndColorMap(Map<Behavior, Color> behaviors)
     {
-        TreeMap<String, Color> colorMap = new TreeMap<String, Color>();
+        this.behaviors = new ArrayList<Behavior>();
+        this.colorMap = new TreeMap<String, Color>();
+        Behavior currentBehavior;
         //go through all the behaviors in the behaviors-map and add its string representation to new map 
-        for(Map.Entry<Behavior, Color> entry: behaviors.entrySet())
-            colorMap.put(entry.getKey().toString(), entry.getValue());
-        
-        return colorMap;
+        for(Map.Entry<Behavior, Color> entry : behaviors.entrySet()) {
+            currentBehavior = entry.getKey();
+            if (!this.colorMap.containsKey(currentBehavior.toString())) {
+                this.behaviors.add(currentBehavior);
+                this.colorMap.put(currentBehavior.toString(), entry.getValue());
+            }
+        }
     }
     
     /**
@@ -324,10 +343,10 @@ public class GalapagosFrame extends JFrame implements Observer {
             sizeOptionGroup.setBorder(BorderFactory.createTitledBorder("World size"));
             widthSpinner = newIntegerSpinner(100, 10, 1);
             heightSpinner = newIntegerSpinner(100, 10, 1);
-            sizeOptionGroup.add(new JLabel("Width",SwingConstants.CENTER), getConstraints(0,0));
-            sizeOptionGroup.add(widthSpinner, getConstraints(0,1));
-            sizeOptionGroup.add(new JLabel("Height",SwingConstants.CENTER), getConstraints(1,0));
-            sizeOptionGroup.add(heightSpinner, getConstraints(1,1));
+            sizeOptionGroup.add(new JLabel("Width",SwingConstants.CENTER), getComponentConstraints(0,0));
+            sizeOptionGroup.add(widthSpinner, getComponentConstraints(0,1));
+            sizeOptionGroup.add(new JLabel("Height",SwingConstants.CENTER), getComponentConstraints(0,2));
+            sizeOptionGroup.add(heightSpinner, getComponentConstraints(0,3));
             
             // Hitpoint options.
             JPanel hitpointsOptionGroup = new JPanel(new GridBagLayout());
@@ -335,22 +354,22 @@ public class GalapagosFrame extends JFrame implements Observer {
             initialHitpointsSpinner = newIntegerSpinner(5, 1, 1);
             maxHitpointsSpinner = newIntegerSpinner(10, 1, 1);
             hitpointsPerRoundSpinner = newIntegerSpinner(3, 1, 0);
-            hitpointsOptionGroup.add(new JLabel("Initial hitpoints",SwingConstants.CENTER), getConstraints(0,0));
-            hitpointsOptionGroup.add(initialHitpointsSpinner, getConstraints(0,1));
-            hitpointsOptionGroup.add(new JLabel("Max. hitpoints",SwingConstants.CENTER), getConstraints(1,0));
-            hitpointsOptionGroup.add(maxHitpointsSpinner, getConstraints(1,1));
-            hitpointsOptionGroup.add(new JLabel("Hitpoints lost per round",SwingConstants.CENTER), getConstraints(2,0));
-            hitpointsOptionGroup.add(hitpointsPerRoundSpinner, getConstraints(2,1));
+            hitpointsOptionGroup.add(new JLabel("Initial hitpoints",SwingConstants.CENTER), getComponentConstraints(0,0));
+            hitpointsOptionGroup.add(initialHitpointsSpinner, getComponentConstraints(0,1));
+            hitpointsOptionGroup.add(new JLabel("Max. hitpoints",SwingConstants.CENTER), getComponentConstraints(0,3));
+            hitpointsOptionGroup.add(maxHitpointsSpinner, getComponentConstraints(0,4));
+            hitpointsOptionGroup.add(new JLabel("Hitpoints lost per round",SwingConstants.CENTER), getComponentConstraints(0,5));
+            hitpointsOptionGroup.add(hitpointsPerRoundSpinner, getComponentConstraints(0,6));
             
             // Age options.
             JPanel ageOptionGroup = new JPanel(new GridBagLayout());
             ageOptionGroup.setBorder(BorderFactory.createTitledBorder("Finch age"));
             minMaxAgeSpinner = newIntegerSpinner(10, 1, 2);
             maxMaxAgeSpinner = newIntegerSpinner(20, 1, 2);
-            ageOptionGroup.add(new JLabel("Least maximum age",SwingConstants.CENTER), getConstraints(0,0));
-            ageOptionGroup.add(minMaxAgeSpinner, getConstraints(0,1));
-            ageOptionGroup.add(new JLabel("Greatest maximum age",SwingConstants.CENTER), getConstraints(1,0));
-            ageOptionGroup.add(maxMaxAgeSpinner, getConstraints(1,1));
+            ageOptionGroup.add(new JLabel("Least maximum age",SwingConstants.CENTER), getComponentConstraints(0,0));
+            ageOptionGroup.add(minMaxAgeSpinner, getComponentConstraints(0,1));
+            ageOptionGroup.add(new JLabel("Greatest maximum age",SwingConstants.CENTER), getComponentConstraints(0,2));
+            ageOptionGroup.add(maxMaxAgeSpinner, getComponentConstraints(0,3));
                    
             // Breeding probability and Finches per Behavior.
             JPanel otherOptionGroup = new JPanel(new GridBagLayout());
@@ -358,18 +377,18 @@ public class GalapagosFrame extends JFrame implements Observer {
             breedingProbabilitySpinner = new JSpinner(new SpinnerNumberModel(0.33,0.0,1.0,0.01));
             breedingProbabilitySpinner.setPreferredSize(new Dimension(50,22));
             finchesPerBehaviorSpinner = newIntegerSpinner(30, 1, 0);
-            otherOptionGroup.add(new JLabel("Breeding probability",SwingConstants.CENTER), getConstraints(0,0));
-            otherOptionGroup.add(breedingProbabilitySpinner, getConstraints(0,1));
-            otherOptionGroup.add(new JLabel("Finches per behavior",SwingConstants.CENTER), getConstraints(1,0));
-            otherOptionGroup.add(finchesPerBehaviorSpinner, getConstraints(1,1));
+            otherOptionGroup.add(new JLabel("Breeding probability",SwingConstants.CENTER), getComponentConstraints(0,0));
+            otherOptionGroup.add(breedingProbabilitySpinner, getComponentConstraints(0,1));
+            otherOptionGroup.add(new JLabel("Finches per behavior",SwingConstants.CENTER), getComponentConstraints(0,2));
+            otherOptionGroup.add(finchesPerBehaviorSpinner, getComponentConstraints(0,3));
             
             // Behavior selection.
-            JPanel behaviorsOptionGroup = new JPanel(new FlowLayout());
+            JPanel behaviorsOptionGroup = new JPanel(new GridBagLayout());
             behaviorsOptionGroup.setBorder(BorderFactory.createTitledBorder("Behaviors"));
             behaviorCheckboxes = new JCheckBox[GalapagosFrame.this.behaviors.size()];
             for (int i = 0; i < behaviorCheckboxes.length; i++) {
                 behaviorCheckboxes[i] = new JCheckBox(GalapagosFrame.this.behaviors.get(i).toString(),true);
-                behaviorsOptionGroup.add(behaviorCheckboxes[i]);
+                behaviorsOptionGroup.add(behaviorCheckboxes[i],getComponentConstraints(i / 10, i % 10));
             }
             
             // OK and CANCEL.
@@ -384,11 +403,11 @@ public class GalapagosFrame extends JFrame implements Observer {
             buttonPanel.add(cancelButton);
             
             JPanel options = new JPanel(new GridBagLayout());
-            options.add(sizeOptionGroup, getConstraints(0,0));
-            options.add(hitpointsOptionGroup, getConstraints(0,1));
-            options.add(ageOptionGroup, getConstraints(1,1));
-            options.add(otherOptionGroup, getConstraints(1,0));
-            options.add(behaviorsOptionGroup, new GridBagConstraints(0,2,2,1,1.0,1.0,GridBagConstraints.CENTER,GridBagConstraints.NONE,new Insets(5,5,5,5),0,0));
+            options.add(sizeOptionGroup, getContainerConstraints(0,0,1,1));
+            options.add(hitpointsOptionGroup, getContainerConstraints(0,1,1,1));
+            options.add(ageOptionGroup, getContainerConstraints(1,0,1,1));
+            options.add(otherOptionGroup, getContainerConstraints(1,1,1,1));
+            options.add(behaviorsOptionGroup, getContainerConstraints(2,0,1,2));
             
             this.setLayout(new BorderLayout());
             this.add(options, BorderLayout.CENTER);
