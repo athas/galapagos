@@ -1,30 +1,28 @@
 package galapagos;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.util.Iterator;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 public class NicerStatisticsPanel extends JPanel implements Observer {
     //The number of columns in the output-table, computed by the number of StatisticElements
     private static final int COLUMNS;
     
+    // A label containing the title "Rounds:"
+    private static final JLabel ROUNDS_TITLE_LABEL;
+    
     //The top row of the table, containing headers of the table columns.
     private static final JLabel[] TITLE_ROW;
     
     private static final Font font = new Font("InputDialog", Font.BOLD, 14);
+    private static final Font roundsFont = new Font("InputDialog", Font.BOLD, 18);
     
     static {
+        ROUNDS_TITLE_LABEL = new JLabel("Round number:  ");
+        ROUNDS_TITLE_LABEL.setFont(roundsFont);
+        
         //the number of columns is the number of statistic elements + one for the behaviornames
         Statistics.StatisticElement[] statElements = Statistics.StatisticElement.values();
         COLUMNS = 1 + statElements.length;
@@ -44,29 +42,35 @@ public class NicerStatisticsPanel extends JPanel implements Observer {
 
     }
     
+    private JLabel roundsLabel;
     private JLabel[][] informationLabels;
     private Map<String, Color> colorMap;
-    private int numberOfRows;
+    private int numberOfInformationRows;
     
     /**
      * Create a new StatisticsPanel for monitoring a Biotope.
      * @param frame The StatisticsPanel uses the colors specified in frame.
      */
     public NicerStatisticsPanel(Map<String, Color> colorMap) {
-        setLayout(new GridBagLayout());
-        this.colorMap = colorMap;
-
-        numberOfRows = colorMap.size() + 2;
+        roundsLabel = new JLabel();
+        roundsLabel.setFont(roundsFont);
+        Container roundsBox = Box.createHorizontalBox();
+        roundsBox.add(ROUNDS_TITLE_LABEL);
+        roundsBox.add(roundsLabel);
         
-        informationLabels = new JLabel[numberOfRows][COLUMNS];
+        JPanel informationPanel = new JPanel(new GridBagLayout());
+        
+        numberOfInformationRows = colorMap.size() + 2;
+        
+        informationLabels = new JLabel[numberOfInformationRows][COLUMNS];
         informationLabels[0] = TITLE_ROW;
         
         for(int j = 0; j < COLUMNS; ++j)
         {
-            this.add(informationLabels[0][j], getConstraints(j, 1));
+            informationPanel.add(informationLabels[0][j], getConstraints(j, 1));
         }
         
-        for(int i = 1; i < numberOfRows; ++i)    
+        for(int i = 1; i < numberOfInformationRows; ++i)    
         {
             JLabel[] row = new JLabel[COLUMNS];
             
@@ -75,13 +79,19 @@ public class NicerStatisticsPanel extends JPanel implements Observer {
                 row[j] = new JLabel();
                 row[j].setFont(font);
                 row[j].setHorizontalAlignment(SwingConstants.RIGHT);
-                this.add(row[j], getConstraints(j, i+1));
+                informationPanel.add(row[j], getConstraints(j, i+1));
             }
             
             row[0].setHorizontalAlignment(SwingConstants.LEFT);
             
             informationLabels[i] = row;
         }
+        
+        this.setLayout(new GridBagLayout());
+        this.add(roundsBox, getConstraints(0,0));
+        this.add(informationPanel, getConstraints(0,1));
+        
+        this.colorMap = colorMap;
     }
     
     /**
@@ -96,6 +106,8 @@ public class NicerStatisticsPanel extends JPanel implements Observer {
     
     public void update(Observable observableBiotope, Object arg) {
         Biotope biotope = (Biotope) observableBiotope;
+        roundsLabel.setText(((Integer) biotope.round()).toString());
+        
         List<Behavior> behaviors = biotope.behaviors();
         Statistics.StatisticElement[] statElements = Statistics.StatisticElement.values();
 
@@ -142,7 +154,7 @@ public class NicerStatisticsPanel extends JPanel implements Observer {
         }
         
         // Set the remaining rows to invisible.
-        for(int i = numberOfBehaviors+2; i < numberOfRows; ++i)
+        for(int i = numberOfBehaviors+2; i < numberOfInformationRows; ++i)
             for (int j = 0; j < COLUMNS; ++j)
                 informationLabels[i][j].setVisible(false);
     }
