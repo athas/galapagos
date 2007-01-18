@@ -59,7 +59,7 @@ public class GalapagosFrame extends JFrame implements Observer {
      * and the associated color will be used to draw a visual
      * representation of finches with that behavior.
      *
-     * @require For every two distrinct behavior objects b1,b2 in
+     * @require For every two distrinct behavior objects b1, b2 in
      * behaviors, b1.toString() != b2.toString() must hold.
      */
     public GalapagosFrame(Map<Behavior, Color> behaviors)
@@ -252,21 +252,23 @@ public class GalapagosFrame extends JFrame implements Observer {
      * Get the color associated with the behavior
      * @param behavior The behavior to look-up in the ColorMap
      * @return The color associated with behavior.
+     * @require colorMap.containsKey(behavior)
+     * @ensure colorByBehavior(behavior).equals(colorMap.get(behavior.toString())
      */
     public Color colorByBehavior(Behavior behavior)
     {
         Color c = colorMap.get(behavior.toString());
-        
-        if(c == null)
-            throw new Error("Color not defined for this Behavior");
-        
+        assert c != null : "Color not defined for this Behavior";
         return c;
     }
     
     /**
-     * Maps each color in the behaviors-map to the associated behaviors name (Behavior.toString());
-     * and creates a list of the Behaviors, adding a specific behavior only if there isn't already a
-     * Behavior in the list with the same name (Behavior.toString()).
+     * Maps each color in the behaviors-map to the associated behaviors name (Behavior.toString()).
+     * 
+     * @require For every two distrinct behavior objects b1, b2 in
+     * behaviors, b1.toString() != b2.toString() must hold.
+     * 
+     * @ensure this.colorByBehavior(b).equals(behaviors.get(b)) for all Behavior objects b in behaviors.
      */
     private void makeBehaviorListAndColorMap(Map<Behavior, Color> behaviors)
     {
@@ -276,10 +278,9 @@ public class GalapagosFrame extends JFrame implements Observer {
         //go through all the behaviors in the behaviors-map and add its string representation to new map 
         for(Map.Entry<Behavior, Color> entry : behaviors.entrySet()) {
             currentBehavior = entry.getKey();
-            if (!this.colorMap.containsKey(currentBehavior.toString())) {
-                this.behaviors.add(currentBehavior);
-                this.colorMap.put(currentBehavior.toString(), entry.getValue());
-            }
+            assert !this.colorMap.containsKey(currentBehavior.toString()) : "Duplicate behaviors in Behavior-Color Map";
+            this.behaviors.add(currentBehavior);
+            this.colorMap.put(currentBehavior.toString(), entry.getValue());
         }
     }
     
