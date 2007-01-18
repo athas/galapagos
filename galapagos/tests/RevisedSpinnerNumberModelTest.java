@@ -23,10 +23,10 @@ public class RevisedSpinnerNumberModelTest extends TestCase {
      * Test method for RevisedSpinnerNumberModel constructors.
      */
     public void testRevisedSpinnerNumberModel() {
-        assertTrue(standardModel.getNumber().equals(0));
-        assertTrue(standardModel.getMinimum() == null);
-        assertTrue(standardModel.getMaximum() == null);
-        assertTrue(standardModel.getStepSize().equals(1));
+        assertEquals(standardModel.getNumber(),0);
+        assertNull(standardModel.getMinimum());
+        assertNull(standardModel.getMaximum());
+        assertEquals(standardModel.getStepSize(), 1);
         assertTrue(modelHasState(doubleModel, 0.5, 0.0, 1.0, 0.4));
         assertTrue(modelHasState(intModel, 5, 0, 10, 4));
         assertTrue(modelHasState(numberModel, 5.0, 0.0, 10.0, 4.0));
@@ -41,49 +41,49 @@ public class RevisedSpinnerNumberModelTest extends TestCase {
      * Test method for RevisedSpinnerNumberModel#getNextValue().
      */
     public void testGetNextValue() {
-        assertTrue(standardModel.getNextValue().equals(1));
-        assertTrue(standardModel.getNextValue().equals(1));
+        assertEquals(standardModel.getNextValue(), 1);
+        assertEquals(standardModel.getNextValue(), 1);
         standardModel.setValue(1);
-        assertTrue(standardModel.getNextValue().equals(2));
+        assertEquals(standardModel.getNextValue(), 2);
         
-        assertTrue(doubleModel.getNextValue().equals(0.9));
-        assertTrue(doubleModel.getNextValue().equals(0.9));
+        assertEquals(doubleModel.getNextValue(), 0.9);
+        assertEquals(doubleModel.getNextValue(), 0.9);
         doubleModel.setValue(0.7);
-        assertTrue(doubleModel.getNextValue().equals(1.0));
+        assertEquals(doubleModel.getNextValue(), 1.0);
         
-        assertTrue(intModel.getNextValue().equals(9));
-        assertTrue(intModel.getNextValue().equals(9));
+        assertEquals(intModel.getNextValue(), 9);
+        assertEquals(intModel.getNextValue(), 9);
         intModel.setValue(7);
-        assertTrue(intModel.getNextValue().equals(10));
+        assertEquals(intModel.getNextValue(), 10);
         
-        assertTrue(numberModel.getNextValue().equals(9.0));
-        assertTrue(numberModel.getNextValue().equals(9.0));
+        assertEquals(numberModel.getNextValue(), 9.0);
+        assertEquals(numberModel.getNextValue(), 9.0);
         numberModel.setValue(7.0);
-        assertTrue(numberModel.getNextValue().equals(10.0));
+        assertEquals(numberModel.getNextValue(), 10.0);
     }
 
     /**
      * Test method for RevisedSpinnerNumberModel#getPreviousValue().
      */
     public void testGetPreviousValue() {
-        assertTrue(standardModel.getPreviousValue().equals(-1));
-        assertTrue(standardModel.getPreviousValue().equals(-1));
+        assertEquals(standardModel.getPreviousValue(), -1);
+        assertEquals(standardModel.getPreviousValue(), -1);
         standardModel.setValue(-1);
-        assertTrue(standardModel.getPreviousValue().equals(-2));
+        assertEquals(standardModel.getPreviousValue(), -2);
         
         assertTrue(Math.abs(((Double) doubleModel.getPreviousValue()) - 0.1) < epsilon);
         assertTrue(Math.abs(((Double) doubleModel.getPreviousValue()) - 0.1) < epsilon);
         doubleModel.setValue(0.3);
         assertTrue(Math.abs(((Double) doubleModel.getPreviousValue()) - 0.0) < epsilon);
         
-        assertTrue(intModel.getPreviousValue().equals(1));
-        assertTrue(intModel.getPreviousValue().equals(1));
+        assertEquals(intModel.getPreviousValue(), 1);
+        assertEquals(intModel.getPreviousValue(), 1);
         intModel.setValue(3);
-        assertTrue(intModel.getPreviousValue().equals(0));
+        assertEquals(intModel.getPreviousValue(), 0);
         
-        assertTrue(numberModel.getPreviousValue().equals(1.0));
-        assertTrue(numberModel.getPreviousValue().equals(1.0));
+        assertEquals(numberModel.getPreviousValue(), 1.0);
+        assertEquals(numberModel.getPreviousValue(), 1.0);
         numberModel.setValue(3.0);
-        assertTrue(numberModel.getPreviousValue().equals(0.0));
+        assertEquals(numberModel.getPreviousValue(), 0.0);
     }
 }
