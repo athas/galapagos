@@ -224,7 +224,8 @@ public class Biotope extends Observable {
 
     /**
      * Engages the finch at the specified place with one of its neighbours (if any). 
-     * And makes them meet eachother.
+     * And makes them meet each other. If a finch doens't meet a neighbour, it gains a hitpoint 
+     * due to not using time on cleaning another finch (as when to finches meet and neither cleans the other).
      * @require place.getElement() != null && !isEngaged(place)
      * @ensure isEngaged(place)
      * @param place the place holding the unengaged finch
@@ -242,6 +243,11 @@ public class Biotope extends Observable {
                 meet(place.getElement(), p.getElement());
                 return;
             }
+        
+        /* If a finch doesn't participate in a meeting, it gains a hitpoint. This is the same gain as
+         * if the finch had met another finch, and neither had used time on cleaning the other.
+         */
+        place.getElement().changeHitpoints(1);
     }
 
     /**
