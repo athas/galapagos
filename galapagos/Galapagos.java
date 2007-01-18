@@ -18,6 +18,7 @@ public class Galapagos {
         behaviors.put(new RandomFinch(), Color.MAGENTA);
         behaviors.put(new Grudger(), Color.ORANGE.darker());
         behaviors.put(new TitForTat(), Color.GREEN);
+        behaviors.put(new InverseTitForTat(), Color.PINK);
         behaviors.put(new ProbingTitForTat(), Color.CYAN);
         behaviors.put(new SuspiciousTitForTat(), Color.ORANGE);
         
