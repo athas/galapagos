@@ -210,7 +210,7 @@ public class GalapagosFrame extends JFrame implements Observer {
         timerInterval.setMaximumSize(new Dimension(100,30));
         timerInterval.setMinimumSize(minimumButtonDimension);
         timerInterval.addChangeListener(controller);
-        numberOfRounds.setName("timerIntervalSpinner");
+        timerInterval.setName("timerIntervalSpinner");
         
         Container topContainer = Box.createHorizontalBox();
         topContainer.add(Box.createGlue());
