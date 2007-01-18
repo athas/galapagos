@@ -448,6 +448,14 @@ public class GalapagosFrame extends JFrame implements Observer {
             this.setSize(getPreferredSize().width + 20, getPreferredSize().height + 40);
         }
 
+        /**
+         * Randomly select the given number of behaviors from the list
+         * of behaviors.
+         *
+         * @param How many behaviors that should be selected.
+         *
+         * @require count <= behaviorCheckboxes.length
+         */
         private void selectRandomBehaviors(int count) {
             assert (count <= behaviorCheckboxes.length)
                 : "More behaviors required than is available";
@@ -461,6 +469,23 @@ public class GalapagosFrame extends JFrame implements Observer {
                 behaviorCheckboxes[list.get(i)].setSelected(true);
         }
 
+        /**
+         * Set the Biotype parameters edited by this BiotopeCreator by
+         * changing the values of the control widgets.
+         *
+         * @param breedingProbability The chance each finch has of
+         * reproducing each round.
+         * @param roundPrince The amount of hit points each finch will
+         * lose every round.
+         * @param maxHitpoints The maximum amount of hit points a
+         * single finch will be able to have.
+         * @param startHitpoints The number of hit points a newly
+         * created finch will have.
+         * @param minMaxAge The lower bound on the max age of a finch.
+         * @param maxMagAge The upper bound on the max age of a finch.
+         * @param initialFinchesPerBehavior The amount of finches
+         * created for each behavior at the onset of the simulation.
+         */
         private void setConfiguration(double breedingProbability, int roundPrice, 
                                       int maxHitpoints, int startHitpoints,
                                       int minMaxAge, int maxMaxAge,
