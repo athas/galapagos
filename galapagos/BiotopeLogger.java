@@ -18,7 +18,7 @@ public class BiotopeLogger implements Observer {
     
     static {
         //the number of columns is the number of statistic elements + one for the behaviornames
-        Statistics.StatisticElement[] statElements = Statistics.StatisticElement.values();
+        Statistics.StatisticsElement[] statElements = Statistics.StatisticsElement.values();
         COLUMNS = 1 + statElements.length;
         TITLE_ROW = new String[COLUMNS];
         
@@ -70,7 +70,7 @@ public class BiotopeLogger implements Observer {
     public void update(Observable observableBiotope, Object arg) {
         Biotope biotope = (Biotope) observableBiotope;
         List<Behavior> behaviors = biotope.behaviors();
-        Statistics.StatisticElement[] statElements = Statistics.StatisticElement.values();
+        Statistics.StatisticsElement[] statElements = Statistics.StatisticsElement.values();
 
         int numberOfRows = behaviors.size() + 2; // The number of rows in the output table - including the header row and a row containing totals.
 
@@ -93,7 +93,7 @@ public class BiotopeLogger implements Observer {
                 // The texts of the fields in the table are generated, and added to the output-array.
                 currentRow[0] = currentBehavior.toString();
                 
-                for(Statistics.StatisticElement element : statElements)
+                for(Statistics.StatisticsElement element : statElements)
                 {
                     int value = currentStat.getStatByElement(element);
                     currentRow[element.ordinal()+1] = Integer.toString(value);

@@ -24,7 +24,7 @@ public class NicerStatisticsPanel extends JPanel implements Observer {
         ROUNDS_TITLE_LABEL.setFont(roundsFont);
         
         //the number of columns is the number of statistic elements + one for the behaviornames
-        Statistics.StatisticElement[] statElements = Statistics.StatisticElement.values();
+        Statistics.StatisticsElement[] statElements = Statistics.StatisticsElement.values();
         COLUMNS = 1 + statElements.length;
         
         TITLE_ROW = new JLabel[COLUMNS];
@@ -109,7 +109,7 @@ public class NicerStatisticsPanel extends JPanel implements Observer {
         roundsLabel.setText(((Integer) biotope.round()).toString());
         
         List<Behavior> behaviors = biotope.behaviors();
-        Statistics.StatisticElement[] statElements = Statistics.StatisticElement.values();
+        Statistics.StatisticsElement[] statElements = Statistics.StatisticsElement.values();
 
         int numberOfBehaviors = behaviors.size(); // The number of rows in the output table - including the header row and a row containing totals.
 
@@ -128,7 +128,7 @@ public class NicerStatisticsPanel extends JPanel implements Observer {
                 currentRow[0].setForeground(color);
                 currentRow[0].setVisible(true);
                 
-                for(Statistics.StatisticElement element : statElements)
+                for(Statistics.StatisticsElement element : statElements)
                 {
                     int value = currentStat.getStatByElement(element);
                     currentRow[element.ordinal()+1].setText(Integer.toString(value));

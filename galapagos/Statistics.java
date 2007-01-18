@@ -33,7 +33,7 @@ public class Statistics {
     /**
      * Represents an element in a Statistic.
      */
-    public enum StatisticElement {
+    public enum StatisticsElement {
         POPULATION ("Population"),
         BORN_THIS_ROUND ("Born"),
         DEAD_TICKS_THIS_ROUND ("Dead by ticks"),
@@ -43,7 +43,7 @@ public class Statistics {
         DEAD_AGE_TOTAL ("Total dead by age");
         
         public final String name;
-        StatisticElement (String name)
+        StatisticsElement (String name)
         {
             this.name = name;
         }
@@ -54,7 +54,7 @@ public class Statistics {
      * @param element The element to get the value of
      * @return The value associated with the element.
      */
-    public int getStatByElement(StatisticElement element) {
+    public int getStatByElement(StatisticsElement element) {
         switch(element) {
             case POPULATION:
                 return population;
