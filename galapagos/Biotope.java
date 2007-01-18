@@ -1,7 +1,6 @@
 package galapagos;
 
 import java.util.*;
-import java.lang.*;
 
 public class Biotope extends Observable {
     public final int width, height;
@@ -155,11 +154,11 @@ public class Biotope extends Observable {
      * existing finch at the position.
      */
     public void putFinch (int x, int y, Behavior b) {
-        World.Place p = world.getAt(x, y);
+        World<GalapagosFinch>.Place p = world.getAt(x, y);
         // If we have a finch here already, subtract it from the total
         // population of that type.
         if (p.getElement() != null) {
-            Statistics s = statisticsTree.get(((GalapagosFinch)p.getElement()).behavior().toString());
+            Statistics s = statisticsTree.get((p.getElement()).behavior().toString());
             s.decPopulation();
         }
         placeFinch(p, b, false);
@@ -215,8 +214,8 @@ public class Biotope extends Observable {
      */
     private void makeMeetings() {
         clearEngagementKnowledge();
-        for (Iterator i = world.randomIterator(); i.hasNext(); ) {
-            World<GalapagosFinch>.Place place = (World.Place) i.next();
+        for (Iterator<World<GalapagosFinch>.Place> i = world.randomIterator(); i.hasNext(); ) {
+            World<GalapagosFinch>.Place place = i.next();
             if(place.getElement() != null && !isEngaged(place))
                 makeMeeting(place);
         }

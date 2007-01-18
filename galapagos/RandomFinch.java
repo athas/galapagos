@@ -1,7 +1,5 @@
 package galapagos;
 
-import java.util.Random;
-
 public class RandomFinch implements Behavior {
     /**
      * Chooses randomly between CLEANING and IGNORING the other finch
