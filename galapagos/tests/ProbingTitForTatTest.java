@@ -5,11 +5,11 @@ import galapagos.*;
 public class ProbingTitForTatTest extends BehaviorTest {
 	public void testDecide()
     {
-		assertEquals(behavior.decide(opponent), Action.CLEANING);
-		behavior.response(opponent, Action.CLEANING);
-		// Should do what opponent did last time.
-		assertEquals(behavior.decide(opponent), Action.CLEANING);
-		behavior.response(opponent, Action.IGNORING);
+        assertEquals(behavior.decide(opponent), Action.CLEANING);
+        behavior.response(opponent, Action.CLEANING);
+        // Should do what opponent did last time.
+        assertEquals(behavior.decide(opponent), Action.CLEANING);
+        behavior.response(opponent, Action.IGNORING);
         assertEquals(behavior.decide(opponent), Action.IGNORING);
         behavior.response(opponent, Action.IGNORING);
         assertEquals(behavior.decide(opponent), Action.IGNORING);
