@@ -85,7 +85,6 @@ public class GalapagosFrame extends JFrame implements Observer {
         
         this.addWindowListener(new Terminator());
         this.setTitle("Galapagos Finch Simulator");
-        this.setVisible(true);
     }
     
     private void initializeControls()

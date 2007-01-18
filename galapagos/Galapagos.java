@@ -22,7 +22,7 @@ public class Galapagos {
         behaviors.put(new SuspiciousTitForTat(), Color.ORANGE);
         
         GalapagosFrame frame = new GalapagosFrame(behaviors);
-
+        frame.setVisible(true);
     }
 
 }
