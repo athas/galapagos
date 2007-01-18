@@ -653,4 +653,18 @@ public class GalapagosFrame extends JFrame implements Observer {
             }
         }
     }
+
+    /**
+     * Get the BiotopeController used in this GalapagosFrame.
+     */
+    public BiotopeController controller() {
+        return controller;
+    }
+
+    /**
+     * Get the Biotope simulated in this GalapagosFrame.
+     */
+    public Biotope biotope() {
+        return biotope;
+    }
 }
