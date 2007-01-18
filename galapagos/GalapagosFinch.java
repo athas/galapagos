@@ -62,6 +62,10 @@ public class GalapagosFinch implements Finch {
       return age;
   }
   
+  public int hitpoints () {
+	  return hitpoints;
+  }
+  
   /**
    * Get the response of a finch this finch has met.
    */
