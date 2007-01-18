@@ -101,6 +101,10 @@ public class BiotopeLogger implements Observer {
                     //The totals are accumulated.
                     totals[element.ordinal()] += value;
                 }
+                
+                if(currentStat.getStatByElement(Statistics.StatisticsElement.POPULATION) == 0)
+                    currentRow[1] = "EXTINCT";
+                
                 i++;
             }
         }
@@ -112,6 +116,9 @@ public class BiotopeLogger implements Observer {
         //the rest is found in totals[]
         for(int i = 0; i < totals.length; ++i)
             totalsRow[i+1] = Integer.toString(totals[i]); 
+        
+        if(totals[0] == 0)
+            totalsRow[1] = "APOCALYPSE";
         
         outputTable[numberOfRows-1] = totalsRow;
         
