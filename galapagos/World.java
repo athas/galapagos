@@ -11,8 +11,8 @@ import java.util.*;
 public class World<T> implements Iterable<World<T>.Place> {
     private ArrayList<Place> array;
     private ArrayList<Place> shuffledArray;
-    private int width;
-    private int height;
+    private final int width;
+    private final int height;
 
     /**
      * Create a world of size worldWidth * worldHeight.
