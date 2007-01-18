@@ -72,6 +72,102 @@ vi kan implementere tilfældig iteration blot ved at kalde {\tt
 vi for at skulle klone vores underliggende array hver gang vi har
 behov for pseudotilfældig iteration.
 
+\subsubsection{\tt GalapagosFinch}
+
+En instans af klassen {\tt GalapagosFinch} repræsenterer én
+finke. Klassen {\tt GalapagosFinch} implementerer interfacet {\tt
+  Finch}, der bruges som reference til en {\tt GalapagosFinch} på
+steder hvor det ikke er tilsigtet at {\tt GalapagsoFinch}en skal kunne
+ændres på nogen måde.
+
+En {\tt GalapagosFinch} har én {\tt Behavior}. Det er {\tt
+  Behavior}ens ansvar at afgøre om {\tt GalapagosFinch}en vil hjælpe
+en given finke eller ej, ligesom {\tt Behavior}en underrettes om
+hvorledes andre finker har handlet overfor {\tt GalapagosFinch}en.
+
+Metoden {\tt decide} i
+{\tt GalapagosFinch} bruges når man har brug for at få at vide, om
+{\tt GalapagosFinch}en vil hjælpe en anden finke eller ej (i første
+tilfælde returneres {\tt FinchStatus.CLEANING}, i andet tilfælde
+returneres {\tt FinchStatus.IGNORING}). 
+Når {\tt decide} kaldes
+returneres resultatet af
+{\tt Behavior}ens {\tt decide}-metode på den pågældende finke.
+
+Med metoden {\tt response} modtager {\tt GalapagosFinch}en information
+om hvordan en given anden {\tt Finch} har handlet mod den. Dette gives
+videre til {\tt GalapagosFinch}ens {\tt Behavior}, ved at kalde dennes
+{\tt response}-metode.
+
+Metoden {\tt status} bruges til at afgøre om {\tt GalapagosFinch}en
+ er levende, død af utøj
+eller død af alderdom, sådan at man kan fjerne den fra simulationen
+hvis den ikke længere bør være der.
+
+\subsubsection{\tt Behavior}
+
+Interfacet {\tt Behavior} er en specifikation af en finkes opførsel
+i forbindelse med møder med andre finker.
+
+Resultatet af {\tt decide} beskriver om en {\tt Finch} skal hjælpes
+eller ej.
+
+{\tt response} modtager information om hvad en anden finke handlede
+under et møde med den {\tt Finch} som den pågældende {\tt Behavior}
+tilhører.
+
+Enhver implementation af {\tt Behavior} har sin egen
+{\tt toString}-metoden, og denne bruges til at afgøre hvilken slags
+{\tt Behavior} en given {\tt Behavior} er.
+
+Enhver klasse der
+repræsenterer en finkeopførsel som afhænger af hvordan finken er
+blevet behandlet, udvider den abstrakte klasse {\tt
+  MemoryBehavior}.
+
+{\tt MemoryBehavior} er parametriseret med den generiske variabel {\tt
+  DATA}, og klassevariablen {\tt finches} er et
+{\tt WeakHashMap<Finch, DATA>}, som bruges når man ønsker at knytte
+{\tt DATA} til en eller anden {\tt Finch}. Dette danner grundlaget for
+senere at kunne afgøre hvordan der
+skal handles i et møde ud fra de foregående møder.
+
+{\tt MemoryBehavior} indeholder metoden {\tt recall} til at hente den {\tt
+  DATA} der er knyttet til en given {\tt Finch}, og {\tt remember}
+til at knytte {\tt DATA}
+til en given {\tt Finch} i {\tt finches}.
+
+Den abstrakte klasse {\tt ActionMemoryBehavior} udvider {\tt
+  MemoryBehavior<Action>}, og udvides af alle typer af opførsler
+der til en given {\tt Finch} behøver at huske én {\tt Action}. Dette
+være sig fx {\tt Grudger} og {\tt TitForTat}.
+
+\subsubsection{\tt Biotope}
+
+{\tt Biotope}-klassen er simulationens grundsten, den klasse, der
+implementere al logikken i programmet. {\tt Biotope} er ganske simpel
+at bruge - essentielt foregår det ved at levere en liste af {\tt
+  Behavior}-objekter som beskriver de forskellige opførsler de
+simulerede finker skal benytte sig af. Ved at kalde metoden {\tt
+  runRound} simuleres en enkelt runde af simulationen, og eventuelle
+observerende objekter gøres opmærksomme på ændringer i simulationens
+tilstand. Det er {\tt Biotope}-klassens ansvar at oprette og
+vedligeholde objekter til at repræsentere spilverdenen ({\tt World})
+og finkerne i den ({\tt GalapagosFinch}).
+
+For at simulationen skal være fair, er det nødvendigt at f.eks.
+muligheden for at få afkom bliver besluttet tilfældigt - da der
+utvivlsomt opstår situationer hvor flere finker deles om et tomt
+nabofelt som kan fyldes med afkom, er det ikke nok at bruge en naiv
+iteration, som f.eks. række for række igennem verden, da det så ville
+favoritisere finker nordvest i spilverdenen. Det er {\tt
+  Biotope}-klassens ansvar at sørge for at disse situationer bliver
+løst på fair vis. Det er også {\tt Biotope}-klassens ansvar at samle
+ændringer undervejs i en runde i et {\tt Statistics}-objekt, som
+observers kan bruge til at få et bredt billede af begivenhederne i en
+runde.
+
+
 \subsection{Brugerinterface}
 
 \section{Konklusion}
