@@ -17,6 +17,7 @@ public class Galapagos {
         behaviors.put(new FlipFlopper(), Color.getHSBColor(0, 0, (float)0.5));
         behaviors.put(new RandomFinch(), Color.MAGENTA);
         behaviors.put(new Grudger(), Color.ORANGE.darker());
+        behaviors.put(new LenientGrudger(), Color.RED.darker());
         behaviors.put(new TitForTat(), Color.GREEN);
         behaviors.put(new InverseTitForTat(), Color.PINK);
         behaviors.put(new ProbingTitForTat(), Color.CYAN);
