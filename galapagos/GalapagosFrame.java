@@ -9,6 +9,10 @@ import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * A frame running a simulation of the interaction between finches of
+ * different behaviors.
+ */
 public class GalapagosFrame extends JFrame implements Observer {
 
     private AreaPanel area;
@@ -42,7 +46,22 @@ public class GalapagosFrame extends JFrame implements Observer {
     private static final Dimension standardSpinnerSize = new Dimension(100,22);
     
     private List<Behavior> behaviors;
-    
+
+    /**
+     * Create a GalapagosFrame simulating finches with the provided
+     * behaviors and using the provided colors to visually represent
+     * the simulation state.
+     *
+     * @param behaviors A mapping from behavior objects to colors. The
+     * behavior objects specify which behaviors should be available
+     * for use in the simulation (the user may choose to disable some
+     * of them, so they are not guaranteed to participate in the run),
+     * and the associated color will be used to draw a visual
+     * representation of finches with that behavior.
+     *
+     * @require For every two distrinct behavior objects b1,b2 in
+     * behaviors, b1.toString() != b2.toString() must hold.
+     */
     public GalapagosFrame(Map<Behavior, Color> behaviors)
     {
         makeBehaviorListAndColorMap(behaviors);
@@ -87,6 +106,9 @@ public class GalapagosFrame extends JFrame implements Observer {
         this.setTitle("Galapagos Finch Simulator");
     }
     
+    /**
+     * Create and position the controls of the main interface. 
+     */
     private void initializeControls()
     {
         //create top controls
@@ -139,7 +161,7 @@ public class GalapagosFrame extends JFrame implements Observer {
         topContainer.add(stopRounds);
         topContainer.add(Box.createGlue());
         
-        //this container's only purpose is to centralize area
+        //this container's only purpose is to center area
         Container centerContainer = new Container();
         centerContainer.setLayout(new GridBagLayout());
         centerContainer.add(area);
