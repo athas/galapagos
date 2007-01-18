@@ -135,9 +135,14 @@ public class NicerStatisticsPanel extends JPanel implements Observer {
                     currentRow[element.ordinal()+1].setForeground(color);
                     currentRow[element.ordinal()+1].setVisible(true);
                     
+                    
                     //The totals are accumulated.
                     totals[element.ordinal()] += value;
                 }
+                
+                if(currentStat.getStatByElement(Statistics.StatisticsElement.POPULATION) == 0)
+                    currentRow[1].setText("EXTINCT");
+                
                 i++;
             }
         }
@@ -152,6 +157,9 @@ public class NicerStatisticsPanel extends JPanel implements Observer {
             totalsRow[i+1].setForeground(Color.BLACK);
             totalsRow[i+1].setVisible(true);
         }
+        
+        if(totals[0] == 0)
+            totalsRow[1].setText("APOCALYPSE");
         
         // Set the remaining rows to invisible.
         for(int i = numberOfBehaviors+2; i < numberOfInformationRows; ++i)
