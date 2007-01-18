@@ -8,13 +8,17 @@ import java.util.*;
  * behavior type specifies, and will breed randomly.
  */
 public class Biotope extends Observable {
-    public final int width, height;
     private final double breedingProbability;
     private final int maxHitpoints, initialHitpoints, hitpointsPerRound;
     private final int minMaxAge, maxMaxAge;
     private final int finchesPerBehavior;
     private int round;
+    
+    /**
+     * The world used in this simulation.
+     */
     public final World<GalapagosFinch> world;
+
     private final TreeMap<String,Statistics> statisticsTree;
     private final List<Behavior> finchBehaviors;
 
@@ -85,8 +89,6 @@ public class Biotope extends Observable {
             : "The upper bound on the maximum age must be greater than the lower bound.";
         assert (0 <= finchesPerBehavior)
             : "At least one finch per behavior must be specified.";
-        this.width = width;
-        this.height = height;
         this.breedingProbability = breedingProbability;
         this.maxHitpoints = maxHitpoints;
         this.initialHitpoints = initialHitpoints;
@@ -221,7 +223,7 @@ public class Biotope extends Observable {
         clearEngagementKnowledge();
         for (Iterator<World<GalapagosFinch>.Place> i = world.randomIterator(); i.hasNext(); ) {
             World<GalapagosFinch>.Place place = i.next();
-            if(place.getElement() != null && !isEngaged(place))
+            if (place.getElement() != null && !isEngaged(place))
                 makeMeeting(place);
         }
     }
@@ -230,6 +232,7 @@ public class Biotope extends Observable {
      * Engages the finch at the specified place with one of its neighbours (if any). 
      * And makes them meet each other. If a finch doens't meet a neighbour, it gains a hitpoint 
      * due to not using time on cleaning another finch (as when to finches meet and neither cleans the other).
+     *
      * @require place.getElement() != null && !isEngaged(place)
      * @ensure isEngaged(place)
      * @param place the place holding the unengaged finch
@@ -238,13 +241,11 @@ public class Biotope extends Observable {
         assert (place.getElement() != null) : "Can't engage a null-finch";
         assert (!isEngaged(place)) : "The finch is already engaged";
 
-        List<World<GalapagosFinch>.Place> filledNeighbours = place.filledNeighbours(); 
-
-        for (World<GalapagosFinch>.Place p : filledNeighbours)
-            if (!isEngaged(p)) {
-                engage(p);
+        for (World<GalapagosFinch>.Place neighborPlace : place.filledNeighbours())
+            if (!isEngaged(neighborPlace)) {
+                engage(neighborPlace);
                 engage(place);
-                meet(place.getElement(), p.getElement());
+                meet(place.getElement(), neighborPlace.getElement());
                 return;
             }
         
@@ -272,14 +273,14 @@ public class Biotope extends Observable {
     private void engage(World.Place place) {
         assert place.getElement() != null
             : "Cannot register an empty place as having participated in a meeting.";
-        engagedFinches.set(place.xPosition() * height + place.yPosition(), true);
+        engagedFinches.set(place.xPosition() * world.height() + place.yPosition(), true);
     }
 
     /**
      * Return true if place has already been engaged in a meeting.
      */
     private boolean isEngaged(World.Place place) {
-        return engagedFinches.get(place.xPosition() * height + place.yPosition());
+        return engagedFinches.get(place.xPosition() * world.height() + place.yPosition());
     }
     
     /**
