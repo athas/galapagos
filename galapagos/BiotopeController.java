@@ -3,19 +3,19 @@ package galapagos;
 import java.awt.event.*;
 import javax.swing.Timer;
 import javax.swing.event.*;
+import javax.swing.JSpinner;
 
 public class BiotopeController implements ActionListener, ChangeListener {
     private Biotope biotope;
-    private final GalapagosFrame frame;
     private final Timer roundTimer;
     private int roundsToGo;
     private boolean unlimited;
+    private int numberOfRounds;
     
     /**
      * Create a new BiotopeController, controlling the specified Biotope according to data from frame.
      */
-    public BiotopeController (GalapagosFrame frame, Biotope biotope) {
-        this.frame = frame;
+    public BiotopeController (Biotope biotope) {
         this.biotope = biotope;
         roundTimer = new Timer(200, this);
         roundTimer.stop();
@@ -52,7 +52,7 @@ public class BiotopeController implements ActionListener, ChangeListener {
             biotope.runRound();
         } else if (command.equals("severalRounds")) {
             unlimited = false;
-            roundsToGo += frame.getNumberOfRounds();
+            roundsToGo += numberOfRounds;
             roundTimer.start();
         } else if (command.equals("unlimitedRounds")) {
             unlimited = true;
@@ -62,16 +62,17 @@ public class BiotopeController implements ActionListener, ChangeListener {
             unlimited = false;
             roundsToGo = 0;
             roundTimer.stop();
-        } else if (command.equals("newBiotope")) {
-            frame.biotopeCreator.openPanel();
-        } else if (command.equals("cancelButton")) {
-            frame.biotopeCreator.close();
-        } else if (command.equals("okButton")) {
-            frame.biotopeCreator.createBiotope();
         }
     }
     
     public void stateChanged (ChangeEvent e) {
-        roundTimer.setDelay(frame.getTimerInterval());
+    	JSpinner spinner = (JSpinner)e.getSource(); 
+    	
+    	int value = (Integer)spinner.getValue();
+    	
+    	if(spinner.getName().equals("timerIntervalSpinner"))
+    		roundTimer.setDelay(value);
+    	else if(spinner.getName().equals("numberOfRoundsSpinner"))
+    		this.numberOfRounds = value;
     }
 }

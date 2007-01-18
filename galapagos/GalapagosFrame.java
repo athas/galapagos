@@ -9,10 +9,6 @@ import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 
-/**
- * A frame running a simulation of the interaction between finches of
- * different behaviors.
- */
 public class GalapagosFrame extends JFrame implements Observer {
 
     private AreaPanel area;
@@ -46,22 +42,7 @@ public class GalapagosFrame extends JFrame implements Observer {
     private static final Dimension standardSpinnerSize = new Dimension(100,22);
     
     private List<Behavior> behaviors;
-
-    /**
-     * Create a GalapagosFrame simulating finches with the provided
-     * behaviors and using the provided colors to visually represent
-     * the simulation state.
-     *
-     * @param behaviors A mapping from behavior objects to colors. The
-     * behavior objects specify which behaviors should be available
-     * for use in the simulation (the user may choose to disable some
-     * of them, so they are not guaranteed to participate in the run),
-     * and the associated color will be used to draw a visual
-     * representation of finches with that behavior.
-     *
-     * @require For every two distrinct behavior objects b1, b2 in
-     * behaviors, b1.toString() != b2.toString() must hold.
-     */
+    
     public GalapagosFrame(Map<Behavior, Color> behaviors)
     {
         makeBehaviorListAndColorMap(behaviors);
@@ -91,18 +72,58 @@ public class GalapagosFrame extends JFrame implements Observer {
         area.addMouseMotionListener(listener);
         statistics = new NicerStatisticsPanel(colorMap);
         logger = new BiotopeLogger();
-        controller = new BiotopeController(this, biotope);
+        controller = new BiotopeController(biotope);
 
         this.setLayout(new BorderLayout());
-
-        initializeControls();
-        biotopeCreator = new BiotopeCreator(this);
-        biotopeCreator.createBiotope();
-
         this.doLayout();
-        
         this.addWindowListener(new Terminator());
         this.setTitle("Galapagos Finch Simulator");
+        
+        initializeControls();
+        
+        // Create a new Biotope with the default-settings of the BiotopeCreator. 
+        biotopeCreator = new BiotopeCreator(this.behaviors);
+        setBiotope(biotopeCreator.createBiotope());
+    }
+    
+    public void setBiotope(Biotope biotope)
+    {
+    	this.biotope = biotope;
+    	
+        //Create RadioButton's on the GalapagosFrame
+        //for the spawning-tool
+        behaviorButtons = new ButtonGroup();
+        behaviorButtonsBox.removeAll();
+        behaviorButtonsBox.add(Box.createGlue());
+        behaviorButtonsBox.add(behaviorButtonsLabel);
+
+        for (final Behavior b : biotope.behaviors()) {
+            JRadioButton button = new JRadioButton(b.toString());
+            button.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        selectedBehavior = b;
+                    }
+                });
+            behaviorButtons.add(button);
+            behaviorButtonsBox.add(button);
+        }
+
+        behaviorButtonsBox.add(Box.createGlue());
+
+        selectedBehavior = null;
+        controller.setBiotope(biotope);
+        area.reset(biotope.world.width(), biotope.world.height(), pixelSize);
+        
+        biotope.addObserver(statistics);
+        if (isLogging)
+            biotope.addObserver(logger);
+        if (isRefreshing)
+            biotope.addObserver(this);
+        
+        biotope.doNotifyObservers();
+        
+        this.setSize(combinedSize());
+        this.validate();
     }
     
     /**
@@ -112,6 +133,18 @@ public class GalapagosFrame extends JFrame implements Observer {
     {
         //create top controls
         newBiotope = newButton ("New Biotope", "newBiotope");
+        newBiotope = new JButton("New Biotope");
+        newBiotope.setActionCommand("newBiotope");
+        newBiotope.addActionListener(new ActionListener () {
+        	public void actionPerformed(ActionEvent e) {
+        		disableButtons();
+                biotopeCreator.setVisible(true);
+                Biotope biotope = biotopeCreator.biotope();
+                if(biotope != GalapagosFrame.this.biotope && biotope != null)
+                	GalapagosFrame.this.setBiotope(biotope);
+                enableButtons();
+            }
+        });
         nextRound = newButton ("Next Round", "nextRound");
         severalRounds = newButton ("Compute Several Rounds", "severalRounds");
         unlimitedRounds = newButton ("Go!", "unlimitedRounds");
@@ -119,6 +152,8 @@ public class GalapagosFrame extends JFrame implements Observer {
         
         numberOfRounds = new JSpinner(new RevisedSpinnerNumberModel(50,0,Integer.MAX_VALUE,10));
         numberOfRounds.setPreferredSize(standardSpinnerSize);
+        numberOfRounds.setName("numberOfRoundsSpinner");
+        numberOfRounds.addChangeListener(controller);
         numberOfRounds.setMaximumSize(new Dimension(100,30));
         numberOfRounds.setMinimumSize(minimumButtonDimension);
         
@@ -149,6 +184,7 @@ public class GalapagosFrame extends JFrame implements Observer {
         timerInterval.setMaximumSize(new Dimension(100,30));
         timerInterval.setMinimumSize(minimumButtonDimension);
         timerInterval.addChangeListener(controller);
+        numberOfRounds.setName("timerIntervalSpinner");
         
         Container topContainer = Box.createHorizontalBox();
         topContainer.add(Box.createGlue());
@@ -202,7 +238,7 @@ public class GalapagosFrame extends JFrame implements Observer {
         
         return button;
     }
-    
+
     /**
      * A set of GridBagConstraints for use with the GridBagLayout. Recommended for single components.
      * @param x the horisontal position of the component.
@@ -214,23 +250,6 @@ public class GalapagosFrame extends JFrame implements Observer {
                                         alignment,
                                         GridBagConstraints.NONE,
                                         new Insets(5,5,5,5),
-                                        0, 0);
-    }
-    
-    /**
-     * A set of GridBagConstraints for use with the GridBagLayout. Recommended for containers.
-     * @param x the horisontal position of the component.
-     * @param y the vertical position of the component.
-     * @param xSize the horisontal size of the component. How many columns the component
-     * covers in the layout.
-     * @param ySize the vertical size of the component. How many rows the component
-     * covers in the layout.
-     */            
-    private GridBagConstraints getContainerConstraints (int x, int y, int xSize, int ySize) {
-        return new GridBagConstraints(x, y, xSize, ySize, 1.0, 1.0, 
-                                        GridBagConstraints.CENTER,
-                                        GridBagConstraints.BOTH,
-                                        new Insets(0,0,0,0),
                                         0, 0);
     }
     
@@ -341,341 +360,6 @@ public class GalapagosFrame extends JFrame implements Observer {
         return new Dimension(width, height);
     }
     
-    /**
-     * A Dialog
-     *
-     */
-    public class BiotopeCreator extends JFrame {
-        private final JSpinner widthSpinner, heightSpinner;
-        private final JSpinner breedingProbabilitySpinner;
-        private final JSpinner maxHitpointsSpinner, initialHitpointsSpinner, hitpointsPerRoundSpinner;
-        private final JSpinner minMaxAgeSpinner, maxMaxAgeSpinner;
-        private final JSpinner finchesPerBehaviorSpinner;
-        private final JCheckBox[] behaviorCheckboxes;
-        private final JButton okButton, cancelButton;
-        private final JButton setVariantOneButton, setVariantTwoButton, setVariantThreeButton;
-        
-        private BiotopeCreator(GalapagosFrame frame) {
-            //Enables GalapagosFrame buttons when the dialog is closed
-            this.addWindowListener(new WindowAdapter() {
-                public void windowClosing(WindowEvent e) {enableButtons();}
-            });
-            
-            // The world size options.
-            JPanel sizeOptionGroup = new JPanel(new GridBagLayout());
-            sizeOptionGroup.setBorder(BorderFactory.createTitledBorder("World size"));
-            widthSpinner = newIntegerSpinner(100, 10, 1);
-            heightSpinner = newIntegerSpinner(100, 10, 1);
-            sizeOptionGroup.add(new JLabel("Width",SwingConstants.CENTER), getComponentConstraints(0,0, GridBagConstraints.CENTER));
-            sizeOptionGroup.add(widthSpinner, getComponentConstraints(0,1, GridBagConstraints.CENTER));
-            sizeOptionGroup.add(new JLabel("Height",SwingConstants.CENTER), getComponentConstraints(0,2, GridBagConstraints.CENTER));
-            sizeOptionGroup.add(heightSpinner, getComponentConstraints(0,3, GridBagConstraints.CENTER));
-            
-            // Hitpoint options.
-            JPanel hitpointsOptionGroup = new JPanel(new GridBagLayout());
-            hitpointsOptionGroup.setBorder(BorderFactory.createTitledBorder("Finch hitpoints"));
-            initialHitpointsSpinner = newIntegerSpinner(5, 1, 1);
-            maxHitpointsSpinner = newIntegerSpinner(10, 1, 1);
-            hitpointsPerRoundSpinner = newIntegerSpinner(3, 1, 0);
-            hitpointsOptionGroup.add(new JLabel("Initial hitpoints",SwingConstants.CENTER), getComponentConstraints(0,0, GridBagConstraints.CENTER));
-            hitpointsOptionGroup.add(initialHitpointsSpinner, getComponentConstraints(0,1, GridBagConstraints.CENTER));
-            hitpointsOptionGroup.add(new JLabel("Max. hitpoints",SwingConstants.CENTER), getComponentConstraints(0,3, GridBagConstraints.CENTER));
-            hitpointsOptionGroup.add(maxHitpointsSpinner, getComponentConstraints(0,4, GridBagConstraints.CENTER));
-            hitpointsOptionGroup.add(new JLabel("Hitpoints lost per round",SwingConstants.CENTER), getComponentConstraints(0,5, GridBagConstraints.CENTER));
-            hitpointsOptionGroup.add(hitpointsPerRoundSpinner, getComponentConstraints(0,6, GridBagConstraints.CENTER));
-            
-            // Age options.
-            JPanel ageOptionGroup = new JPanel(new GridBagLayout());
-            ageOptionGroup.setBorder(BorderFactory.createTitledBorder("Finch age"));
-            minMaxAgeSpinner = newIntegerSpinner(10, 1, 2);
-            maxMaxAgeSpinner = newIntegerSpinner(20, 1, 2);
-            ageOptionGroup.add(new JLabel("Least maximum age",SwingConstants.CENTER), getComponentConstraints(0,0, GridBagConstraints.CENTER));
-            ageOptionGroup.add(minMaxAgeSpinner, getComponentConstraints(0,1, GridBagConstraints.CENTER));
-            ageOptionGroup.add(new JLabel("Greatest maximum age",SwingConstants.CENTER), getComponentConstraints(0,2, GridBagConstraints.CENTER));
-            ageOptionGroup.add(maxMaxAgeSpinner, getComponentConstraints(0,3, GridBagConstraints.CENTER));
-                   
-            // Breeding probability and Finches per Behavior.
-            JPanel otherOptionGroup = new JPanel(new GridBagLayout());
-            otherOptionGroup.setBorder(BorderFactory.createTitledBorder("Other parametres"));
-            breedingProbabilitySpinner = new JSpinner(new RevisedSpinnerNumberModel(0.33,0.0,1.0,0.01));
-            breedingProbabilitySpinner.setPreferredSize(new Dimension(50,22));
-            finchesPerBehaviorSpinner = newIntegerSpinner(30, 1, 0);
-            otherOptionGroup.add(new JLabel("Breeding probability",SwingConstants.CENTER), getComponentConstraints(0,0, GridBagConstraints.CENTER));
-            otherOptionGroup.add(breedingProbabilitySpinner, getComponentConstraints(0,1, GridBagConstraints.CENTER));
-            otherOptionGroup.add(new JLabel("Finches per behavior",SwingConstants.CENTER), getComponentConstraints(0,2, GridBagConstraints.CENTER));
-            otherOptionGroup.add(finchesPerBehaviorSpinner, getComponentConstraints(0,3, GridBagConstraints.CENTER));
-            
-            // Behavior selection.
-            JPanel behaviorsOptionGroup = new JPanel(new GridBagLayout());
-            behaviorsOptionGroup.setBorder(BorderFactory.createTitledBorder("Behaviors"));
-            behaviorCheckboxes = new JCheckBox[GalapagosFrame.this.behaviors.size()];
-            for (int i = 0; i < behaviorCheckboxes.length; i++) {
-                behaviorCheckboxes[i] = new JCheckBox(GalapagosFrame.this.behaviors.get(i).toString(),true);
-                behaviorsOptionGroup.add(behaviorCheckboxes[i],getComponentConstraints(i / 10, i % 10, GridBagConstraints.WEST));
-            }
-            
-            // OK and CANCEL.
-            JPanel buttonPanel = new JPanel(new FlowLayout());
-            okButton = new JButton("Genesis!");
-            okButton.setActionCommand("okButton");
-            okButton.addActionListener(controller);
-            cancelButton = new JButton("Abort creation");
-            cancelButton.setActionCommand("cancelButton");
-            cancelButton.addActionListener(controller);
-            buttonPanel.add(okButton);
-            buttonPanel.add(cancelButton);
-
-            JPanel standardSettingsPanel = new JPanel(new FlowLayout());
-            setVariantOneButton = new JButton("Set variant #1");
-            setVariantOneButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        setConfiguration(1.0/6.0, 3, 20, 7, 10, 13, 40);
-                        selectRandomBehaviors(5);
-                    }
-                });
-            setVariantTwoButton = new JButton("Set variant #2");
-            setVariantTwoButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        setConfiguration(1.0/6.0, 4, 20, 10, 20, 23, 40);
-                        selectRandomBehaviors(5);
-                    }
-                });
-            setVariantThreeButton = new JButton("Set variant #3");
-            setVariantThreeButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        setConfiguration(1.0/12.0, 3, 20, 13, 11, 14, 40);
-                        selectRandomBehaviors(5);
-                    }
-                });
-            standardSettingsPanel.add(setVariantOneButton);
-            standardSettingsPanel.add(setVariantTwoButton);
-            standardSettingsPanel.add(setVariantThreeButton);
-
-            Container bottomButtonsContainer = Box.createVerticalBox();
-            bottomButtonsContainer.add(standardSettingsPanel);
-            bottomButtonsContainer.add(buttonPanel);
-            
-            JPanel options = new JPanel(new GridBagLayout());
-            options.add(sizeOptionGroup, getContainerConstraints(0,0,1,1));
-            options.add(hitpointsOptionGroup, getContainerConstraints(0,1,1,1));
-            options.add(ageOptionGroup, getContainerConstraints(1,0,1,1));
-            options.add(otherOptionGroup, getContainerConstraints(1,1,1,1));
-            options.add(behaviorsOptionGroup, getContainerConstraints(2,0,1,2));
-            
-            this.setLayout(new BorderLayout());
-            this.add(options, BorderLayout.CENTER);
-            this.add(bottomButtonsContainer, BorderLayout.SOUTH);
-            this.setTitle("Biotope Creator");
-            
-            this.setSize(getPreferredSize().width + 20, getPreferredSize().height + 40);
-        }
-
-        /**
-         * Randomly select the given number of behaviors from the list
-         * of behaviors.
-         *
-         * @param How many behaviors that should be selected.
-         *
-         * @require count <= behaviorCheckboxes.length
-         */
-        private void selectRandomBehaviors(int count) {
-            assert (count <= behaviorCheckboxes.length)
-                : "More behaviors required than is available";
-            LinkedList<Integer> list = new LinkedList<Integer>();
-            for (Integer i = 0; i < behaviorCheckboxes.length; i++)
-                list.add(i);
-            Collections.shuffle(list);
-            for (JCheckBox box : behaviorCheckboxes)
-                box.setSelected(false);
-            for (int i = 0; i < 5; i++)
-                behaviorCheckboxes[list.get(i)].setSelected(true);
-        }
-
-        /**
-         * Set the Biotype parameters edited by this BiotopeCreator by
-         * changing the values of the control widgets.
-         *
-         * @param breedingProbability The chance each finch has of
-         * reproducing each round.
-         * @param roundPrince The amount of hit points each finch will
-         * lose every round.
-         * @param maxHitpoints The maximum amount of hit points a
-         * single finch will be able to have.
-         * @param startHitpoints The number of hit points a newly
-         * created finch will have.
-         * @param minMaxAge The lower bound on the max age of a finch.
-         * @param maxMagAge The upper bound on the max age of a finch.
-         * @param initialFinchesPerBehavior The amount of finches
-         * created for each behavior at the onset of the simulation.
-         */
-        private void setConfiguration(double breedingProbability, int roundPrice, 
-                                      int maxHitpoints, int startHitpoints,
-                                      int minMaxAge, int maxMaxAge,
-                                      int initialFinchesPerBehavior) {
-            breedingProbabilitySpinner.setValue(breedingProbability);
-            maxHitpointsSpinner.setValue(maxHitpoints);
-            initialHitpointsSpinner.setValue(startHitpoints);
-            hitpointsPerRoundSpinner.setValue(roundPrice);
-            minMaxAgeSpinner.setValue(minMaxAge);
-            maxMaxAgeSpinner.setValue(maxMaxAge);
-            finchesPerBehaviorSpinner.setValue(initialFinchesPerBehavior);
-        }
-        
-        /**
-         * Create a new spinner with a startValue, stepSize and minValue.
-         * The max value is set to Integer.MAX_VALUE.
-         * @param startValue The spinner's start-value.
-         * @param stepSize The step size of the spinner.
-         * @return The created spinner.
-         */
-        private JSpinner newIntegerSpinner(int startValue, int stepSize, int minValue)
-        {
-            JSpinner spinner = new JSpinner(new RevisedSpinnerNumberModel(startValue, minValue, Integer.MAX_VALUE, stepSize));
-            spinner.setPreferredSize(standardSpinnerSize);
-            
-            return spinner;
-        }
-
-        public void createBiotope() {
-            //Get the user input from the spinners.
-            int width = (Integer) this.widthSpinner.getValue();
-            int height = (Integer) this.heightSpinner.getValue();
-            double breedingProbability = (Double) this.breedingProbabilitySpinner.getValue();
-            int maxHitpoints = (Integer) this.maxHitpointsSpinner.getValue();
-            int initialHitpoints = (Integer) this.initialHitpointsSpinner.getValue();
-            int hitpointsPerRound = (Integer) this.hitpointsPerRoundSpinner.getValue();
-            int minMaxAge = (Integer) this.minMaxAgeSpinner.getValue();
-            int maxMaxAge = (Integer) this.maxMaxAgeSpinner.getValue();
-            int finchesPerBehavior = (Integer) this.finchesPerBehaviorSpinner.getValue();
-            
-            //Get a list of the users chosen finches.
-            List<Behavior> finchBehaviors = new LinkedList<Behavior>();
-            for(int i = 0; i < behaviors.size(); ++i)
-                if(behaviorCheckboxes[i].isSelected())
-                    finchBehaviors.add(behaviors.get(i).clone());
-            
-            //Check that the values are legal
-            if (checkStartFinches(width, height, finchesPerBehavior, finchBehaviors.size()) 
-                    & checkAge(minMaxAge, maxMaxAge) & checkHitpoints(maxHitpoints, initialHitpoints)) {
-
-                biotope = new Biotope(width,height,breedingProbability,
-                                      maxHitpoints,initialHitpoints,hitpointsPerRound,minMaxAge,
-                                      maxMaxAge,finchesPerBehavior,finchBehaviors);
-                
-                biotope.addObserver(statistics);
-                if (isLogging)
-                    biotope.addObserver(logger);
-                if (isRefreshing)
-                    biotope.addObserver(GalapagosFrame.this);
-
-                //Create RadioButton's on the GalapagosFrame
-                //for the spawning-tool
-                behaviorButtons = new ButtonGroup();
-                behaviorButtonsBox.removeAll();
-                behaviorButtonsBox.add(Box.createGlue());
-                behaviorButtonsBox.add(behaviorButtonsLabel);
-
-                for (final Behavior b : finchBehaviors) {
-                    JRadioButton button = new JRadioButton(b.toString());
-                    button.addActionListener(new ActionListener() {
-                            public void actionPerformed(ActionEvent e) {
-                                selectedBehavior = b;
-                            }
-                        });
-                    behaviorButtons.add(button);
-                    behaviorButtonsBox.add(button);
-                }
-
-                behaviorButtonsBox.add(Box.createGlue());
-
-                selectedBehavior = null;
-                controller.setBiotope(biotope);
-                area.reset(biotope.world.width(), biotope.world.height(), pixelSize);
-                biotope.doNotifyObservers();
-                
-                GalapagosFrame.this.setSize(combinedSize());
-                GalapagosFrame.this.validate();
-                close();
-            }
-        }
-        
-        /**
-         * Show the BiotopeCreator screen.
-         */
-        public void openPanel() {
-            disableButtons();
-            this.setVisible(true);
-        }
-        
-        /**
-         * Close the BiotopeCreator screen.
-         */
-        public void close() {
-            enableButtons();
-            setVisible(false);
-        }
-        
-        /**
-         * Check that user-chosen world is big enough for the number of finches that should be spawned.
-         * Shows a messagebox if the values are illegal.
-         * @param width The width of the world.
-         * @param height The height of the world.
-         * @param finchesPerBehavior How many finches that should be spawned per behavior.
-         * @param numberOfBehaviors How many different behaviors the user has chosen.
-         * @return true if the values are legal.
-         */
-        public boolean checkStartFinches(int width, int height, int finchesPerBehavior, int numberOfBehaviors) {
-            if (width * height >= finchesPerBehavior * numberOfBehaviors) {
-                return true;
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "There is not enough room in the world for the initial amount of finches.",
-                        "Impossible to create biotope", JOptionPane.WARNING_MESSAGE);
-                return false;            
-                
-            }
-        }
-        
-        /**
-         * Check that the user-chosen age values are legal and show a messagebox if not.
-         * (The minimum age must be smaller than the maximum age)
-         * Shows a messagebox if the values are illegal
-         * @param minMaxAge The user-chosen minimum age.
-         * @param maxMaxAge The user-chosen maximum age.
-         * @return true if the values are legal.
-         */
-        public boolean checkAge(int minMaxAge, int maxMaxAge) {
-            if (minMaxAge <= maxMaxAge) {
-                return true;
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "The greatest maximum age must be at least as large as the least maximum age.",
-                        "Impossible to create biotope", JOptionPane.WARNING_MESSAGE);
-                return false;
-            }
-        }
-        
-        /**
-         * Check that the user-chosen hitpoint values are legal.
-         * (The finches can't start with more hitpoints than the maximum) 
-         * Shows a messagebox if they are illegal.
-         * @ensure (initialHitpoints <= maxHitpoints) ? true : false
-         * @param maxHitpoints The user-chosen maximum hitpoints-value.
-         * @param initialHitpoints The user-chosen initial hitpoints-value.
-         * @return true if the values are legal.
-         */
-        public boolean checkHitpoints(int maxHitpoints, int initialHitpoints) {
-            if (initialHitpoints <= maxHitpoints) {
-                return true;
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "The initial amount of hitpoints may at most be the maximum amount of hitpoints.",
-                        "Impossible to create biotope", JOptionPane.WARNING_MESSAGE);
-                return false;
-            }
-        }
-    }
-
     /**
      * Get the BiotopeController used in this GalapagosFrame.
      */
