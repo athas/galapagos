@@ -102,8 +102,8 @@ public class WorldTest extends TestCase {
         //stores the elements it has passed
         LinkedList<Integer> found = new LinkedList<Integer>();
         
-        for (Iterator i = world.randomIterator(); i.hasNext(); ) {
-            World<Integer>.Place place = (World.Place) i.next();
+        for (Iterator<World<Integer>.Place> i = world.randomIterator(); i.hasNext(); ) {
+            World<Integer>.Place place =  i.next();
             found.add(place.getElement());
         }
         
@@ -135,14 +135,14 @@ public class WorldTest extends TestCase {
     public void testMutablePlaces () {
         fillWorld();
         
-        World.Place p = world.getAt(2,2);
+        World<Integer>.Place p = world.getAt(2,2);
 
-        assertEquals(8, p.getElement());
+        assertEquals(8, (int)p.getElement());
 
         world.setAt(2,2,42);
-        assertEquals(42, p.getElement());
+        assertEquals(42, (int)p.getElement());
 
         p.setElement(39);
-        assertEquals(39, p.getElement());;
+        assertEquals(39, (int)p.getElement());;
     }
 }
