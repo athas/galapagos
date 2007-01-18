@@ -91,7 +91,7 @@ public class BiotopeTest extends TestCase {
     public void testPutFinch () {
         // Make a Biotope at size 4x4 with 0 Samaritans,
     	// Grudgers and FlipFloppers. In this biotope the finches don't
-    	// loose any hotpoints, and they become 100 rounds old.
+    	// lose any hitpoints, and they become 100 rounds old.
     	ArrayList<Behavior> list = new ArrayList<Behavior>();
         list.add(new Samaritan());
         list.add(new Grudger());
@@ -138,7 +138,7 @@ public class BiotopeTest extends TestCase {
     public void testBreed () {
         // Make a Biotope at size 4x4 with 0 Samaritans,
     	// Grudgers and FlipFloppers. In this biotope the finches don't
-    	// loose any hotpoints, and they become 100 rounds old.
+    	// lose any hitpoints, and they become 100 rounds old.
     	ArrayList<Behavior> list = new ArrayList<Behavior>();
         list.add(new Samaritan());
         list.add(new Grudger());
@@ -177,21 +177,35 @@ public class BiotopeTest extends TestCase {
     	assertTrue(fi2.behavior().toString() == "Samaritan");
     	assertTrue(fi2.age() == 1);
     	assertTrue(fi2.status() == FinchStatus.ALIVE);
+        
+        // Test that there are only 2 filled Places in the World, and that these are p and newPlace.
+        List<World<GalapagosFinch>.Place> filledPlaces = new LinkedList<World<GalapagosFinch>.Place>();
+        for (Iterator<World<GalapagosFinch>.Place> it = b.worldIterator();
+        it.hasNext();)
+        {
+            World<GalapagosFinch>.Place place = it.next();
+            if (place.getElement() != null)
+                filledPlaces.add(place);
+        }
+        assertTrue(filledPlaces.size() == 2);
+        assertTrue(filledPlaces.contains(p));
+        assertTrue(filledPlaces.contains(newPlace));
     }
     
     public void testMeeting () {
         // Make a Biotope at size 4x4 with 0 Samaritans,
     	// Grudgers and FlipFloppers. In this biotope the finches loose
-    	// 1 hitpoint per round and have 1 initial hitpoint.
+    	// 2 hitpoint per round and have 1 initial hitpoint.
     	// Therefore, they die in the first round if they don't
-    	// make any meetings.
+    	// make any meetings, or participate in a meeting where 
+        // neither finch cleans the other.
     	ArrayList<Behavior> list = new ArrayList<Behavior>();
         list.add(new Samaritan());
         list.add(new Grudger());
         list.add(new FlipFlopper());
         
         Biotope b = new
-        	Biotope(4, 4, 0.00, 10, 1, 1, 100, 100, 0, list);
+        	Biotope(4, 4, 0.00, 10, 1, 2, 100, 100, 0, list);
         World<GalapagosFinch> world = b.world;
     
         // We make a new Samaritan at place (2,2) and one at place (2,3).
@@ -216,7 +230,7 @@ public class BiotopeTest extends TestCase {
     public void testGrimReaperDeadByAge () {
         // Make a Biotope at size 4x4 with 0 Samaritans,
     	// Grudgers and FlipFloppers. In this biotope the finches loose
-    	// 0 hitpoint per round, and become 2 rounds old.
+    	// 0 hitpoint per round, and die at the end of the second round.
     	ArrayList<Behavior> list = new ArrayList<Behavior>();
         list.add(new Samaritan());
         list.add(new Grudger());
@@ -273,15 +287,16 @@ public class BiotopeTest extends TestCase {
     public void testGrimReaperDeadByTicks () {
         // Make a Biotope at size 4x4 with 0 Samaritans,
     	// Grudgers and FlipFloppers. In this biotope the finches loose
-    	// 1 hitpoint per round and have 2 initial hitpoint.
-    	// Therefore, they are dead after two rundRounds
+    	// 2 hitpoint per round (and get 1 hitpoint if they don't meet
+        // other finches) and have 2 initial hitpoint.
+    	// Therefore, they are dead after two runRounds.
     	ArrayList<Behavior> list = new ArrayList<Behavior>();
         list.add(new Samaritan());
         list.add(new Grudger());
         list.add(new FlipFlopper());
         
         Biotope b = new
-        	Biotope(4, 4, 0.00, 10, 2, 1, 100, 100, 0, list);
+        	Biotope(4, 4, 0.00, 10, 2, 2, 100, 100, 0, list);
         World<GalapagosFinch> world = b.world;
     
         // We make a new Samaritan at place (2,2).
