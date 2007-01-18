@@ -2,7 +2,7 @@ package galapagos;
 
 /**
  * This is a more concrete MemoryBehavior which only stores a single action with each remembered finch.
- * The action stored is that action we wan't to do to the finch next time we meet it. 
+ * The action stored is that action we want to do to the finch next time we meet it. 
  * It has a default action which is used when nothing is remembered about the finch.
  */
 public abstract class ActionMemoryBehavior extends MemoryBehavior<Action> {
