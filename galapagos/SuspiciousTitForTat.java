@@ -1,10 +1,9 @@
 package galapagos;
 
 /**
- * A behavior using the suspicious variation of the tit for
- tat-strategy.
+ * A Tit-for-tat variant with the default action being the only difference. 
  */
-public class SuspiciousTitForTat extends MemoryBehavior {
+public class SuspiciousTitForTat extends ActionMemoryBehavior {
     protected Action defaultAction () {
         return Action.IGNORING;
     }
@@ -13,7 +12,7 @@ public class SuspiciousTitForTat extends MemoryBehavior {
      * Remembers what this finch did.
      */
     public void response (Finch finch, Action action) {
-        add(finch,action);
+        remember(finch,action);
     }
     
     /**

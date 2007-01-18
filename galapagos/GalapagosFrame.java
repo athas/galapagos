@@ -490,6 +490,7 @@ public class GalapagosFrame extends JFrame implements Observer {
         }
 
         public void createBiotope() {
+            //Get the user input from the spinners.
             int width = (Integer) this.widthSpinner.getValue();
             int height = (Integer) this.heightSpinner.getValue();
             double breedingProbability = (Double) this.breedingProbabilitySpinner.getValue();
@@ -499,26 +500,30 @@ public class GalapagosFrame extends JFrame implements Observer {
             int minMaxAge = (Integer) this.minMaxAgeSpinner.getValue();
             int maxMaxAge = (Integer) this.maxMaxAgeSpinner.getValue();
             int finchesPerBehavior = (Integer) this.finchesPerBehaviorSpinner.getValue();
-            List<Behavior> finchBehaviors = new LinkedList<Behavior>();
             
+            //Get a list of the users chosen finches.
+            List<Behavior> finchBehaviors = new LinkedList<Behavior>();
             for(int i = 0; i < behaviors.size(); ++i)
                 if(behaviorCheckboxes[i].isSelected())
                     finchBehaviors.add(behaviors.get(i).clone());
             
+            //Check that the values are legal
             if (checkStartFinches(width, height, finchesPerBehavior, finchBehaviors.size()) 
                     & checkAge(minMaxAge, maxMaxAge) & checkHitpoints(maxHitpoints, initialHitpoints)) {
+
                 biotope = new Biotope(width,height,breedingProbability,
                                       maxHitpoints,initialHitpoints,hitpointsPerRound,minMaxAge,
                                       maxMaxAge,finchesPerBehavior,finchBehaviors);
-                biotope.addObserver(statistics);
                 
+                biotope.addObserver(statistics);
                 if (isLogging)
                     biotope.addObserver(logger);
                 if (isRefreshing)
                     biotope.addObserver(GalapagosFrame.this);
 
+                //Create RadioButton's on the GalapagosFrame
+                //for the spawning-tool
                 behaviorButtons = new ButtonGroup();
-
                 behaviorButtonsBox.removeAll();
                 behaviorButtonsBox.add(Box.createGlue());
                 behaviorButtonsBox.add(behaviorButtonsLabel);
@@ -543,22 +548,35 @@ public class GalapagosFrame extends JFrame implements Observer {
                 
                 GalapagosFrame.this.setSize(combinedSize());
                 GalapagosFrame.this.validate();
-                enableButtons();
-                this.setVisible(false);
+                close();
             }
         }
         
+        /**
+         * Show the BiotopeCreator screen.
+         */
         public void openPanel() {
             disableButtons();
             this.setVisible(true);
         }
         
-        
-        public void abort() {
+        /**
+         * Close the BiotopeCreator screen.
+         */
+        public void close() {
             enableButtons();
             setVisible(false);
         }
         
+        /**
+         * Check that user-chosen world is big enough for the number of finches that should be spawned.
+         * Shows a messagebox if the values are illegal.
+         * @param width The width of the world.
+         * @param height The height of the world.
+         * @param finchesPerBehavior How many finches that should be spawned per behavior.
+         * @param numberOfBehaviors How many different behaviors the user has chosen.
+         * @return true if the values are legal.
+         */
         public boolean checkStartFinches(int width, int height, int finchesPerBehavior, int numberOfBehaviors) {
             if (width * height >= finchesPerBehavior * numberOfBehaviors) {
                 return true;
@@ -571,23 +589,40 @@ public class GalapagosFrame extends JFrame implements Observer {
             }
         }
         
+        /**
+         * Check that the user-chosen age values are legal and show a messagebox if not.
+         * (The minimum age must be smaller than the maximum age)
+         * Shows a messagebox if the values are illegal
+         * @param minMaxAge The user-chosen minimum age.
+         * @param maxMaxAge The user-chosen maximum age.
+         * @return true if the values are legal.
+         */
         public boolean checkAge(int minMaxAge, int maxMaxAge) {
             if (minMaxAge <= maxMaxAge) {
                 return true;
             } else {
                 JOptionPane.showMessageDialog(this,
-                        "The greatest maksimum age must be at least as large as the least maksimum age.",
+                        "The greatest maximum age must be at least as large as the least maximum age.",
                         "Impossible to create biotope", JOptionPane.WARNING_MESSAGE);
                 return false;
             }
         }
         
+        /**
+         * Check that the user-chosen hitpoint values are legal.
+         * (The finches can't start with more hitpoints than the maximum) 
+         * Shows a messagebox if they are illegal.
+         * @ensure (initialHitpoints <= maxHitpoints) ? true : false
+         * @param maxHitpoints The user-chosen maximum hitpoints-value.
+         * @param initialHitpoints The user-chosen initial hitpoints-value.
+         * @return true if the values are legal.
+         */
         public boolean checkHitpoints(int maxHitpoints, int initialHitpoints) {
             if (initialHitpoints <= maxHitpoints) {
                 return true;
             } else {
                 JOptionPane.showMessageDialog(this,
-                        "The initial amount of hitpoints may at most be the maksimum amount of hitpoints.",
+                        "The initial amount of hitpoints may at most be the maximum amount of hitpoints.",
                         "Impossible to create biotope", JOptionPane.WARNING_MESSAGE);
                 return false;
             }

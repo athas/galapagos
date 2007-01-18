@@ -6,45 +6,40 @@ import java.util.*;
  * Every behavior that sometimes uses information about
  * how it is treated earlier extends this class.
  */
-public abstract class MemoryBehavior implements Behavior {
-    private final Map<Finch,Action> finches;
+public abstract class MemoryBehavior<DATA> implements Behavior {
+    private final Map<Finch, DATA> finches;
     
     /**
-     * A new MemoryBehavior.
+     * Constructor for MemoryBehavior.
      */
     public MemoryBehavior() {
-        finches = new WeakHashMap<Finch,Action>();
+        //The garbage collector removes items from WeakHashMap's
+        //if there is no other references to them in the program.
+        finches = new WeakHashMap<Finch, DATA>();
     }
     
     /**
-     * Remember the finch in the argument and what it did.
+     * Remember a finch and with some data about it.
+     * @param finch The finch to remember.
+     * @param data The data to store with the finch.
      */
-    protected void add(Finch finch, Action action) {
-        finches.put(finch, action);
+    protected void remember(Finch finch, DATA data) {
+        finches.put(finch, data);
     }
     
     /**
-     * Choose which action to do to the finch in the argument.
-     * If it is remembered what action the finch chose earlier at som time,
-     * this behavior should choose the same action now.
-     * 
-     * @ensure finches.containsKey(finch) implies decide == finches.get(finch)
-     * @ensure !finches.containsKey(finch) implies decide == defaultAction()
+     * The data associated with a given finch is returned - if there is any.
+     * null is returned if the finch wasn't found.
+     *  
+     * @param finch The finch to look up in the memory.
+     * @return The data associated with the given finch or null.
      */
-    public Action decide(Finch finch) {
-        if (finches.containsKey(finch))
-            return finches.get(finch);
-        else 
-            return defaultAction();
+    protected DATA recall(Finch finch) {
+        return finches.get(finch);
     }
     
     /**
-     * The action chosen when nothing about a given finch is remembered.
-     */
-    protected abstract Action defaultAction ();
-    
-    /**
-     * A new instanse of this behavior.
+     * Creates new instanse of this behavior.
      */
     public abstract Behavior clone();
 }

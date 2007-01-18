@@ -1,14 +1,10 @@
 package galapagos;
 
-import java.util.*;
-
 /**
- * A probing tit-for-tat variant.
+ * A Tit-for-tat variant which some times (~ every fifth time) chooses to IGNORE the other finch.
  */
-public class ProbingTitForTat extends MemoryBehavior {
+public class ProbingTitForTat extends ActionMemoryBehavior {
     private int count;
-
-    Random rand = new Random();
 
     /**
      * A new PropingTitForTat.
@@ -23,15 +19,17 @@ public class ProbingTitForTat extends MemoryBehavior {
      * we do what a TitForTat would do.
      */
     public Action decide(Finch finch) {
-        if (count == 0) {
-            if (rand.nextInt(2) == 0) {
-                count = 5;
-                return Action.IGNORING;
-            }
+        //create a random value between 0 and 1
+        int random = (int)Math.floor(Math.random() * 2);
+        
+        if (count == 0 && random == 0) {
+            count = 5;
+            return Action.IGNORING;
         } else {
             --count;
         }
 
+        //do what the finch did to us last time
         return super.decide(finch);
     }
     
@@ -46,7 +44,7 @@ public class ProbingTitForTat extends MemoryBehavior {
      * Remember what the finch did.
      */
     public void response(Finch finch, Action action) {
-        add(finch, action);
+        remember(finch, action);
     }
     
     public Behavior clone()

@@ -1,12 +1,12 @@
 package galapagos;
 
-public class Grudger extends MemoryBehavior {
+public class Grudger extends ActionMemoryBehavior {
     /**
      * If a finch just met ignores this finch it should be remembered.
      */
     public void response(Finch finch, Action action) {
         if (action == Action.IGNORING)
-            add(finch, Action.IGNORING);
+            remember(finch, Action.IGNORING);
     }
     
     /**

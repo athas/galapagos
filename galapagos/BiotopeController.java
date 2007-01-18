@@ -65,7 +65,7 @@ public class BiotopeController implements ActionListener, ChangeListener {
         } else if (command.equals("newBiotope")) {
             frame.biotopeCreator.openPanel();
         } else if (command.equals("cancelButton")) {
-            frame.biotopeCreator.abort();
+            frame.biotopeCreator.close();
         } else if (command.equals("okButton")) {
             frame.biotopeCreator.createBiotope();
         }

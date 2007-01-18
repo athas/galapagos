@@ -1,9 +1,10 @@
 package galapagos;
 
 /**
- * A behavior using the tit for tat-strategy.
+ * A behavior that always does what the opponent did last time!
+ * The finch always cleans when faced with an unknown opponent.
  */
-public class TitForTat extends MemoryBehavior {
+public class TitForTat extends ActionMemoryBehavior {
     protected Action defaultAction() {
         return Action.CLEANING;
     }
@@ -12,7 +13,7 @@ public class TitForTat extends MemoryBehavior {
      * Remembers what this finch did.
      */
     public void response (Finch finch, Action action) {
-        add(finch,action);
+        remember(finch,action);
     }
     
     /**
