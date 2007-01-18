@@ -72,6 +72,31 @@ vi kan implementere tilfældig iteration blot ved at kalde {\tt
 vi for at skulle klone vores underliggende array hver gang vi har
 behov for pseudotilfældig iteration.
 
+\subsubsection{\tt Biotope}
+
+{\tt Biotope}-klassen er simulationens grundsten, den klasse, der
+implementere al logikken i programmet. {\tt Biotope} er ganske simpel
+at bruge - essentielt foregår det ved at levere en liste af {\tt
+  Behavior}-objekter som beskriver de forskellige opførsler de
+simulerede finker skal benytte sig af. Ved at kalde metoden {\tt
+  runRound} simuleres en enkelt runde af simulationen, og eventuelle
+observerende objekter gøres opmærksomme på ændringer i simulationens
+tilstand. Det er {\tt Biotope}-klassens ansvar at oprette og
+vedligeholde objekter til at repræsentere spilverdenen ({\tt World})
+og finkerne i den ({\tt GalapagosFinch}).
+
+For at simulationen skal være fair, er det nødvendigt at f.eks.
+muligheden for at få afkom bliver besluttet tilfældigt - da der
+utvivlsomt opstår situationer hvor flere finker deles om et tomt
+nabofelt som kan fyldes med afkom, er det ikke nok at bruge en naiv
+iteration, som f.eks. række for række igennem verden, da det så ville
+favoritisere finker nordvest i spilverdenen. Det er {\tt
+  Biotope}-klassens ansvar at sørge for at disse situationer bliver
+løst på fair vis. Det er også {\tt Biotope}-klassens ansvar at samle
+ændringer undervejs i en runde i et {\tt Statistics}-objekt, som
+observers kan bruge til at få et bredt billede af begivenhederne i en
+runde.
+
 \subsection{Brugerinterface}
 
 \section{Konklusion}
