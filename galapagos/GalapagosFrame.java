@@ -331,6 +331,7 @@ public class GalapagosFrame extends JFrame implements Observer {
         private final JSpinner finchesPerBehaviorSpinner;
         private final JCheckBox[] behaviorCheckboxes;
         private final JButton okButton, cancelButton;
+        private final JButton setVariantOneButton, setVariantTwoButton, setVariantThreeButton;
         
         private BiotopeCreator(GalapagosFrame frame) {
             //Enables GalapagosFrame buttons when the dialog is closed
@@ -401,6 +402,36 @@ public class GalapagosFrame extends JFrame implements Observer {
             cancelButton.addActionListener(controller);
             buttonPanel.add(okButton);
             buttonPanel.add(cancelButton);
+
+            JPanel standardSettingsPanel = new JPanel(new FlowLayout());
+            setVariantOneButton = new JButton("Set variant #1");
+            setVariantOneButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        setConfiguration(1.0/6.0, 3, 20, 7, 10, 13, 40);
+                        selectRandomBehaviors(5);
+                    }
+                });
+            setVariantTwoButton = new JButton("Set variant #2");
+            setVariantTwoButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        setConfiguration(1.0/6.0, 4, 20, 10, 20, 23, 40);
+                        selectRandomBehaviors(5);
+                    }
+                });
+            setVariantThreeButton = new JButton("Set variant #3");
+            setVariantThreeButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        setConfiguration(1.0/12.0, 3, 20, 13, 11, 14, 40);
+                        selectRandomBehaviors(5);
+                    }
+                });
+            standardSettingsPanel.add(setVariantOneButton);
+            standardSettingsPanel.add(setVariantTwoButton);
+            standardSettingsPanel.add(setVariantThreeButton);
+
+            Container bottomButtonsContainer = Box.createVerticalBox();
+            bottomButtonsContainer.add(standardSettingsPanel);
+            bottomButtonsContainer.add(buttonPanel);
             
             JPanel options = new JPanel(new GridBagLayout());
             options.add(sizeOptionGroup, getContainerConstraints(0,0,1,1));
@@ -411,10 +442,36 @@ public class GalapagosFrame extends JFrame implements Observer {
             
             this.setLayout(new BorderLayout());
             this.add(options, BorderLayout.CENTER);
-            this.add(buttonPanel, BorderLayout.SOUTH);
+            this.add(bottomButtonsContainer, BorderLayout.SOUTH);
             this.setTitle("Biotope Creator");
             
             this.setSize(getPreferredSize().width + 20, getPreferredSize().height + 40);
+        }
+
+        private void selectRandomBehaviors(int count) {
+            assert (count <= behaviorCheckboxes.length)
+                : "More behaviors required than is available";
+            LinkedList<Integer> list = new LinkedList<Integer>();
+            for (Integer i = 0; i < behaviorCheckboxes.length; i++)
+                list.add(i);
+            Collections.shuffle(list);
+            for (JCheckBox box : behaviorCheckboxes)
+                box.setSelected(false);
+            for (int i = 0; i < 5; i++)
+                behaviorCheckboxes[list.get(i)].setSelected(true);
+        }
+
+        private void setConfiguration(double breedingProbability, int roundPrice, 
+                                      int maxHitpoints, int startHitpoints,
+                                      int minMaxAge, int maxMaxAge,
+                                      int initialFinchesPerBehavior) {
+            breedingProbabilitySpinner.setValue(breedingProbability);
+            maxHitpointsSpinner.setValue(maxHitpoints);
+            initialHitpointsSpinner.setValue(startHitpoints);
+            hitpointsPerRoundSpinner.setValue(roundPrice);
+            minMaxAgeSpinner.setValue(minMaxAge);
+            maxMaxAgeSpinner.setValue(maxMaxAge);
+            finchesPerBehaviorSpinner.setValue(initialFinchesPerBehavior);
         }
         
         /**
