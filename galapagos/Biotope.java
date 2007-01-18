@@ -2,6 +2,11 @@ package galapagos;
 
 import java.util.*;
 
+/**
+ * A simulation of a torus-shaped world containing finches of
+ * different social behaviors. The finches will interact the way their
+ * behavior type specifies, and will breed randomly.
+ */
 public class Biotope extends Observable {
     public final int width, height;
     private final double breedingProbability;
@@ -147,7 +152,7 @@ public class Biotope extends Observable {
             finch.makeOlder();
         p.setElement(finch);
     }
-    
+
     /**
      * Put a new finch in the world at position x, y. The finch will
      * have the provided behavior, and it will overwrite any already
@@ -321,9 +326,14 @@ public class Biotope extends Observable {
     }
     
     /**
-     * Decrease the hitpoints of all finches by hitpointsPerRound, and
-     * find dead finches and remove them from world, and store the
-     * changes in statisticsTree.
+     * Let the Grim Reaper bring his scythe to bear on the finches of
+     * the Biotope, decreasing the hitpoints of all finches by
+     * hitpointsPerRound, and reaping dead finches from the land,
+     * removing them from the mortal world, and registering changes in
+     * statisticsTree.
+     *
+     * @require statisticsTree != null
+     * @require world != null
      */
     private void grimReaper () {
         for (World<GalapagosFinch>.Place p : world) if (p.getElement() != null) {
@@ -371,7 +381,8 @@ public class Biotope extends Observable {
     }
     
     /**
-     * Get a list of all the behaviors in the Biotope.
+     * Get a list of all the behaviors in the Biotope. It is not
+     * permitted to modify this list.
      */
     public List<Behavior> behaviors () {
         return finchBehaviors;
