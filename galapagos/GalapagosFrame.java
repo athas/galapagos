@@ -9,6 +9,16 @@ import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * A graphical user-interface for creating and viewing Biotope's.
+ * At the top of the screen there are a set of buttons for creating and simulating the Biotope.
+ * At the middle of the screen the Biotope is shown graphically.
+ * At the bottom of the screen there are a panel with statistics about the different types of behaviors
+ * Its possible to spawn new Finches by choosing a behavior on the right and "draw" them on the Biotope.
+ * On the left part of the screen you can turn on and of the graphical display and the logger (for performance),
+ * its also here you change the updaterate. 
+ * 
+ */
 public class GalapagosFrame extends JFrame implements Observer {
 
     private AreaPanel area;
@@ -42,6 +52,22 @@ public class GalapagosFrame extends JFrame implements Observer {
     private static final Dimension standardSpinnerSize = new Dimension(100,22);
     
     private List<Behavior> behaviors;
+
+    /**
+     * Create a GalapagosFrame simulating finches with the provided
+     * behaviors and using the provided colors to visually represent
+     * the simulation state.
+     *
+     * @param behaviors A mapping from behavior objects to colors. The
+     * behavior objects specify which behaviors should be available
+     * for use in the simulation (the user may choose to disable some
+     * of them, so they are not guaranteed to participate in the run),
+     * and the associated color will be used to draw a visual
+     * representation of finches with that behavior.
+     *
+     * @require For every two distrinct behavior objects b1, b2 in
+     * behaviors, b1.toString() != b2.toString() must hold.
+     */
     
     public GalapagosFrame(Map<Behavior, Color> behaviors)
     {
