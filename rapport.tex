@@ -19,19 +19,26 @@
 
 \subsection{Model}
 
+\subsubsection{\tt World}
+
 Den fundamentale datastruktur, der ligger til grund for hele
-simulationens verden, er den passende navngivne klasse {\tt World}.
-Denne klasse giver i sin enkelted adgang til et todimensionelt array
-af {\tt World.Place} objekter. Disse {\tt World.Place}s skaber verdens
-torusform, som krævet i opgaven, idet de har metoder til at finde
-nabo-{\tt World.Place}s. Et af disse objekter, placeret på en kant,
-vil give de passende objekter på den modsatte kant, når der bliver
-spurgt om sine naboer. Et {\tt World.Place} objekt kan også indeholde
-et andet objekt - dets {\em element}. I vores simulation er
+simulationens  verden, er den passende navngivne klasse {\tt World}.
+Denne klasse giver i sin enkelthed adgang til et todimensionelt array
+af {\tt World.Place} objekter. Disse {\tt World.Place}s skaber
+verdens torusform, som krævet i opgaven, idet de har metoder til at
+finde nabo-{\tt World.Place}s. Et af disse objekter, placeret på en
+kant, vil give de passende objekter på den modsatte kant, når der
+bliver spurgt om sine naboer. Et {\tt World.Place} objekt kan også
+indeholde et andet objekt - dets {\em element}. I vores simulation er
 finke-objekterne placeret som elementer i {\tt World.Place} objekter,
-og metoderne {\tt World.Place.filledNeighbors} og {\tt
-  World.Place.emptyNeighbors} bruges til at finde de naboceller, som
-skal benyttes når finker skal få afkom og møde andre finker.
+men da man kan forestille sig at der sidenhen kan være behov for at
+lave {\tt World}-strukturer med andre typer objekter end finker, har
+vi valgt at benytte generics til {\tt World}-klassen.
+
+Metoderne {\tt World.Place.filledNeighbors} og {\tt
+  World.Place.emptyNeighbors} bruges til at finde de naboceller der
+  hhv. indeholder elementer eller er tommer. De skal benyttes når
+  finker skal få afkom og møde andre finker.
 
 Under simulationen er der ydermere endnu en interessant facilitet, vi
 ofte har behov for at udføre på vores verden - når der skal arrangeres
@@ -44,9 +51,9 @@ gøre koden så elegant som muligt. En åbenlys implementation er at lade
 returnere en iterator. Dette ville resultere i allokeringen af et nyt
 array for hver gang vi har behov for at iterere igennem elementerne i
 {\tt World} i pseudotilfældig rækkefølge - en åbenlys ineffektiv
-implementation. Vi kan dog - ved at observere at {\tt
+implementation. Vi har dog - ved at observere at {\tt
   World.Place}-objekterne i {\tt World} aldrig ændrer sig, kun deres
-elementer - finde på en mere effektiv implementation, hvor vi i {\tt
+elementer - fundet på en mere effektiv implementation, hvor vi i {\tt
   World}, sideløbende med det almindelige lager, gemmer et alternativt
 lager, der indeholder de samme {\tt World.Place} objekter som det
 primære, men i en anden rækkefølge. Idet det er de samme {\tt
