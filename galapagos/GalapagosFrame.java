@@ -97,7 +97,7 @@ public class GalapagosFrame extends JFrame implements Observer {
         unlimitedRounds = newButton ("Go!", "unlimitedRounds");
         stopRounds = newButton ("Stop Simulation", "stopRounds");
         
-        numberOfRounds = new JSpinner(new SpinnerNumberModel(50,0,Integer.MAX_VALUE,10));
+        numberOfRounds = new JSpinner(new RevisedSpinnerNumberModel(50,0,Integer.MAX_VALUE,10));
         numberOfRounds.setPreferredSize(standardSpinnerSize);
         numberOfRounds.setMaximumSize(new Dimension(100,30));
         numberOfRounds.setMinimumSize(minimumButtonDimension);
@@ -124,7 +124,7 @@ public class GalapagosFrame extends JFrame implements Observer {
                 }
             });
         
-        timerInterval = new JSpinner(new SpinnerNumberModel(200,0,Integer.MAX_VALUE,100));
+        timerInterval = new JSpinner(new RevisedSpinnerNumberModel(200,0,Integer.MAX_VALUE,100));
         timerInterval.setPreferredSize(standardSpinnerSize);
         timerInterval.setMaximumSize(new Dimension(100,30));
         timerInterval.setMinimumSize(minimumButtonDimension);
@@ -374,7 +374,7 @@ public class GalapagosFrame extends JFrame implements Observer {
             // Breeding probability and Finches per Behavior.
             JPanel otherOptionGroup = new JPanel(new GridBagLayout());
             otherOptionGroup.setBorder(BorderFactory.createTitledBorder("Other parametres"));
-            breedingProbabilitySpinner = new JSpinner(new SpinnerNumberModel(0.33,0.0,1.0,0.01));
+            breedingProbabilitySpinner = new JSpinner(new RevisedSpinnerNumberModel(0.33,0.0,1.0,0.01));
             breedingProbabilitySpinner.setPreferredSize(new Dimension(50,22));
             finchesPerBehaviorSpinner = newIntegerSpinner(30, 1, 0);
             otherOptionGroup.add(new JLabel("Breeding probability",SwingConstants.CENTER), getComponentConstraints(0,0));
@@ -426,7 +426,7 @@ public class GalapagosFrame extends JFrame implements Observer {
          */
         private JSpinner newIntegerSpinner(int startValue, int stepSize, int minValue)
         {
-            JSpinner spinner = new JSpinner(new SpinnerNumberModel(startValue, minValue, Integer.MAX_VALUE, stepSize));
+            JSpinner spinner = new JSpinner(new RevisedSpinnerNumberModel(startValue, minValue, Integer.MAX_VALUE, stepSize));
             spinner.setPreferredSize(standardSpinnerSize);
             
             return spinner;
