@@ -75,7 +75,6 @@ public class GalapagosFrame extends JFrame {
     {
         makeBehaviorListAndColorMap(behaviors);
         
-        pixelSize = 5;
         isRefreshing = true;
         isLogging = false;
         
@@ -90,11 +89,11 @@ public class GalapagosFrame extends JFrame {
                         biotope.putFinch(x, y, b.clone());
                 }
                 public void mousePressed(MouseEvent e) {
-                    maybeAddFinchAt(e.getX() / pixelSize, e.getY() / pixelSize, 
+                    maybeAddFinchAt(e.getX() / area.pixelSize(), e.getY() / area.pixelSize(), 
                                     selectedBehavior);
                 }
                 public void mouseDragged(MouseEvent e) {
-                    maybeAddFinchAt(e.getX() / pixelSize, e.getY() / pixelSize, 
+                    maybeAddFinchAt(e.getX() / area.pixelSize(), e.getY() / area.pixelSize(), 
                                     selectedBehavior);
                 }
             };
@@ -142,7 +141,7 @@ public class GalapagosFrame extends JFrame {
 
         selectedBehavior = null;
         controller.setBiotope(biotope);
-        area.reset(biotope.world.width(), biotope.world.height(), pixelSize);
+        area.reset(biotope.world.width(), biotope.world.height());
         
         biotope.addObserver(statistics);
         if (isLogging)
@@ -247,10 +246,6 @@ public class GalapagosFrame extends JFrame {
         topContainer.add(stopRounds);
         topContainer.add(Box.createGlue());
         
-        //this container's only purpose is to center area
-        Container centerContainer = new Container();
-        centerContainer.setLayout(new GridBagLayout());
-        centerContainer.add(area);
 
         JPanel leftContainer = new JPanel(new GridBagLayout());
         leftContainer.add(toggleLogging, getComponentConstraints(0,0, GridBagConstraints.CENTER));
@@ -267,7 +262,7 @@ public class GalapagosFrame extends JFrame {
         behaviorButtonsLabel = new JLabel("Pencil for freehand finch drawing");
         
         add(topContainer, BorderLayout.NORTH);
-        add(centerContainer,BorderLayout.CENTER);
+        add(area,BorderLayout.CENTER);
         add(statistics, BorderLayout.SOUTH);
         add(outerLeftContainer, BorderLayout.WEST);
         add(behaviorButtonsBox, BorderLayout.EAST);
