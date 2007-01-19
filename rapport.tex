@@ -289,12 +289,14 @@ områder. Det øverste panel indeholder de primære kontrolmuligheder
 for den aktuelle {\tt Biotope}. Alle komponenterne på dette panel
 (bortset fra knappen ``New Biotope'') sender events til {\tt
 BiotopeController}'en der håndterer de konkrete deltaljer om at få
-biotopen til at udføre det ønskede antal simulationsrunder. ``New
-Biotope''-knappen åbner programmets {\tt BiotopeCreator} der står for
-at indsamle gyldige parametre fra brugeren til en ny {\tt Biotope},
-og undervejs er det ikke muligt at manipulere med den nuværende {\tt
-Biotope} - idet {\tt BiotopeCreator}'en bliver vist som en modal
-dialog.
+biotopen til at udføre det ønskede antal simulationsrunder (``Next
+Round'': én runde. ``Several Rounds'': det angivne antal runder.
+``Go!'': et ubegrænset antal runder) eller stoppe for udførslen af
+flere runder (``Stop Simulation''). ``New Biotope''-knappen åbner
+programmets {\tt BiotopeCreator} der står for at indsamle gyldige
+parametre fra brugeren til en ny {\tt Biotope}, og undervejs er det
+ikke muligt at manipulere med den nuværende {\tt Biotope} - idet {\tt
+BiotopeCreator}'en bliver vist som en modal dialog.
 
 Det midterste panel på {\tt GalapagosFrame} indeholder den visuelle
 visning af biotopen i form af en instans af {\tt AreaPanel}. {\tt
