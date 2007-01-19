@@ -83,7 +83,8 @@ public class GalapagosFrame extends JFrame implements Observer {
                     // Only add a finch if x,y is within the bounds of
                     // the world.
                     if (0 <= x && x < biotope.world.width() &&
-                        0 <= y && y < biotope.world.height())
+                        0 <= y && y < biotope.world.height() &&
+                        b != null)
                         biotope.putFinch(x, y, b.clone());
                 }
                 public void mousePressed(MouseEvent e) {
