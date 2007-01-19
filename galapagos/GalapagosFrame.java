@@ -10,13 +10,15 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * A graphical user-interface for creating and viewing Biotope's.
- * At the top of the screen there are a set of buttons for creating and simulating the Biotope.
- * At the middle of the screen the Biotope is shown graphically.
- * At the bottom of the screen there are a panel with statistics about the different types of behaviors
- * Its possible to spawn new Finches by choosing a behavior on the right and "draw" them on the Biotope.
- * On the left part of the screen you can turn on and of the graphical display and the logger (for performance),
- * its also here you change the updaterate. 
+ * A graphical user-interface for creating and viewing Biotope's.  At
+ * the top of the screen there are a set of buttons for creating and
+ * simulating the Biotope.  At the middle of the screen the Biotope is
+ * shown graphically.  At the bottom of the screen there are a panel
+ * with statistics about the different types of behaviors Its possible
+ * to spawn new Finches by choosing a behavior on the right and "draw"
+ * them on the Biotope.  On the left part of the screen you can turn
+ * on and of the graphical display and the logger (for performance),
+ * its also here you change the updaterate.
  * 
  */
 public class GalapagosFrame extends JFrame implements Observer {
@@ -102,10 +104,10 @@ public class GalapagosFrame extends JFrame implements Observer {
         logger = new BiotopeLogger();
         controller = new BiotopeController(biotope);
 
-        this.setLayout(new BorderLayout());
-        this.doLayout();
-        this.addWindowListener(new Terminator());
-        this.setTitle("Galapagos Finch Simulator");
+        setLayout(new BorderLayout());
+        doLayout();
+        addWindowListener(new Terminator());
+        setTitle("Galapagos Finch Simulator");
         
         initializeControls();
         
@@ -149,8 +151,8 @@ public class GalapagosFrame extends JFrame implements Observer {
             biotope.addObserver(this);
         
         biotope.doNotifyObservers();
-        this.setSize(combinedSize());
-        this.validate();
+        setSize(combinedSize());
+        validate();
         pack();
     }
     
@@ -173,10 +175,10 @@ public class GalapagosFrame extends JFrame implements Observer {
                 enableButtons();
             }
         });
-        nextRound = newButton ("Next Round", "nextRound");
-        severalRounds = newButton ("Compute Several Rounds", "severalRounds");
-        unlimitedRounds = newButton ("Go!", "unlimitedRounds");
-        stopRounds = newButton ("Stop Simulation", "stopRounds");
+        nextRound = newButton("Next Round", "nextRound");
+        severalRounds = newButton("Compute Several Rounds", "severalRounds");
+        unlimitedRounds = newButton("Go!", "unlimitedRounds");
+        stopRounds = newButton("Stop Simulation", "stopRounds");
         
         numberOfRounds = new JSpinner(new RevisedSpinnerNumberModel(50,0,Integer.MAX_VALUE,10));
         numberOfRounds.setPreferredSize(standardSpinnerSize);
@@ -243,11 +245,11 @@ public class GalapagosFrame extends JFrame implements Observer {
         behaviorButtonsBox = Box.createVerticalBox();
         behaviorButtonsLabel = new JLabel("Pencil for freehand finch drawing");
         
-        this.add(topContainer, BorderLayout.NORTH);
-        this.add(centerContainer,BorderLayout.CENTER);
-        this.add(statistics, BorderLayout.SOUTH);
-        this.add(outerLeftContainer, BorderLayout.WEST);
-        this.add(behaviorButtonsBox, BorderLayout.EAST);
+        add(topContainer, BorderLayout.NORTH);
+        add(centerContainer,BorderLayout.CENTER);
+        add(statistics, BorderLayout.SOUTH);
+        add(outerLeftContainer, BorderLayout.WEST);
+        add(behaviorButtonsBox, BorderLayout.EAST);
     }
     
     /**
@@ -261,7 +263,7 @@ public class GalapagosFrame extends JFrame implements Observer {
     {
         JButton button = new JButton(text);
         button.setActionCommand(command);
-        button.addActionListener(this.controller);
+        button.addActionListener(controller);
         button.setMinimumSize(minimumButtonDimension);
         
         return button;
@@ -273,7 +275,7 @@ public class GalapagosFrame extends JFrame implements Observer {
      * @param y the vertical position of the component.
      * @param alignment the alignment of the component in its display area.
      */            
-    private GridBagConstraints getComponentConstraints (int x, int y, int alignment) {
+    private GridBagConstraints getComponentConstraints(int x, int y, int alignment) {
         return new GridBagConstraints(x, y, 1, 1, 1.0, 1.0, 
                                         alignment,
                                         GridBagConstraints.NONE,
@@ -287,7 +289,7 @@ public class GalapagosFrame extends JFrame implements Observer {
         for(World<GalapagosFinch>.Place place : biotope.world)
         {
             GalapagosFinch element = place.getElement();
-            if(element != null)
+            if (element != null)
                 area.pixel(place.xPosition(), place.yPosition(), colorByBehavior(element.behavior()));
             else
                 area.pixel(place.xPosition(), place.yPosition(), Color.BLACK);
@@ -320,19 +322,21 @@ public class GalapagosFrame extends JFrame implements Observer {
     private void makeBehaviorListAndColorMap(Map<Behavior, Color> behaviors)
     {
         this.behaviors = new ArrayList<Behavior>();
-        this.colorMap = new HashMap<Behavior, Color>();
+        colorMap = new HashMap<Behavior, Color>();
         
-        //go through all the behaviors in the behaviors-map and add its string representation to new map 
-        for(Map.Entry<Behavior, Color> entry : behaviors.entrySet()) {
-        	Behavior currentBehavior = entry.getKey();
-            assert !this.colorMap.containsKey(currentBehavior) : "Duplicate behaviors in Behavior-Color Map";
+        // Go through all the behaviors in the behaviors-map and add
+        // its string representation to new map.
+        for (Map.Entry<Behavior, Color> entry : behaviors.entrySet()) {
+            Behavior currentBehavior = entry.getKey();
+            assert !colorMap.containsKey(currentBehavior) : "Duplicate behaviors in Behavior-Color Map";
             this.behaviors.add(currentBehavior);
-            this.colorMap.put(currentBehavior, entry.getValue());
+            colorMap.put(currentBehavior, entry.getValue());
         }
     }
     
     /**
-     * Disable the control buttons of this frame. The biotope-simulation is stopped.
+     * Disable the control buttons of this frame. The
+     * biotope-simulation is stopped.
      */
     public void disableButtons() {
         newBiotope.setEnabled(false);
@@ -357,7 +361,8 @@ public class GalapagosFrame extends JFrame implements Observer {
     }
     
     /**
-     * Get the combined size of all components preferred sizes plus 50 extra pixels in width and height.
+     * Get the combined size of all components preferred sizes plus 50
+     * extra pixels in width and height.
      */
     public Dimension combinedSize() {
         BorderLayout layout = (BorderLayout) this.getContentPane().getLayout();
