@@ -7,7 +7,8 @@ import java.util.*;
 /**
  * Primarily tests that Biotope is able to run simulation-rounds as specified
  * (with breeding, meetings and removal of dead finches) but also tests
- * that it updates the statistics properly.
+ * that it updates the statistics properly and that it properly returns the
+ * round number.
  *
  */
 public class BiotopeTest extends TestCase {
@@ -15,13 +16,14 @@ public class BiotopeTest extends TestCase {
 	public void setUp() {
 		behaviors = new ArrayList<Behavior>();
 		behaviors.add(new Samaritan());
-		behaviors.add(new Grudger());
+		behaviors.add(new Cheater());
 		behaviors.add(new FlipFlopper());
 	}
 	
 	/**
 	 * Tests that the right amount of finches per Behavior is placed in the world.
-	 * Is tested with a 100x100 Biotop and 40 finches per Behavior. 
+	 * Is tested with a 100x100 Biotop and 40 finches per Behavior.
+	 * Also tests that the initial statistics is correct for each of the behaviors. 
 	 */
     public void testConstructor () {       
         //for counting the number of finches per behavior
@@ -95,7 +97,11 @@ public class BiotopeTest extends TestCase {
         }
     }
     
-    
+    /**
+     * Tests that the testPutFinch in the correct way places finches in
+     * the world and that statistics is properly updated.
+     *
+     */
     public void testPutFinch () {
         // Make a Biotope at size 4x4 with 0 Samaritans,
     	// Grudgers and FlipFloppers. In this biotope the finches don't
@@ -183,39 +189,92 @@ public class BiotopeTest extends TestCase {
     }
     
     /**
-     * 
+     * Make a Biotope at size 4x4 with 0 Samaritans,
+	 * Grudgers and FlipFloppers. In this biotope the finches loose
+	 * 1 hitpoint per round and have 1 initial hitpoint.
+	 * Therefore, they die in the first round if they don't
+	 * make any meetings.
      *
      */
-    public void testMeeting () {
-        // Make a Biotope at size 4x4 with 0 Samaritans,
-    	// Grudgers and FlipFloppers. In this biotope the finches loose
-    	// 1 hitpoint per round and have 1 initial hitpoint.
-    	// Therefore, they die in the first round if they don't
-    	// make any meetings.
-        
-        Biotope b = new
-        	Biotope(4, 4, 0.00, 10, 1, 1, 100, 100, 0, behaviors);
-        World<GalapagosFinch> world = b.world;
+    	
+    private Biotope meetingTestSetUp (Behavior b1, Behavior b2) {
+    	Biotope b = new
+    	Biotope(4, 4, 0.00, 10, 1, 1, 100, 100, 0, behaviors);
+    	
+    	// We make a new Samaritan at place (2,2) and one at place (2,3).
+    	b.putFinch(2,2, b1);
+    	b.putFinch(2,3, b2);
     
-        // We make a new Samaritan at place (2,2) and one at place (2,3).
-        b.putFinch(2, 2, new Samaritan());
-        b.putFinch(2, 3, new Samaritan());
-        
-    	GalapagosFinch fi1 = world.getAt(2, 2).getElement();
-    	GalapagosFinch fi2 = world.getAt(2, 3).getElement();
-    	
-    	b.runRound();
-    	
-    	// fi1 and fi2 should be alive because they got 3
-    	// hitpoints each from the meeting.
-    	assertEquals(FinchStatus.ALIVE, fi1.status());
-    	assertEquals(FinchStatus.ALIVE, fi2.status());
-    	
-    	// fi1 and fi2 should still be in the world:
-    	assertEquals(fi1, world.getAt(2, 2).getElement());
-    	assertEquals(fi2, world.getAt(2, 3).getElement());
+    	return b;
     }
     
+    /**
+     * Tests that in a meeting where both finches help, they get 3
+     * hitpoints each. This is testet by adding neighboring samaritans
+     * to the biotope.
+     *
+     */
+    public void testMeeting1 () {
+    	Biotope b = meetingTestSetUp(new Samaritan(),new Samaritan());
+    	World<GalapagosFinch> world = b.world;
+    	b.runRound();
+    	
+    	GalapagosFinch fi1 = world.getAt(2, 2).getElement();
+    	GalapagosFinch fi2 = world.getAt(2, 3).getElement();
+
+    	// fi1 and fi2 should have 3
+    	// hitpoints each because of the meeting.
+    	assertEquals(3, fi1.hitpoints());
+    	assertEquals(3, fi2.hitpoints());
+    }
+    
+    /**
+     * Tests that in a meeting where neither finches help, they get 1
+     * hitpoints each. This is testet by adding neighboring cheaters
+     * to the biotope.
+     *
+     */
+    public void testMeeting2 () {
+    	Biotope b = meetingTestSetUp(new Cheater(),new Cheater());
+    	World<GalapagosFinch> world = b.world;
+    	b.runRound();
+    	
+    	GalapagosFinch fi1 = world.getAt(2, 2).getElement();
+    	GalapagosFinch fi2 = world.getAt(2, 3).getElement();
+
+    	// fi1 and fi2 should have 1
+    	// hitpoints each because of the meeting.
+    	assertEquals(1, fi1.hitpoints());
+    	assertEquals(1, fi2.hitpoints());	
+    }
+
+    /**
+     * Tests that in a meeting where the one finch helps and the other doesn't,
+     * the helping one gets 0 hitpoints while the one that doesn't help get 5.
+     * This is testet to the biotope. This is tested by adding a samaritan and
+     * a cheater on one of the samaritan's neighboring places.
+     *
+     */
+    public void testMeeting3 () {
+    	Biotope b = meetingTestSetUp(new Samaritan(),new Cheater());
+    	World<GalapagosFinch> world = b.world;
+    	GalapagosFinch fi1 = world.getAt(2, 2).getElement();
+    	GalapagosFinch fi2 = world.getAt(2, 3).getElement();
+    	b.runRound();
+    	
+    	// fi1 should have 0 hitpoints. fi2 should have 5.
+    	assertEquals(0, fi1.hitpoints());
+    	assertEquals(5, fi2.hitpoints());
+    }
+    
+    /**
+     * Tests that finches which are dead by age are removed from the biotope,
+     * and that the statistics are properly updated. This is tested by
+     * making a Biotope in which the finches loose
+   	 * 0 hitpoint per round, and become 2 rounds old.
+   	 * We place one single finch into this world.
+     *
+     */
     public void testGrimReaperDeadByAge () {
         // Make a Biotope at size 4x4 with 0 Samaritans,
     	// Grudgers and FlipFloppers. In this biotope the finches loose
@@ -235,9 +294,6 @@ public class BiotopeTest extends TestCase {
     	// fi should be older now.
     	assertEquals(2, fi.age());
     	
-    	// fi should be alive
-    	assertEquals(FinchStatus.ALIVE, fi.status());
-    	
     	// fi should be in the world:
     	assertEquals(fi, world.getAt(2, 2).getElement());
     	
@@ -255,9 +311,6 @@ public class BiotopeTest extends TestCase {
     	// fi should be older now.
     	assertEquals(3, fi.age());
     	
-    	// fi should be dead by age
-    	assertEquals(FinchStatus.DEAD_AGE, fi.status());
-    	
     	// fi should not be in the world:
     	assertNull(world.getAt(2, 2).getElement());
     	
@@ -270,7 +323,11 @@ public class BiotopeTest extends TestCase {
     }
     
     /**
-     * Test that finches age is increased, the finches status is changed on death and dead finches is removed.
+     * Test that finches which are dead by ticks are removed from the biotope, and
+     * that the statistics are properly updated. This is tested by making a biotope
+     * in which a finch that is alone will die by ticks after two rounds. A single
+     * finch is put into the biotope, and the breeding probabilty is 0, so the
+     * finch will die.
      */
     public void testGrimReaperDeadByTicks () {
         // Make a Biotope at size 4x4 with 0 Samaritans,
@@ -278,7 +335,7 @@ public class BiotopeTest extends TestCase {
     	// 1 hitpoint per round and have 2 initial hitpoint. And breeding propability == 0.
     	// Therefore, they are dead after two rounds
 
-        Biotope biotope = new Biotope(4, 4, 0.00, 10, 2, 1, 100, 100, 0, behaviors);
+        Biotope biotope = new Biotope(4, 4, 0.00, 10, 2, 2, 100, 100, 0, behaviors);
     
         // We make a new Samaritan at place (2,2).
         biotope.putFinch(2,2, new Samaritan());
@@ -287,11 +344,9 @@ public class BiotopeTest extends TestCase {
     	
     	biotope.runRound();
     	
-    	// fi should be older now.
-    	assertEquals(2, fi.age());
-    	
-    	// fi should be alive
-    	assertEquals(FinchStatus.ALIVE, fi.status());
+    	// fi should have 1 hitpoint (it got 1 because it didn't meet anyone,
+    	// and payed 2 for beceause we got a new round).
+    	assertEquals(1,fi.hitpoints());
     	
     	// fi should be in the world
     	assertEquals(fi, biotope.world.getAt(2, 2).getElement());
@@ -307,13 +362,10 @@ public class BiotopeTest extends TestCase {
 
     	biotope.runRound();
     	
-    	// fi1 should be older now.
-    	assertEquals(3, fi.age());
+    	// fi should have 0 hitpoints.
+    	assertEquals(0,fi.hitpoints());
     	
-    	// fi1 should be dead by ticks
-    	assertEquals(FinchStatus.DEAD_TICKS, fi.status());
-    	
-    	// fi1 should not be in the world:
+    	// fi should not be in the world:
     	assertNull(biotope.world.getAt(2, 2).getElement());
     	
     	assertEquals(0, stats.getBorn());
@@ -335,6 +387,62 @@ public class BiotopeTest extends TestCase {
         biotope.runRound();
         biotope.runRound();
         assertEquals(3, biotope.round());
+    }
+    
+    /**
+     * Test that the bornThisRound variable in statistics is
+     * initialized after each round. This is tested by making a biotope with
+     * only two places. A finch is placed on one of them, an it will breed, but then
+     * there is nothing space left, so in the third round no new finches will come
+     * to the world, and getBornThisRound should return 0.
+     *
+     */
+    public void testNewRoundStatistics1() {
+    	Biotope b = new Biotope(1, 2, 1.00, 10, 2, 0, 10, 10, 0, behaviors);
+        b.putFinch(0, 0, new Samaritan());
+        // A new finch will be born when making a new round.
+        b.runRound();
+        // New the world is filled. Then after a new round getBornThisRound should
+        // return 0.
+        b.runRound();
+        Statistics s = b.statistics(new Samaritan());
+        assertEquals(0,s.getBornThisRound());
+    }
+    
+    /**
+     * Test that the deadByTicksThisRound variable in statistics is
+     * initialized after each round. We create a biotope in whichs a single finch
+     * is placed. The finch will die by ticks after one round, and then
+     * getDeadByTicksThisRound should be 0 efter two rounds.
+     *
+     */
+    public void testNewRoundStatistics2() {
+    	Biotope b = new Biotope(4, 4, 0.00, 10, 2, 4, 10, 10, 0, behaviors);
+        b.putFinch(2, 2, new Samaritan());
+        // The finch will be dead by ticks after one round.
+        b.runRound();
+        // After a new round getDeadByTicks should return 0.
+        b.runRound();
+        Statistics s = b.statistics(new Samaritan());
+        assertEquals(0,s.getDeadByTicksThisRound());
+    }
+    
+    /**
+     * Test that the deadByTicksThisRound variable in statistics is
+     * initialized after each round. We create a biotope in whichs a single finch
+     * is placed. The finch will die by age after one round, and then
+     * getDeadByAgeThisRound should be 0 efter two rounds.
+     *
+     */
+    public void testNewRoundStatistics3() {
+    	Biotope b = new Biotope(4, 4, 0.00, 10, 5, 0, 1, 1, 0, behaviors);
+        b.putFinch(2, 2, new Samaritan());
+        // The finch will be dead by age after one round.
+        b.runRound();
+        // After a new round getDeadByTicks should return 0.
+        b.runRound();
+        Statistics s = b.statistics(new Samaritan());
+        assertEquals(0,s.getDeadByAgeThisRound());
     }
     
     /**
