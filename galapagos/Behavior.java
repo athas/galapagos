@@ -11,12 +11,12 @@ public interface Behavior extends Cloneable {
     public Action decide (Finch finch);
     
     /**
-     * This finch gets information about which action a finch just met chose.
+     * This finch gets information about which action a finch just met choosed.
      */
     public void response (Finch finch, Action action);
     
     /**
-     * A new instanse of the same behavior.
+     * A new instance of the same behavior.
      */
     public Behavior clone();
       

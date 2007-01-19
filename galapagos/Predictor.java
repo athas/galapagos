@@ -1,7 +1,5 @@
 package galapagos;
 
-import java.util.LinkedList;
-
 /**
  * A behavior implementing two-bit prediction.
  */
