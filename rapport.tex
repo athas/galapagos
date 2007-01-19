@@ -189,11 +189,11 @@ at bruge - en {\tt Biotope} konstrueres bl.a. ud fra en liste af {\tt
   Behavior}-objekter, og denne liste indeholder alle de opførsler som
 finker i biotopen skal kunne have. Derudover kan man ved konstruktion
 af en {\tt Biotope} angive størrelsen af {\tt world},
-ynglesandsynlighed, maksimalt antal livspoint af en finke, startpoint,
-rundepris, maksimal maksimal alder, minimal maksimal alder og antallet
-af finker med hver opførset der skal sættes i verden når simulationen
-startes. De mulige opførsler og de andre parametre kan ikke ændres når
-biotopen er skabt.
+ynglesandsynlighed, maksimalt antal livspoint af en finke,
+startpoint, rundepris, nedre grænse for maksimal alder, øvre grænse
+for maksimal alder og antallet af finker med hver opførsel der skal
+sættes i verden når simulationen startes. De mulige opførsler og de
+andre parametre kan ikke ændres når biotopen er skabt.
 
 Ved at kalde metoden {\tt
   runRound} simuleres en enkelt runde, og eventuelle
@@ -214,14 +214,13 @@ Det er {\tt
   Biotope}-klassens ansvar at sørge for at disse situationer bliver
 løst på fair vis.
 
-Det er også {\tt Biotope}-klassens ansvar at samle
-ændringer undervejs i en runde i {\tt Statistics}-objekter. Et sådant
-objekt indeholder information om hvor mange finker der er,
-hvor mange nye finker der er kommet
-til verden, og hvor mange der har forladt verden pga. hhv. utøj og
-alderdom.
-Disse {\tt Statistics} bruger observers til at få et bredt billede
-af begivenhederne i en runde og over længere tid.
+Det er også {\tt Biotope}-klassens ansvar at samle ændringer
+undervejs i en runde i {\tt Statistics}-objekter. Et sådant objekt
+indeholder information om hvor mange finker der er, hvor mange nye
+finker der er kommet til verden, og hvor mange der har forladt verden
+pga. hhv. utøj og alderdom. Disse {\tt Statistics} kan bruges af
+observerende objekter til at få et bredt billede af begivenhederne i
+en runde og over længere tid.
 
 
 \subsection{Brugerinterface}
