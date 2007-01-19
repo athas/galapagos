@@ -6,7 +6,7 @@ import java.util.*;
  * An abstract behavior type that stores knowledge about interactions
  * and permit later analysis to choose an optimal strategy.
  */
-public abstract class AnalyzingBehavior extends MemoryBehavior<Analyzer.Analysis> {
+public abstract class AnalyzingBehavior extends MemoryBehavior<AnalyzingBehavior.Analysis> {
     /**
      * An interaction history for a specific finch.
      */
