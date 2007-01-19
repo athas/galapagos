@@ -182,12 +182,13 @@ public class GalapagosFrame extends JFrame implements Observer {
         unlimitedRounds = newButton("Go!", "unlimitedRounds");
         stopRounds = newButton("Stop Simulation", "stopRounds");
         
-        numberOfRounds = new JSpinner(new RevisedSpinnerNumberModel(50,0,Integer.MAX_VALUE,10));
-        numberOfRounds.setPreferredSize(standardSpinnerSize);
+        numberOfRounds = new JSpinner(new RevisedSpinnerNumberModel(0,0,Integer.MAX_VALUE,10));
         numberOfRounds.setName("numberOfRoundsSpinner");
-        numberOfRounds.addChangeListener(controller);
+        numberOfRounds.setPreferredSize(standardSpinnerSize);
         numberOfRounds.setMaximumSize(new Dimension(100,30));
         numberOfRounds.setMinimumSize(minimumButtonDimension);
+        numberOfRounds.addChangeListener(controller);
+        numberOfRounds.setValue(100); // The initial value needs to be set seperatly to notify the controller of the value.
         
         toggleLogging = new JCheckBox("Perform logging", isLogging);
         toggleLogging.addActionListener(new ActionListener () {
@@ -211,12 +212,13 @@ public class GalapagosFrame extends JFrame implements Observer {
                 }
             });
         
-        timerInterval = new JSpinner(new RevisedSpinnerNumberModel(200,0,Integer.MAX_VALUE,100));
+        timerInterval = new JSpinner(new RevisedSpinnerNumberModel(0,0,Integer.MAX_VALUE,100));
+        timerInterval.setName("timerIntervalSpinner");
         timerInterval.setPreferredSize(standardSpinnerSize);
         timerInterval.setMaximumSize(new Dimension(100,30));
         timerInterval.setMinimumSize(minimumButtonDimension);
         timerInterval.addChangeListener(controller);
-        timerInterval.setName("timerIntervalSpinner");
+        timerInterval.setValue(100); // The initial value needs to be set seperatly to notify the controller of the value.
         
         Container topContainer = Box.createHorizontalBox();
         topContainer.add(Box.createGlue());

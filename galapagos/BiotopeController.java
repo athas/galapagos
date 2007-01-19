@@ -17,9 +17,10 @@ public class BiotopeController implements ActionListener, ChangeListener {
      */
     public BiotopeController (Biotope biotope) {
         this.biotope = biotope;
-        roundTimer = new Timer(200, this);
+        roundTimer = new Timer(0, this);
         roundTimer.stop();
         roundsToGo = 0;
+        numberOfRounds = 0;
     }
     
     /**
