@@ -21,5 +21,7 @@ public abstract class BehaviorTest extends TestCase {
         Behavior clone = behavior.clone();
         
         assertEquals(behavior.getClass().toString(), clone.getClass().toString());
+        assertEquals(behavior,clone);
+        assertEquals(behavior.hashCode(),clone.hashCode());
     }
 }

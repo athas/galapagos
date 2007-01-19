@@ -7,7 +7,7 @@ import galapagos.*;
  *
  * The decision-test only makes sure that no exceptions are
  * thrown. This is because it is in the nature of the Analyzer
- * behavior to be probabitionalistic and vague, which makes it hard to
+ * behavior to be probabilistic and vague, which makes it hard to
  * create and test hard rules for its behavior. Also, we do not
  * believe that it makes sense to test the decision-making aspect of
  * the behavior, as the determination algorithm is not specified, but
