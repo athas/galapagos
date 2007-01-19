@@ -4,8 +4,6 @@
 
 \textheight = 625pt \textwidth = 400pt \oddsidemargin = 25pt
 
-\usepackage[pdftex]{color, graphicx}
-
 \pagestyle{plain}
 
 \title{Eksamensprojekt i Objektorienteret \linebreak programmering og design}
@@ -58,16 +56,17 @@ af {\tt World.Place} objekter. Disse {\tt World.Place}s skaber
 verdens torusform, som krævet i opgaven, idet de har metoder til at
 finde nabo-{\tt World.Place}s. Et af disse objekter, placeret på en
 kant, vil give de passende objekter på den modsatte kant, når der
-bliver spurgt om dets naboer. Et {\tt World.Place}-objekt kan også
+bliver spurgt om dets naboer. Et {\tt World.Place}-objekt kan
 indeholde et andet objekt - dets {\em element}. I vores simulation er
 finke-objekterne placeret som elementer i {\tt World.Place}-objekter,
 men da man kan forestille sig at der sidenhen kan være behov for at
 lave {\tt World}-strukturer med andre typer objekter end finker, har
-vi valgt at benytte generics til {\tt World}-klassen.
+vi valgt at parametrisere {\tt World}-klassen over den type elementer
+som {\tt World.Place}-objekterne indeholder.
 
 Metoderne {\tt World.Place.filledNeighbors} og {\tt
   World.Place.emptyNeighbors} bruges til at finde alle de naboceller der
-  hhv. indeholder elementer eller er tommer. De skal benyttes når
+  hhv. indeholder elementer eller er tomme. De skal benyttes når
   finker skal få afkom og møde andre finker.
 
 Under simulationen er der endnu en interessant facilitet vi
@@ -86,12 +85,13 @@ implementation. Vi har - ved at observere at {\tt
 kun deres
 elementer der ændrer sig) -
 fundet på en mere effektiv implementation, hvor vi i {\tt
-  World}, sideløbende med det almindelige lager gemmer et alternativt
+  World}, sideløbende med det almindelige lager, gemmer et alternativt
 lager, der indeholder de samme {\tt World.Place}-objekter som det
 primære, men i en anden rækkefølge. Idet det er de samme {\tt
   World.Place}-objekter der bliver modificeret når der tilføjes og
-fjernes finker, vil dette array altid være opdateret mht. indhold, og
-vi kan implementere tilfældig iteration blot ved at kalde {\tt
+fjernes finker, vil dette sekundære array altid være opdateret mht.
+indhold, og vi kan implementere tilfældig iteration blot ved at kalde
+{\tt
   Collections.shuffle} på det og returnere en iterator. Derved slipper
 vi for at skulle klone vores underliggende array hver gang vi har
 behov for pseudotilfældig iteration.
@@ -101,25 +101,23 @@ behov for pseudotilfældig iteration.
 En instans af klassen {\tt GalapagosFinch} repræsenterer én
 finke. Klassen {\tt GalapagosFinch} implementerer interfacet {\tt
   Finch}, der bruges som reference til en {\tt GalapagosFinch} på
-steder hvor det ikke er tilsigtet at man skal kunne få ekstra oplysninger
-om {\tt GalapagsoFinch}en eller ændre den på nogen måde
-(det vil naturligvis stadig være muligt at
-type-caste en {\tt Finch} til {\tt GalapagosFinch} og herefter ændre
-på den eller få yderligere oplysninger om fx dens alder).
+steder hvor det ikke er tilsigtet at man skal kunne få ekstra
+oplysninger om {\tt GalapagsoFinch}en eller ændre den på nogen måde
+(det vil naturligvis stadig være muligt at "type-caste" en {\tt
+Finch} til {\tt GalapagosFinch} og herefter ændre på den eller få
+yderligere oplysninger om fx dens alder).
 
 En {\tt GalapagosFinch} har én {\tt Behavior}. Det er {\tt
   Behavior}ens ansvar at afgøre om {\tt GalapagosFinch}en vil hjælpe
 en given finke eller ej, ligesom {\tt Behavior}en underrettes om
 hvorledes andre finker har handlet overfor {\tt GalapagosFinch}en.
 
-Metoden {\tt decide} i
-{\tt GalapagosFinch} bruges når man har brug for at få at vide, om
-{\tt GalapagosFinch}en vil hjælpe en anden finke eller ej (i første
-tilfælde returneres {\tt FinchStatus.CLEANING}, i andet tilfælde
-returneres {\tt FinchStatus.IGNORING}).
-Når {\tt decide} kaldes
-returneres resultatet af
-{\tt Behavior}ens {\tt decide}-metode på den pågældende finke.
+Metoden {\tt decide} i {\tt GalapagosFinch} bruges når man har brug
+for at få at vide, om {\tt GalapagosFinch}en vil hjælpe en anden {\tt
+Finch} eller ej (i første tilfælde returneres {\tt
+FinchStatus.CLEANING}, i andet tilfælde returneres {\tt
+FinchStatus.IGNORING}). Når {\tt decide} kaldes returneres resultatet
+af {\tt Behavior}ens {\tt decide}-metode på den pågældende finke.
 
 Med metoden {\tt response} modtager {\tt GalapagosFinch}en information
 om hvordan en given anden {\tt Finch} har handlet mod den. Dette gives
@@ -139,13 +137,26 @@ i forbindelse med møder med andre finker.
 Resultatet af {\tt decide} beskriver om en {\tt Finch} skal hjælpes
 eller ej.
 
-{\tt response} modtager information om hvad en anden finke handlede
-under et møde med den {\tt Finch} som den pågældende {\tt Behavior}
-tilhører.
+{\tt response} modtager information om hvordan en anden finke
+handlede under et møde med den {\tt GalapagosFinch} som den
+pågældende {\tt Behavior} tilhører.
 
-Enhver implementation af {\tt Behavior} har sin egen
-{\tt toString}-metoden, og denne bruges til at afgøre hvilken slags
-{\tt Behavior} en given {\tt Behavior} er.
+Enhver implementation af {\tt Behavior} har sin egen {\tt
+toString}-metode der returnerer navnet på den givne {\tt Behavior}
+(det er dette navn der i sidste ende bliver vist af vores bruger
+interface). Man kan således bruge {\tt toString} til at afgøre
+hvilken konkret klasse som et givent {\tt Behavior}-objekt er en
+instans af.
+
+Til dette formål har vi dog også krævet at enhver konkret {\tt
+Behavior}-klasse skal overskrive {\tt equals} således at {\tt
+a.equals(b)} for to {\tt Behavior}s objekter hvis og kun hvis {\tt a}
+og {\tt b} er instanser af den samme {\tt Behavior}.
+
+{\tt Behavior} interfacet kræver derfor også at {\tt hashCode}
+overskrives så alle {\tt Behavior}s af samme klasse giver samme {\tt
+hashCode} (hvorved specifikationen af {\tt hashCode} i {\tt Object}
+er overholdt).
 
 Enhver klasse der
 repræsenterer en finkeopførsel som afhænger af hvordan finken er
@@ -153,7 +164,7 @@ blevet behandlet, udvider den abstrakte klasse {\tt
   MemoryBehavior}.
 
 {\tt MemoryBehavior} er parametriseret med den generiske variabel {\tt
-  DATA}, og klassevariablen {\tt finches} er et
+  DATA}, og instansvariablen {\tt finches} er et
 {\tt WeakHashMap<Finch, DATA>}, som bruges når man ønsker at knytte
 {\tt DATA} til en eller anden {\tt Finch}. Dette danner grundlaget for
 senere at kunne afgøre hvordan der
@@ -166,8 +177,8 @@ til en given {\tt Finch} i {\tt finches}.
 
 Den abstrakte klasse {\tt ActionMemoryBehavior} udvider {\tt
   MemoryBehavior<Action>}, og udvides af alle typer af opførsler
-der til en given {\tt Finch} behøver at huske én {\tt Action}. Dette
-være sig fx {\tt Grudger} og {\tt TitForTat}.
+der til en given {\tt Finch} kun behøver at huske én {\tt Action}.
+Eksempler på dette er {\tt Grudger} og {\tt TitForTat}.
 
 \subsubsection{\tt Biotope}
 
