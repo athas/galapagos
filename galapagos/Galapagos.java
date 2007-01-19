@@ -23,6 +23,7 @@ public class Galapagos {
         behaviors.put(new ProbingTitForTat(), Color.CYAN);
         behaviors.put(new SuspiciousTitForTat(), Color.ORANGE);
         behaviors.put(new Predictor(), Color.GREEN.darker());
+        behaviors.put(new Analyzer(), Color.BLUE.darker());
         
         GalapagosFrame frame = new GalapagosFrame(behaviors);
         frame.setVisible(true);
