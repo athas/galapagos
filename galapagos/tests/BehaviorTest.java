@@ -51,6 +51,31 @@ public abstract class BehaviorTest extends TestCase {
     public final void testClone() {
         Behavior clone = behavior.clone();
         
-        assertEquals(behavior.getClass().toString(), clone.getClass().toString());
+        // should be of the same type
+        assertEquals(behavior, clone);
+        
+        // but not the same instance
+        assertTrue(behavior != clone);
+        
+        // creating 2 clones should create 2 new behaviors.
+        Behavior clone2 = behavior.clone();
+        assertTrue(clone != clone2);
+    }
+    
+    /**
+     * Test that equals() indicates when to behaviors is of
+     * the same behavior type.
+     */
+    public final void testEquals() {
+    	//JUnit uses the equals()-method to test for equality.
+    	assertEquals(behavior, behavior.clone());
+    	assertNotSame(behavior, new Object());
+    }
+    
+    /**
+     * Test that hashCode() gives the same result for instances that are equal
+     */
+    public final void testHashCode() {
+    	assertEquals(behavior.hashCode(), behavior.clone().hashCode());
     }
 }
