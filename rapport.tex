@@ -30,27 +30,27 @@ Eksamensnummer: 37
 \subsubsection{\tt World}
 
 Den fundamentale datastruktur, der ligger til grund for hele
-simulationens  verden, er den passende navngivne klasse {\tt World}.
-Denne klasse giver i sin enkelthed adgang til et todimensionelt array
+simulationens  verden, er den passende navngivede klasse {\tt World}.
+Denne klasse giver i sin enkelthed adgang til et todimensionalt array
 af {\tt World.Place} objekter. Disse {\tt World.Place}s skaber
 verdens torusform, som krævet i opgaven, idet de har metoder til at
 finde nabo-{\tt World.Place}s. Et af disse objekter, placeret på en
 kant, vil give de passende objekter på den modsatte kant, når der
-bliver spurgt om sine naboer. Et {\tt World.Place} objekt kan også
+bliver spurgt om dets naboer. Et {\tt World.Place}-objekt kan også
 indeholde et andet objekt - dets {\em element}. I vores simulation er
-finke-objekterne placeret som elementer i {\tt World.Place} objekter,
+finke-objekterne placeret som elementer i {\tt World.Place}-objekter,
 men da man kan forestille sig at der sidenhen kan være behov for at
 lave {\tt World}-strukturer med andre typer objekter end finker, har
 vi valgt at benytte generics til {\tt World}-klassen.
 
 Metoderne {\tt World.Place.filledNeighbors} og {\tt
-  World.Place.emptyNeighbors} bruges til at finde de naboceller der
+  World.Place.emptyNeighbors} bruges til at finde alle de naboceller der
   hhv. indeholder elementer eller er tommer. De skal benyttes når
   finker skal få afkom og møde andre finker.
 
-Under simulationen er der ydermere endnu en interessant facilitet, vi
-ofte har behov for at udføre på vores verden - når der skal arrangeres
-møder og skabes afkom, skal vi iterere igennem alle finker i verden,
+Under simulationen er der endnu en interessant facilitet vi
+ofte har behov for at udføre på vores verden. Når der skal arrangeres
+møder og skabes afkom skal vi iterere igennem alle finker i verden,
 men for ikke skabe favoritter, skal dette helst ske i pseudotilfældig
 rækkefølge. Ydermere ønsker vi et iteratorbaseret interface for at
 gøre koden så elegant som muligt. En åbenlys implementation er at lade
@@ -59,11 +59,13 @@ gøre koden så elegant som muligt. En åbenlys implementation er at lade
 returnere en iterator. Dette ville resultere i allokeringen af et nyt
 array for hver gang vi har behov for at iterere igennem elementerne i
 {\tt World} i pseudotilfældig rækkefølge - en åbenlys ineffektiv
-implementation. Vi har dog - ved at observere at {\tt
-  World.Place}-objekterne i {\tt World} aldrig ændrer sig, kun deres
-elementer - fundet på en mere effektiv implementation, hvor vi i {\tt
-  World}, sideløbende med det almindelige lager, gemmer et alternativt
-lager, der indeholder de samme {\tt World.Place} objekter som det
+implementation. Vi har - ved at observere at {\tt
+  World.Place}-objekterne i {\tt World} altid er de samme (det er
+kun deres
+elementer der ændrer sig) -
+fundet på en mere effektiv implementation, hvor vi i {\tt
+  World}, sideløbende med det almindelige lager gemmer et alternativt
+lager, der indeholder de samme {\tt World.Place}-objekter som det
 primære, men i en anden rækkefølge. Idet det er de samme {\tt
   World.Place}-objekter der bliver modificeret når der tilføjes og
 fjernes finker, vil dette array altid være opdateret mht. indhold, og
@@ -77,8 +79,11 @@ behov for pseudotilfældig iteration.
 En instans af klassen {\tt GalapagosFinch} repræsenterer én
 finke. Klassen {\tt GalapagosFinch} implementerer interfacet {\tt
   Finch}, der bruges som reference til en {\tt GalapagosFinch} på
-steder hvor det ikke er tilsigtet at {\tt GalapagsoFinch}en skal kunne
-ændres på nogen måde.
+steder hvor det ikke er tilsigtet at man skal kunne få ekstra oplysninger
+om {\tt GalapagsoFinch}en eller ændre den på nogen måde
+(det vil naturligvis stadig være muligt at
+type-caste en {\tt Finch} til {\tt GalapagosFinch} og herefter ændre
+på den eller få yderligere oplysninger om fx dens alder).
 
 En {\tt GalapagosFinch} har én {\tt Behavior}. Det er {\tt
   Behavior}ens ansvar at afgøre om {\tt GalapagosFinch}en vil hjælpe
@@ -144,28 +149,46 @@ være sig fx {\tt Grudger} og {\tt TitForTat}.
 
 \subsubsection{\tt Biotope}
 
-{\tt Biotope}-klassen er simulationens grundsten, den klasse, der
-implementere al logikken i programmet. {\tt Biotope} er ganske simpel
-at bruge - essentielt foregår det ved at levere en liste af {\tt
-  Behavior}-objekter som beskriver de forskellige opførsler de
-simulerede finker skal benytte sig af. Ved at kalde metoden {\tt
-  runRound} simuleres en enkelt runde af simulationen, og eventuelle
+{\tt Biotope}-klassen er simulationens grundsten, den klasse der
+implementerer al logikken i programmet. {\tt Biotope} har en instans,
+{\tt world}, af {\tt World<GalapagosFinch>}. {\tt Biotope} er ganske simpel
+at bruge - en {\tt Biotope} konstrueres bl.a. ud fra en liste af {\tt
+  Behavior}-objekter, og denne liste indeholder alle de opførsler som
+finker i biotopen skal kunne have. Derudover kan man ved konstruktion
+af en {\tt Biotope} angive størrelsen af {\tt world},
+ynglesandsynlighed, maksimalt antal livspoint af en finke, startpoint,
+rundepris, maksimal maksimal alder, minimal maksimal alder og antallet
+af finker med hver opførset der skal sættes i verden når simulationen
+startes. De mulige opførsler og de andre parametre kan ikke ændres når
+biotopen er skabt.
+
+Ved at kalde metoden {\tt
+  runRound} simuleres en enkelt runde, og eventuelle
 observerende objekter gøres opmærksomme på ændringer i simulationens
 tilstand. Det er {\tt Biotope}-klassens ansvar at oprette og
-vedligeholde objekter til at repræsentere spilverdenen ({\tt World})
-og finkerne i den ({\tt GalapagosFinch}).
+vedligeholde verdenen ({\tt world})
+og finkerne ({\tt GalapagosFinch}'erne) i den.
 
-For at simulationen skal være fair, er det nødvendigt at f.eks.
-muligheden for at få afkom bliver besluttet tilfældigt - da der
-utvivlsomt opstår situationer hvor flere finker deles om et tomt
-nabofelt som kan fyldes med afkom, er det ikke nok at bruge en naiv
+For at simulationen skal være fair, er det nødvendigt at finkerne i
+tilfældig rækkefølge får mulighed for at få afkom. Der
+opstår nemlig utvivlsomt situationer hvor flere finker deles om samme tomme
+nabofelt som kan fyldes med afkom, og så er det ikke en god idé at
+bruge en naiv
 iteration, som f.eks. række for række igennem verden, da det så ville
-favoritisere finker nordvest i spilverdenen. Det er {\tt
+favoritisere finker nordvest i spilverdenen. Ligeledes må vi på
+tilfældig vis løbe finkerne igennem og finde en mødepartner til dem.
+Det er {\tt
   Biotope}-klassens ansvar at sørge for at disse situationer bliver
-løst på fair vis. Det er også {\tt Biotope}-klassens ansvar at samle
-ændringer undervejs i en runde i et {\tt Statistics}-objekt, som
-observers kan bruge til at få et bredt billede af begivenhederne i en
-runde.
+løst på fair vis.
+
+Det er også {\tt Biotope}-klassens ansvar at samle
+ændringer undervejs i en runde i {\tt Statistics}-objekter. Et sådant
+objekt indeholder information om hvor mange finker der er,
+hvor mange nye finker der er kommet
+til verden, og hvor mange der har forladt verden pga. hhv. utøj og
+alderdom.
+Disse {\tt Statistics} bruger observers til at få et bredt billede
+af begivenhederne i en runde og over længere tid.
 
 
 \subsection{Brugerinterface}
