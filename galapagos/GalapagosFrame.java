@@ -151,9 +151,11 @@ public class GalapagosFrame extends JFrame implements Observer {
             biotope.addObserver(this);
         
         biotope.doNotifyObservers();
+        this.setSize(combinedSize());
+        this.validate();
+        pack();
         setSize(combinedSize());
         validate();
-        pack();
     }
     
     /**
