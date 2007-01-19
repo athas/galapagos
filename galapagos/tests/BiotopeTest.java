@@ -4,6 +4,12 @@ import galapagos.*;
 import junit.framework.*;
 import java.util.*;
 
+/**
+ * Primarily tests that Biotope is able to run simulation-rounds as specified
+ * (with breeding, meetings and removal of dead finches) but also tests
+ * that it updates the statistics properly.
+ *
+ */
 public class BiotopeTest extends TestCase {
 	ArrayList<Behavior> behaviors;
 	public void setUp() {
@@ -116,8 +122,9 @@ public class BiotopeTest extends TestCase {
     	assertNotNull(place.getElement());
     	
     	GalapagosFinch finch = place.getElement();
+    	
+    	assertEquals(new Samaritan(), finch.behavior());
     	assertEquals(1, finch.age());
-		assertEquals("Samaritan", finch.behavior().toString());
 		assertEquals(FinchStatus.ALIVE, finch.status());
 		
 		// Make a new samaritan and check that the statistics is still OK.
@@ -133,46 +140,52 @@ public class BiotopeTest extends TestCase {
         assertEquals(2, stats.getPopulation());
 	}
     
-    public void testBreed () {
-        // Make a Biotope at size 4x4 with 0 Samaritans,
-    	// Grudgers and FlipFloppers. In this biotope the finches don't
-    	// loose any hotpoints, and they become 100 rounds old.
-        
-        Biotope b = new
+    /**
+     * Tests that finches breeds to a neighbour-place in the world and that the child
+     * is a 1-year old version of their parents.
+     * Tests in a 4x4 world with a breeding propability of 33% and no Behavior's per finch.
+     */
+    public void testBreed () {       
+        Biotope biotope = new
         	Biotope(4, 4, 0.33, 12, 7, 0, 100, 100, 0, behaviors);
-        World<GalapagosFinch> world = b.world;
     
         // We make a new Samaritan at place (2,2).
-        b.putFinch(2,2, new Samaritan());
+        biotope.putFinch(2, 2, new Samaritan());
         
-    	World<GalapagosFinch>.Place p = world.getAt(2, 2);
+    	World<GalapagosFinch>.Place p = biotope.world.getAt(2, 2);
     	
     	GalapagosFinch fi = p.getElement();
     	
-    	Statistics s = b.statistics(fi.behavior());
+    	Statistics s = biotope.statistics(fi.behavior());
 		
     	// Repeat making new rounds until the population has increased.
 		// The finch fi should make a new finch at some point before it
 		// dies.
-		while (s.getPopulation() != 2) b.runRound();
+		while (s.getPopulation() != 2) biotope.runRound();
 		
-		assertTrue(s.getBorn() == 1);
-    	assertTrue(s.getBornThisRound() == 1);
-    	assertTrue(s.getDeadByTicks() == 0);
-    	assertTrue(s.getDeadByTicksThisRound() == 0);
-    	assertTrue(s.getDeadByAge() == 0);
-    	assertTrue(s.getDeadByAgeThisRound() == 0);
+		assertEquals(1, s.getBorn());
+		assertEquals(1, s.getBornThisRound());
+		assertEquals(0, s.getDeadByTicks());
+		assertEquals(0, s.getDeadByTicksThisRound());
+		assertEquals(0, s.getDeadByAge());
+		assertEquals(0, s.getDeadByAgeThisRound());
     	
     	// Get the place at which the finch fi has made a new finch.
-    	List<World<GalapagosFinch>.Place> placeList = p.filledNeighbours();
-    	assertTrue(placeList.size() == 1);
-    	World<GalapagosFinch>.Place newPlace = placeList.get(0);
+    	List<World<GalapagosFinch>.Place> neighbours = p.filledNeighbours();
+    	
+    	//should only have the just born finch as neighbour
+    	assertEquals(1, neighbours.size());
+    	World<GalapagosFinch>.Place newPlace = neighbours.get(0);
     	GalapagosFinch fi2 = newPlace.getElement();
-    	assertTrue(fi2.behavior().toString() == "Samaritan");
-    	assertTrue(fi2.age() == 1);
-    	assertTrue(fi2.status() == FinchStatus.ALIVE);
+    	assertEquals(new Samaritan(), fi2.behavior());
+    	assertEquals(1, fi2.age());
+    	assertEquals(FinchStatus.ALIVE, fi2.status());
     }
     
+    /**
+     * 
+     *
+     */
     public void testMeeting () {
         // Make a Biotope at size 4x4 with 0 Samaritans,
     	// Grudgers and FlipFloppers. In this biotope the finches loose
@@ -185,8 +198,8 @@ public class BiotopeTest extends TestCase {
         World<GalapagosFinch> world = b.world;
     
         // We make a new Samaritan at place (2,2) and one at place (2,3).
-        b.putFinch(2,2, new Samaritan());
-        b.putFinch(2,3, new Samaritan());
+        b.putFinch(2, 2, new Samaritan());
+        b.putFinch(2, 3, new Samaritan());
         
     	GalapagosFinch fi1 = world.getAt(2, 2).getElement();
     	GalapagosFinch fi2 = world.getAt(2, 3).getElement();
@@ -195,12 +208,12 @@ public class BiotopeTest extends TestCase {
     	
     	// fi1 and fi2 should be alive because they got 3
     	// hitpoints each from the meeting.
-    	assertTrue(fi1.status() == FinchStatus.ALIVE);
-    	assertTrue(fi2.status() == FinchStatus.ALIVE);
+    	assertEquals(FinchStatus.ALIVE, fi1.status());
+    	assertEquals(FinchStatus.ALIVE, fi2.status());
     	
     	// fi1 and fi2 should still be in the world:
-    	assertTrue(world.getAt(2, 2).getElement() == fi1);
-    	assertTrue(world.getAt(2, 3).getElement() == fi2);
+    	assertEquals(fi1, world.getAt(2, 2).getElement());
+    	assertEquals(fi2, world.getAt(2, 3).getElement());
     }
     
     public void testGrimReaperDeadByAge () {
@@ -220,116 +233,118 @@ public class BiotopeTest extends TestCase {
     	b.runRound();
     	
     	// fi should be older now.
-    	assertTrue(fi.age() == 2);
+    	assertEquals(2, fi.age());
     	
     	// fi should be alive
-    	assertTrue(fi.status() == FinchStatus.ALIVE);
+    	assertEquals(FinchStatus.ALIVE, fi.status());
     	
     	// fi should be in the world:
-    	assertTrue(world.getAt(2, 2).getElement() == fi);
+    	assertEquals(fi, world.getAt(2, 2).getElement());
     	
-    	Statistics s = b.statistics(new Samaritan());
+    	Statistics stats = b.statistics(new Samaritan());
     	
-    	assertTrue(s.getBorn() == 0);
-    	assertTrue(s.getBornThisRound() == 0);
-    	assertTrue(s.getDeadByTicks() == 0);
-    	assertTrue(s.getDeadByTicksThisRound() == 0);
-    	assertTrue(s.getDeadByAge() == 0);
-    	assertTrue(s.getDeadByAgeThisRound() == 0);
+    	assertEquals(0, stats.getBorn());
+    	assertEquals(0, stats.getBornThisRound());
+    	assertEquals(0, stats.getDeadByTicks());
+    	assertEquals(0, stats.getDeadByTicksThisRound());
+    	assertEquals(0, stats.getDeadByAge());
+    	assertEquals(0, stats.getDeadByAgeThisRound());
     
     	b.runRound();
     	
     	// fi should be older now.
-    	assertTrue(fi.age() == 3);
+    	assertEquals(3, fi.age());
     	
     	// fi should be dead by age
-    	assertTrue(fi.status() == FinchStatus.DEAD_AGE);
+    	assertEquals(FinchStatus.DEAD_AGE, fi.status());
     	
     	// fi should not be in the world:
-    	assertTrue(world.getAt(2, 2).getElement() == null);
+    	assertNull(world.getAt(2, 2).getElement());
     	
-    	assertTrue(s.getBorn() == 0);
-    	assertTrue(s.getBornThisRound() == 0);
-    	assertTrue(s.getDeadByTicks() == 0);
-    	assertTrue(s.getDeadByTicksThisRound() == 0);
-    	assertTrue(s.getDeadByAge() == 1);
-    	assertTrue(s.getDeadByAgeThisRound() == 1);
+    	assertEquals(0, stats.getBorn());
+    	assertEquals(0, stats.getBornThisRound());
+    	assertEquals(0, stats.getDeadByTicks());
+    	assertEquals(0, stats.getDeadByTicksThisRound());
+    	assertEquals(1, stats.getDeadByAge());
+    	assertEquals(1, stats.getDeadByAgeThisRound());
     }
-        
+    
+    /**
+     * Test that finches age is increased, the finches status is changed on death and dead finches is removed.
+     */
     public void testGrimReaperDeadByTicks () {
         // Make a Biotope at size 4x4 with 0 Samaritans,
     	// Grudgers and FlipFloppers. In this biotope the finches loose
-    	// 1 hitpoint per round and have 2 initial hitpoint.
-    	// Therefore, they are dead after two rundRounds
+    	// 1 hitpoint per round and have 2 initial hitpoint. And breeding propability == 0.
+    	// Therefore, they are dead after two rounds
 
-        Biotope b = new
-        	Biotope(4, 4, 0.00, 10, 2, 1, 100, 100, 0, behaviors);
-        World<GalapagosFinch> world = b.world;
+        Biotope biotope = new Biotope(4, 4, 0.00, 10, 2, 1, 100, 100, 0, behaviors);
     
         // We make a new Samaritan at place (2,2).
-        b.putFinch(2,2, new Samaritan());
+        biotope.putFinch(2,2, new Samaritan());
         
-    	GalapagosFinch fi = world.getAt(2, 2).getElement();
+    	GalapagosFinch fi = biotope.world.getAt(2, 2).getElement();
     	
-    	b.runRound();
+    	biotope.runRound();
     	
     	// fi should be older now.
-    	assertTrue(fi.age() == 2);
+    	assertEquals(2, fi.age());
     	
     	// fi should be alive
     	assertEquals(FinchStatus.ALIVE, fi.status());
     	
     	// fi should be in the world
-    	assertTrue(world.getAt(2, 2).getElement() == fi);
+    	assertEquals(fi, biotope.world.getAt(2, 2).getElement());
     	
-    	Statistics s = b.statistics(new Samaritan());
+    	Statistics stats = biotope.statistics(new Samaritan());
     	
-    	assertTrue(s.getBorn() == 0);
-    	assertTrue(s.getBornThisRound() == 0);
-    	assertTrue(s.getDeadByTicks() == 0);
-    	assertTrue(s.getDeadByTicksThisRound() == 0);
-    	assertTrue(s.getDeadByAge() == 0);
-    	assertTrue(s.getDeadByAgeThisRound() == 0);
+    	assertEquals(0, stats.getBorn());
+    	assertEquals(0, stats.getBornThisRound());
+    	assertEquals(0, stats.getDeadByTicks());
+    	assertEquals(0, stats.getDeadByTicksThisRound());
+    	assertEquals(0, stats.getDeadByAge());
+    	assertEquals(0, stats.getDeadByAgeThisRound());
 
-    	b.runRound();
+    	biotope.runRound();
     	
     	// fi1 should be older now.
-    	assertTrue(fi.age() == 3);
+    	assertEquals(3, fi.age());
     	
     	// fi1 should be dead by ticks
     	assertEquals(FinchStatus.DEAD_TICKS, fi.status());
     	
     	// fi1 should not be in the world:
-    	assertTrue(world.getAt(2, 2).getElement() == null);
+    	assertNull(biotope.world.getAt(2, 2).getElement());
     	
-    	assertTrue(s.getBorn() == 0);
-    	assertTrue(s.getBornThisRound() == 0);
-    	assertTrue(s.getDeadByTicks() == 1);
-    	assertTrue(s.getDeadByTicksThisRound() == 1);
-    	assertTrue(s.getDeadByAge() == 0);
-    	assertTrue(s.getDeadByAgeThisRound() == 0);
+    	assertEquals(0, stats.getBorn());
+    	assertEquals(0, stats.getBornThisRound());
+    	assertEquals(1, stats.getDeadByTicks());
+    	assertEquals(1, stats.getDeadByTicksThisRound());
+    	assertEquals(0, stats.getDeadByAge());
+    	assertEquals(0, stats.getDeadByAgeThisRound());
     }
     
+    /**
+     * Test that the number of rounds is increased each time we call runRound.
+     */
     public void testRound () {
-        // Make a Biotope at size 4x4 with 0 Samaritans,
-    	// Grudgers and FlipFloppers.
-
-        Biotope b = new
-        	Biotope(4, 4, 0.00, 10, 2, 1, 100, 100, 0, behaviors);
+        Biotope biotope = new Biotope(10, 10, 0.00, 10, 2, 1, 100, 100, 5, behaviors);
         
-        assertTrue(b.round() == 0);
-        b.runRound();
-        b.runRound();
-        assertTrue(b.round() == 2);
+        assertEquals(0, biotope.round());
+        biotope.runRound();
+        biotope.runRound();
+        biotope.runRound();
+        assertEquals(3, biotope.round());
     }
     
-    public void testBehaviors () {
-        // Make a Biotope at size 4x4 with 0 Samaritans,
-    	// Grudgers and FlipFloppers.
+    /**
+     * Test that the behaviors of the Biotope equals those we give as argument
+     */
+    public void testBehaviors () {        
+        Biotope biotope = new Biotope(10, 10, 0.00, 10, 2, 1, 100, 100, 5, behaviors);
         
-        Biotope b = new
-        	Biotope(4, 4, 0.00, 10, 2, 1, 100, 100, 0, behaviors);
-        
-        assertTrue(b.behaviors() == behaviors);
+        //tests both ways
+        assertTrue(biotope.behaviors().containsAll(behaviors));
+        assertTrue(behaviors.containsAll(biotope.behaviors()));
     }
 }
