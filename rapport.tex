@@ -45,6 +45,26 @@ Mikkel Abrahamsen
 
 \section{Programdesign}
 
+Programmet er opdelt efter klare ansvarsgrænser med veldefinerede
+interfaces der adskiller programmets logik i logiske enheder. En
+overordnet ramme fungerer som kontrolpanel for simulationen, der er
+repræsenteret som en instans af klassen {\tt Biotope}. Rammen
+interagerer ikke meget med de klasser der opbygger simulationen (såsom
+datastrukturen verdens tilstand gemmes i, eller den konkrete klasse
+der repræsenterer finker), men uddelegerer i stedet dette til
+simulationsklassen. Det er dog nødvendigt at lade rammen rende til
+visse specifikke simulationsklasser, for at f.eks. statistik kan
+præsenteres på en brugbar måde.
+
+Interaktionen mellem simulationen og brugerinterfacet er struktureret
+efter {\em Model-View-Controller}-designmønstret, hvori modellen (i
+vores tilfælde, biotop-simulationen) er uafhængig af hvorledes dens
+tilstand bliver repræsenteret grafisk eller tekstuelt, og hvor dens
+virkemåde styres igennem et dedikeret {\em Controller}-objekt. I vores
+implementation er de grafiske kontrolværktøjer, som knapper, forbundet
+til kommandoer i vores {\em Controller}, der så igen manipulerer
+biotop-objektet.
+
 \subsection{Model}
 
 \subsubsection{\tt World}
