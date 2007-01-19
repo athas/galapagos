@@ -7,7 +7,7 @@ public class Predictor extends MemoryBehavior<Predictor.Prediction> {
     /**
      * The prediction for the behavior of a finch.
      */
-    public enum Prediction {STRONG_IGNORE, WEAK_IGNORE, STRONG_CLEAN, WEAK_CLEAN}
+    protected enum Prediction {STRONG_IGNORE, WEAK_IGNORE, STRONG_CLEAN, WEAK_CLEAN}
     
     /**
      * If a finch just met ignores this lenient grudger finch twice it
