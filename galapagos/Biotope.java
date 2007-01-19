@@ -332,7 +332,7 @@ public class Biotope extends Observable {
      * the Biotope, decreasing the hitpoints of all finches by
      * hitpointsPerRound, and reaping dead finches from the land,
      * removing them from the mortal world, and registering changes in
-     * statisticsTree.
+     * statistics.
      *
      * @require statisticsTree != null
      * @require world != null
