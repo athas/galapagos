@@ -271,12 +271,70 @@ specificere parametrene for en ny {\tt Biotope} der derefter kan
 iagttages og manipuleres gennem {\tt GalapagosFrame}.
 
 \subsubsection{\tt GalapagosFrame}
+En {\tt GalapagosFrame} er den komponent der står for at oprette alle
+de andre hovedkomponenter i programmet (dvs. selve {\tt
+Biotope}-instanserne, en {\tt BiotopeController} og de andre dele af
+bruger-interfacet). {\tt GalapagosFrame} tager en {\tt Map<Behavior,
+Color>} som argument i sin konstruktør. Denne {\tt Map} specificerer
+hvilke {\tt Behavior}s der er tilgængelige til konstruktion af
+biotoper i programme, samt hvilke farver der repræsententerer de
+forskellige {\tt Behavior}s i den visuelle visning af biotoperne. Det
+er på denne måde let at introducere nye {\tt Behavior}s til
+programmet da dette kun skal gøres et enkelt sted hvorefter resten af
+programmet skalerer sig selv til at passe med antallet af {\tt
+Behavior}s.
+
+Den visuelle repræsentation af {\tt GalapagosFrame} er delt op i fem
+områder. Det øverste panel indeholder de primære kontrolmuligheder
+for den aktuelle {\tt Biotope}. Alle komponenterne på dette panel
+(bortset fra knappen ``New Biotope'') sender events til {\tt
+BiotopeController}'en der håndterer de konkrete deltaljer om at få
+biotopen til at udføre det ønskede antal simulationsrunder. ``New
+Biotope''-knappen åbner programmets {\tt BiotopeCreator} der står for
+at indsamle gyldige parametre fra brugeren til en ny {\tt Biotope},
+og undervejs er det ikke muligt at manipulere med den nuværende {\tt
+Biotope} - idet {\tt BiotopeCreator}'en bliver vist som en modal
+dialog.
+
+Det midterste panel på {\tt GalapagosFrame} indeholder den visuelle
+visning af biotopen i form af en instans af {\tt AreaPanel}. {\tt
+AreaPanel} er tilføjet som {\tt Observer} til den nuværende {\tt
+Biotope}, og opdaterer sig selv når den aktuelle {\tt Biotope} ændrer
+sig. {\tt AreaPanel} ændrer desuden pixel-størrelsen for de enkelte
+felter i visningen af biotopen således at hele biotopen vises så
+stort som muligt på vinduet (forudsat at vinduet ikke gøres så småt
+at biotopen ikke kan vises selv med en feltstørrelse på 1x1 pixels).
+
+Panelet til højre på vinduet indholder en {\tt OptionButton} for hver
+{\tt Behavior} i biotopen (dvs. kun dem der var i biotopen da denne
+blev oprettet), og gør det i kombination med {\tt AreaPanel} muligt
+at tilføje nye finker til biotopen med musen.
+
+Det venstre panel indeholder tre indstillingsmuligheder. Det er
+muligt at indstille det minimale tidsrum der går mellem at en
+simulationsrunde udføres i biotopen (når {\tt BiotopeController}'en
+er sat til at udføre flere runder i træk). Det er desuden muligt at
+slå opdateringen af {\tt AreaPanel} fra hvilket kan mindske tiden for
+udførsel af mange runder i træk. Til sidst indeholder det venstre
+muligheden for at aktivere en {\tt BiotopeLogger} der udskrive en
+statistik over de enkelte {\tt Behaviors} til {\tt System.out} hver
+runde. {\tt BiotopeLogger} bliver tilføjet som {\tt Observer} til den
+aktuelle {\tt Biotope}, men er desuden beskrevet yderligere nedenfor.
+
+Det nederste panel indholder et {\tt NicerStatisticsPanel} det hver
+runde udskriver en generel status for hver af de {\tt Behavior}s der
+er i biotopen. Dette foregår endnu en gang ved at {\tt
+NicerStatisticsPanel} bliver tilføjet som {\tt Observer} til den
+nuværende {\tt Biotope}. Da {\tt NicerStatisticsPanel} får den
+anvendte {\tt Map<Behavior, Color>} med i sin konstruktør, er det
+derefter uafhængigt af {\tt GalapagosFrame}, og kan med meget få
+kodemæssige ændringer erstattes af et andet (og måske) bedre panel
+til udskrivning af information om biotop-tilstanden til brugeren.
+{\tt NicerStatisticsPanel} er beskrevet yderligere nedenfor.
 
 \subsubsection{\tt BiotopeController}
 
 \subsubsection{\tt BiotopeLogger}
-
-\subsubsection{\tt BiotopeCreator}
 
 \section{Konklusion}
 
