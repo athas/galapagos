@@ -4,8 +4,16 @@ import galapagos.*;
 import junit.framework.*;
 import java.util.*;
 
+/**
+ * Do black-box testing of World based on the public interface, but
+ * still with an eye towards the corner cases of the implementation.
+ */
 public class WorldTest extends TestCase {
 
+    /**
+     * Convert a list of Place objects containing integers to a list
+     * of integers. This is a utility method.
+     */
     public List<Integer> toIntegerList(List<World<Integer>.Place> list)
     {
         LinkedList<Integer> result = new LinkedList<Integer>();
@@ -15,7 +23,13 @@ public class WorldTest extends TestCase {
         }
         return result;
     }
-    
+
+    /**
+     * Test that the two provided lists contains exactly the same
+     * elements and no more (no specific order is required). If the
+     * tests fail, JUnit assertation failures will happen. This is
+     * used in implementing other test cases.
+     */
     public void containsTheSame (List<?> list1, List<?> list2)
     {
         assertTrue("list2 doesn't contain all elements of list1" , list2.containsAll(list1));
@@ -23,7 +37,16 @@ public class WorldTest extends TestCase {
         assertEquals("The lists are different in size", list2.size(), list1.size());
     }
     
+    /**
+     * The World object that will be used for testing throughout this
+     * class.
+     */
     public World<Integer> world;
+    
+    /**
+     * A list object that is used for testing whether World contains
+     * what it should.
+     */
     public List<Integer> list;
     
     public void setUp() {
@@ -43,38 +66,20 @@ public class WorldTest extends TestCase {
             for (int y = 0; y < world.height(); y++)
                 world.setAt(x, y, x * world.width() + y);
     }
-    
-    /**
-     * Get the 8 integers surrounding "a"
-     * 
-     * Example:
-     *   Input world:    a == 4
-     *            012
-     *            345
-     *            678
-     *   Output list: 0 1 2 3 5 6 7 8
-     * 
-     * @param a
-     * @return A List of the neighbours numbers
-     
-    public LinkedList<Integer> getNeighbours(int a) {
-        LinkedList<Integer> neighbours = new LinkedList<Integer>();
-        addWrapped(neighbours, a - world.width() - 1);
-        addWrapped(neighbours, a - world.width());
-        addWrapped(neighbours, a - world.width() + 1);
-        addWrapped(neighbours, a - 1);
-        addWrapped(neighbours, a + 1);
-        addWrapped(neighbours, a + world.width() - 1);
-        addWrapped(neighbours, a + world.width());
-        addWrapped(neighbours, a + world.width() + 1);
+
+    public void testWorldContents() {
+        fillWorld();
         
-        return neighbours;
+        for (int x = 0; x < world.width(); x++)
+            for (int y = 0; y < world.height(); y++)
+                assertEquals(x * world.width() + y, (int) world.getAt(x, y).getElement());
     }
     
-    public void addWrapped(List<Integer> list, int a) {
-            list.add(a);
-    }*/
-    
+    /**
+       Testing whether the method to retrieve the neighbors of a place
+       works properly, even when the place is at the border of the
+       world.
+     */
     public void testfilledNeighbours()
     {
         fillWorld();
@@ -82,20 +87,23 @@ public class WorldTest extends TestCase {
         list.add(1);
         list.add(2);
         list.add(3);
+        list.add(4);
         list.add(5);
         list.add(6);
         list.add(7);
         list.add(8);
         
-        World.Place place = world.getAt(1,1);
-        assertEquals(4, (int)(Integer)place.getElement());
-        
-        containsTheSame(toIntegerList(world.getAt(1,1).filledNeighbours()), list);
+        for (int x = 0; x < world.width(); x++)
+            for (int y = 0; y < world.height(); y++) {
+                List neighbourList = toIntegerList(world.getAt(x,y).filledNeighbours());
+                // Add the current element for ease of comparison.
+                neighbourList.add(world.getAt(x,y).getElement());
+                containsTheSame(neighbourList, list);
+            }
     }
     
     /**
      * Test that RandomIterator goes through all elements
-     *
      */
     public void testRandomIterator() {
         fillWorld();
@@ -132,6 +140,10 @@ public class WorldTest extends TestCase {
         }
     }
 
+    /**
+     * Test that it is possible to change the state of the world,
+     * using both the worlds own method and a given Place object.
+     */
     public void testMutablePlaces () {
         fillWorld();
         
