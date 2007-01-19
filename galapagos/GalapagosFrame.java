@@ -75,6 +75,7 @@ public class GalapagosFrame extends JFrame implements Observer {
         
         pixelSize = 5;
         isRefreshing = true;
+        isLogging = false;
         
         area = new AreaPanel();
         MouseInputAdapter listener = new MouseInputAdapter () {
@@ -330,22 +331,6 @@ public class GalapagosFrame extends JFrame implements Observer {
     }
     
     /**
-     * Get the number of rounds specified by the numberOfRounds-textfield
-     * @return
-     */
-    public int getNumberOfRounds () {
-        return ((SpinnerNumberModel) numberOfRounds.getModel()).getNumber().intValue();
-    }
-    
-    /**
-     * Get the timer interval specified by the timerInterval-textfield
-     * @return
-     */
-    public int getTimerInterval () {
-        return ((SpinnerNumberModel) timerInterval.getModel()).getNumber().intValue();
-    }
-    
-    /**
      * Disable the control buttons of this frame. The biotope-simulation is stopped.
      */
     public void disableButtons() {
@@ -359,7 +344,7 @@ public class GalapagosFrame extends JFrame implements Observer {
     }
     
     /**
-     * Enable the control buttons of this frame. The biotope-simulation is stopped.
+     * Enable the control buttons of this frame.
      */
     public void enableButtons() {
         newBiotope.setEnabled(true);
@@ -381,8 +366,14 @@ public class GalapagosFrame extends JFrame implements Observer {
         Dimension rightDim = layout.getLayoutComponent(BorderLayout.EAST).getPreferredSize();
         Dimension bottomDim = layout.getLayoutComponent(BorderLayout.SOUTH).getPreferredSize();
         
+        /* Remark: With a BorderLayout the top and bottom areas cover the entire width of
+         * of the frame, while the right and left areas only cover the part of the 
+         * right and left frame borders not covered by the top and bottom areas.
+         * This is reflected in a structural difference in the computation of the
+         * combined Dimension of the five areas of the BorderLayout.
+         */  
         int width = 50 + Math.max(leftDim.width + centerDim.width + rightDim.width, Math.max(topDim.width, bottomDim.width));
-        int height = 50 + Math.max(topDim.height + centerDim.height + bottomDim.height, Math.max(leftDim.height, rightDim.height));
+        int height = 50 + topDim.height + bottomDim.height + Math.max(centerDim.height, Math.max(leftDim.height, rightDim.height));
         return new Dimension(width, height);
     }
     
