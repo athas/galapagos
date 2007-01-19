@@ -19,7 +19,7 @@ public class Cheater implements Behavior {
     }
     
     /**
-     * A new Cheater behavior.
+     * @inheritDoc
      */
     public Behavior clone() {
         return new Cheater();

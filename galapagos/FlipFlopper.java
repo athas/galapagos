@@ -12,8 +12,8 @@ public class FlipFlopper implements Behavior {
      */
     public Action decide(Finch finch) {
         last = (last == Action.IGNORING)
-        			? Action.CLEANING
-        		    : Action.IGNORING;
+            ? Action.CLEANING
+            : Action.IGNORING;
         return last;
     }
 
@@ -25,7 +25,7 @@ public class FlipFlopper implements Behavior {
     }
     
     /**
-     * A new FlipFlopper-behavior.
+     * @inheritDoc
      */
     public Behavior clone() {
         return new FlipFlopper();

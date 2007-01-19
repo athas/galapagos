@@ -64,7 +64,7 @@ public class Predictor extends MemoryBehavior<Predictor.Prediction> {
     }
     
     /**
-     * A new Predictor behavior.
+     * @inheritDoc
      */
     public Behavior clone() {
         return new Predictor();

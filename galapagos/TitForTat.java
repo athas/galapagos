@@ -18,7 +18,7 @@ public class TitForTat extends ActionMemoryBehavior {
     }
     
     /**
-     * A new Tit-for-tat behavior.
+     * @inheritDoc
      */
     public Behavior clone() {
         return new TitForTat();

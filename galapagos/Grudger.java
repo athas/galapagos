@@ -17,7 +17,7 @@ public class Grudger extends ActionMemoryBehavior {
     }
     
     /**
-     * A new Grudger behavior.
+     * @inheritDoc
      */
     public Behavior clone() {
         return new Grudger();

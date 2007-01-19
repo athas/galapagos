@@ -19,7 +19,7 @@ public class Samaritan implements Behavior {
     }
     
     /**
-     * A new Samaritan behavior.
+     * @inheritDoc
      */
     public Behavior clone() {
         return new Samaritan();

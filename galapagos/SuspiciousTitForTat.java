@@ -17,7 +17,7 @@ public class SuspiciousTitForTat extends ActionMemoryBehavior {
     }
     
     /**
-     * A new Suspecious tit-for-tat behavior.
+     * @inheritDoc
      */
     public Behavior clone() {
         return new SuspiciousTitForTat();
