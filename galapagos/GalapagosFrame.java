@@ -21,7 +21,7 @@ import java.awt.event.*;
  * its also here you change the updaterate.
  * 
  */
-public class GalapagosFrame extends JFrame implements Observer {
+public class GalapagosFrame extends JFrame {
 
     private AreaPanel area;
     public Map<Behavior, Color> colorMap;
@@ -79,7 +79,7 @@ public class GalapagosFrame extends JFrame implements Observer {
         isRefreshing = true;
         isLogging = false;
         
-        area = new AreaPanel();
+        area = new AreaPanel(this.colorMap);
         MouseInputAdapter listener = new MouseInputAdapter () {
                 public void maybeAddFinchAt(int x, int y, Behavior b) { 
                     // Only add a finch if x,y is within the bounds of
@@ -147,8 +147,14 @@ public class GalapagosFrame extends JFrame implements Observer {
         biotope.addObserver(statistics);
         if (isLogging)
             biotope.addObserver(logger);
+        
         if (isRefreshing)
-            biotope.addObserver(this);
+            biotope.addObserver(area);
+        else
+        	//redraw the initial stage of the Biotope even
+            // when refreshing is disabled.
+        	area.drawBiotope(biotope);
+        
         
         biotope.doNotifyObservers();
         setSize(combinedSize());
@@ -169,12 +175,23 @@ public class GalapagosFrame extends JFrame implements Observer {
         newBiotope.setActionCommand("newBiotope");
         newBiotope.addActionListener(new ActionListener () {
         	public void actionPerformed(ActionEvent e) {
-        		disableButtons();
+        		//disable buttons
+        		switchButtonsState(false);
+        		controller.stopSimulation();
+        		
+        		// Showing the biotopeCreator will stop the current execution until it is closed
+        		// this is because the biotopeCreator is a modal dialog. 
                 biotopeCreator.setVisible(true);
+                
+                //the biotopeCreator is closed we can now read the new biotope.
                 Biotope biotope = biotopeCreator.biotope();
-                if(biotope != GalapagosFrame.this.biotope && biotope != null)
-                	GalapagosFrame.this.setBiotope(biotope);
-                enableButtons();
+                
+                //change the Biotope if it was changed
+                if(biotope != GalapagosFrame.this.biotope && biotope != null)           	
+                	setBiotope(biotope);
+
+                //enable buttons
+                switchButtonsState(true);
             }
         });
         nextRound = newButton("Next Round", "nextRound");
@@ -205,9 +222,9 @@ public class GalapagosFrame extends JFrame implements Observer {
         toggleDisplayRefresh.addActionListener(new ActionListener () {
                 public void actionPerformed(ActionEvent e) {
                     if (isRefreshing)
-                        biotope.deleteObserver(GalapagosFrame.this);
+                        biotope.deleteObserver(GalapagosFrame.this.area);
                     else
-                        biotope.addObserver(GalapagosFrame.this);
+                        biotope.addObserver(GalapagosFrame.this.area);
                     isRefreshing = !isRefreshing;
                 }
             });
@@ -286,35 +303,7 @@ public class GalapagosFrame extends JFrame implements Observer {
                                         new Insets(5,5,5,5),
                                         0, 0);
     }
-    
-    public void update(Observable observableBiotope, Object arg)
-    {
-        Biotope biotope = (Biotope) observableBiotope;
-        for(World<GalapagosFinch>.Place place : biotope.world)
-        {
-            GalapagosFinch element = place.getElement();
-            if (element != null)
-                area.pixel(place.xPosition(), place.yPosition(), colorByBehavior(element.behavior()));
-            else
-                area.pixel(place.xPosition(), place.yPosition(), Color.BLACK);
-        }
-        area.update();
-    }
-    
-    /**
-     * Get the color associated with the behavior
-     * @param behavior The behavior to look-up in the ColorMap
-     * @return The color associated with behavior.
-     * @require colorMap.containsKey(behavior)
-     * @ensure colorByBehavior(behavior).equals(colorMap.get(behavior.toString())
-     */
-    public Color colorByBehavior(Behavior behavior)
-    {
-        Color c = colorMap.get(behavior);
-        assert c != null : "Color not defined for this Behavior";
-        return c;
-    }
-    
+
     /**
      * Maps each color in the behaviors-map to the associated behaviors name (Behavior.toString()).
      * 
@@ -339,29 +328,16 @@ public class GalapagosFrame extends JFrame implements Observer {
     }
     
     /**
-     * Disable the control buttons of this frame. The
-     * biotope-simulation is stopped.
+     * Enables or disables buttons on the frame.
+     * @param enable Indicates wheter the buttons be enabled or disabled (true for enabling).
      */
-    public void disableButtons() {
-        newBiotope.setEnabled(false);
-        nextRound.setEnabled(false);
-        numberOfRounds.setEnabled(false);
-        severalRounds.setEnabled(false);
-        unlimitedRounds.setEnabled(false);
-        stopRounds.doClick();
-        stopRounds.setEnabled(false);
-    }
-    
-    /**
-     * Enable the control buttons of this frame.
-     */
-    public void enableButtons() {
-        newBiotope.setEnabled(true);
-        nextRound.setEnabled(true);
-        numberOfRounds.setEnabled(true);
-        severalRounds.setEnabled(true);
-        unlimitedRounds.setEnabled(true);
-        stopRounds.setEnabled(true);
+    public void switchButtonsState(boolean enable) {
+        newBiotope.setEnabled(enable);
+        nextRound.setEnabled(enable);
+        numberOfRounds.setEnabled(enable);
+        severalRounds.setEnabled(enable);
+        unlimitedRounds.setEnabled(enable);
+        stopRounds.setEnabled(enable);
     }
     
     /**

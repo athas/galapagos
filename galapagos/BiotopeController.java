@@ -30,6 +30,11 @@ public class BiotopeController implements ActionListener, ChangeListener {
         this.biotope = biotope;
     }
     
+    public void stopSimulation() {
+    	roundTimer.stop();
+    	roundsToGo = 0;
+    }
+    
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == roundTimer) {
             if (unlimited) {
@@ -53,7 +58,7 @@ public class BiotopeController implements ActionListener, ChangeListener {
             biotope.runRound();
         } else if (command.equals("severalRounds")) {
             unlimited = false;
-            roundsToGo += numberOfRounds;
+            roundsToGo = numberOfRounds;
             roundTimer.start();
         } else if (command.equals("unlimitedRounds")) {
             unlimited = true;
