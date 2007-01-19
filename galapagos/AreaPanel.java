@@ -144,7 +144,7 @@ public class AreaPanel extends JPanel implements Observer {
 	        imagePixels = new int[ imageWidth * imageHeight ];
 	        for(int y = 0; y < worldWidth; y++)
 	        	for(int x = 0; x < worldHeight; x++)
-	    			pixelImage(y, x, pixels[y * worldWidth + x]);
+	    			pixelImage(x, y, pixels[y * worldWidth + x]);
 
 	        source = new MemoryImageSource( imageWidth, 
 	        								imageHeight, 
