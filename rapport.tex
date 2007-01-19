@@ -143,8 +143,8 @@ pågældende {\tt Behavior} tilhører.
 
 Enhver implementation af {\tt Behavior} har sin egen {\tt
 toString}-metode der returnerer navnet på den givne {\tt Behavior}
-(det er dette navn der i sidste ende bliver vist af vores bruger
-interface). Man kan således bruge {\tt toString} til at afgøre
+(det er dette navn der i sidste ende bliver vist af vores
+bruger-interface). Man kan således bruge {\tt toString} til at afgøre
 hvilken konkret klasse som et givent {\tt Behavior}-objekt er en
 instans af.
 
@@ -153,7 +153,7 @@ Behavior}-klasse skal overskrive {\tt equals} således at {\tt
 a.equals(b)} for to {\tt Behavior}s objekter hvis og kun hvis {\tt a}
 og {\tt b} er instanser af den samme {\tt Behavior}.
 
-{\tt Behavior} interfacet kræver derfor også at {\tt hashCode}
+{\tt Behavior}-interfacet kræver derfor også at {\tt hashCode}
 overskrives så alle {\tt Behavior}s af samme klasse giver samme {\tt
 hashCode} (hvorved specifikationen af {\tt hashCode} i {\tt Object}
 er overholdt).
