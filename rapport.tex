@@ -1,9 +1,14 @@
 \documentclass{article}
 \usepackage[latin1]{inputenc}
+\usepackage[danish]{babel}
+
+\textheight = 625pt \textwidth = 400pt \oddsidemargin = 25pt
+
+\usepackage[pdftex]{color, graphicx}
 
 \pagestyle{plain}
 
-\title{Eksamensproject i Object-Orienteret Programmering \& Design}
+\title{Eksamensprojekt i Objektorienteret \linebreak programmering og design}
 
 \author{Martin Dybdal, Mikkel Abrahamsen, Sune Precht Reeh, Troels Henriksen}
 
@@ -13,13 +18,24 @@
 
 \section{Forfatterinformation}
 
-Mikkel Abrahamsen \\
-\noindent
-Jagtvej 120,3,-346 \\
-\noindent
-2200 København N \\
-\noindent
-Eksamensnummer: 37
+
+Mikkel Abrahamsen
+
+\noindent Jagtvej 120,3,-346
+
+\noindent 2200 København N
+
+\noindent Eksamensnummer: 37
+
+\vspace{20pt} \noindent Sune Precht Reeh
+
+\noindent Kai Hoffmanns Allé 27
+
+\noindent 2750 Ballerup
+
+\noindent Eksamensnummer: 64
+
+
 
 \section{Indledning}
 
@@ -94,7 +110,7 @@ Metoden {\tt decide} i
 {\tt GalapagosFinch} bruges når man har brug for at få at vide, om
 {\tt GalapagosFinch}en vil hjælpe en anden finke eller ej (i første
 tilfælde returneres {\tt FinchStatus.CLEANING}, i andet tilfælde
-returneres {\tt FinchStatus.IGNORING}). 
+returneres {\tt FinchStatus.IGNORING}).
 Når {\tt decide} kaldes
 returneres resultatet af
 {\tt Behavior}ens {\tt decide}-metode på den pågældende finke.
