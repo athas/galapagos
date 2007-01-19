@@ -7,6 +7,9 @@ package galapagos;
  */
 public abstract class ActionMemoryBehavior extends MemoryBehavior<Action> {
 
+    /**
+     * Constructor for ActionMemoryBehavior.
+     */
     public ActionMemoryBehavior() {
         super();
     }
@@ -16,6 +19,7 @@ public abstract class ActionMemoryBehavior extends MemoryBehavior<Action> {
      * If it is remembered what action the finch chose earlier at som time,
      * this behavior should choose the same action now.
      * 
+     * @param finch The finch to
      * @ensure <code>(recall(finch) == null) ? defaultAction() : recall(finch)</code>
      */
     public Action decide(Finch finch) {

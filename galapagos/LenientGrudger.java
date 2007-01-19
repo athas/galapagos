@@ -2,6 +2,10 @@ package galapagos;
 
 import java.util.LinkedList;
 
+/**
+ * A modification of the Grudger behavior. If the same finch has ignored
+ * it two times, it will consequently ignore that finch. 
+ */
 public class LenientGrudger extends ActionMemoryBehavior {
     private final LinkedList<Finch> blacklist;
 
@@ -11,8 +15,7 @@ public class LenientGrudger extends ActionMemoryBehavior {
     }
     
     /**
-     * If a finch just met ignores this lenient grudger finch twice it
-     * should be remembered.
+     * Blacklists finches that have ignored us two times.
      */
     public void response(Finch finch, Action action) {
         if (action == Action.IGNORING)
@@ -23,13 +26,15 @@ public class LenientGrudger extends ActionMemoryBehavior {
     }
     
     /**
-     * What a lenient grudger should do to a finch that hasn't ignored
-     * it twice.
+     * What a lenient grudger does to finches not on the blacklist.
      */
     protected Action defaultAction() {
         return Action.CLEANING;
     }
 
+    /**
+     * Ignores all blacklisted finches, the defaultAction is used againts the rest.
+     */
     public Action decide(Finch finch) {
         if (blacklist.contains(finch))
             return Action.IGNORING;
@@ -38,26 +43,29 @@ public class LenientGrudger extends ActionMemoryBehavior {
     }
     
     /**
-     * A new LenientGrudger.
+     * A new LenientGrudger-behavior.
      */
     public Behavior clone() {
         return new LenientGrudger();
     }
 
     /**
-     * A toString method.
+     * @inheritDoc
      */
     public String toString() {
         return "Lenient Grudger";
     }
     
-    public boolean equals(Object obj) {
-    	if(obj instanceof LenientGrudger)
-    		return true;
-    	else
-    		return false;
+    /**
+     * @inheritDoc
+     */
+    public final boolean equals(Object obj) {
+    	return (obj instanceof LenientGrudger);
     }
     
+    /**
+     * @inheritDoc
+     */
     public int hashCode() {
     	return toString().hashCode();
     }

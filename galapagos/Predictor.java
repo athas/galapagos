@@ -64,26 +64,29 @@ public class Predictor extends MemoryBehavior<Predictor.Prediction> {
     }
     
     /**
-     * A new Predictor.
+     * A new Predictor behavior.
      */
     public Behavior clone() {
         return new Predictor();
     }
 
     /**
-     * A toString method.
+     * @inheritDoc
      */
     public String toString() {
         return "Predictor";
     }
     
-    public boolean equals(Object obj) {
-    	if(obj instanceof Predictor)
-    		return true;
-    	else
-    		return false;
+    /**
+     * @inheritDoc
+     */
+    public final boolean equals(Object obj) {
+    	return (obj instanceof Predictor);
     }
     
+    /**
+     * @inheritDoc
+     */
     public int hashCode() {
     	return toString().hashCode();
     }

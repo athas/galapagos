@@ -9,33 +9,37 @@ public class SuspiciousTitForTat extends ActionMemoryBehavior {
     }
     
     /**
-     * Remembers what this finch did.
+     * Remembers what this finch did as the action
+     * we wan't to use next time we meet it.
      */
     public void response (Finch finch, Action action) {
         remember(finch,action);
     }
     
     /**
-     * A new instance of the suspecious tit-for-tat behavior.
+     * A new Suspecious tit-for-tat behavior.
      */
     public Behavior clone() {
         return new SuspiciousTitForTat();
     }
     
     /**
-     * A toString method.
+     * @inheritDoc
      */
     public String toString() {
         return "Suspicious Tit for Tat";
     }
     
+    /**
+     * @inheritDoc
+     */
     public boolean equals(Object obj) {
-    	if(obj instanceof SuspiciousTitForTat)
-    		return true;
-    	else
-    		return false;
+    	return (obj instanceof SuspiciousTitForTat);
     }
     
+    /**
+     * @inheritDoc
+     */
     public int hashCode() {
     	return toString().hashCode();
     }

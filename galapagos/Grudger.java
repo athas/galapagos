@@ -10,33 +10,36 @@ public class Grudger extends ActionMemoryBehavior {
     }
     
     /**
-     * What a grudger should do to a finch which has't ignored it.
+     * What a grudger should do to a finch which hasn't ignored it.
      */
     protected Action defaultAction() {
         return Action.CLEANING;
     }
     
     /**
-     * A new Grudger.
+     * A new Grudger behavior.
      */
     public Behavior clone() {
         return new Grudger();
     }
     
     /**
-     * A toString method.
+     * @inheritDoc
      */
     public String toString() {
         return "Grudger";
     }
     
-    public boolean equals(Object obj) {
-    	if(obj instanceof Grudger)
-    		return true;
-    	else
-    		return false;
+    /**
+     * @inheritDoc
+     */
+    public final boolean equals(Object obj) {
+    	return (obj instanceof Grudger);
     }
     
+    /**
+     * @inheritDoc
+     */
     public int hashCode() {
     	return toString().hashCode();
     }

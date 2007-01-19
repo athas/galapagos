@@ -1,44 +1,47 @@
 package galapagos;
 
-public class Cheater implements Behavior
-{
+/**
+ * A simple finch-behavior that consequently ignores other finches.
+ */
+public class Cheater implements Behavior {
     /**
      * Will never clean the other Finch
      */
-    public Action decide(Finch finch)
-    {
+    public Action decide(Finch finch) {
         return Action.IGNORING;
     }
 
     /**
      * Doesn't use the other finch's action.
      */
-    public void response(Finch finch, Action action)
-    {
+    public void response(Finch finch, Action action) {
         
     }
     
     /**
-     * A new cheater behavior.
+     * A new Cheater behavior.
      */
     public Behavior clone() {
         return new Cheater();
     }
     
     /**
-     * A toString method.
+     * @inheritDoc
      */
     public String toString() {
         return "Cheater";
     }
     
-    public boolean equals(Object obj) {
-    	if(obj instanceof Cheater)
-    		return true;
-    	else
-    		return false;
+    /**
+     * @inheritDoc
+     */
+    public final boolean equals(Object obj) {
+    	return (obj instanceof Cheater);
     }
     
+    /**
+     * @inheritDoc
+     */
     public int hashCode() {
     	return toString().hashCode();
     }

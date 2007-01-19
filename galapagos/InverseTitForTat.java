@@ -2,7 +2,7 @@ package galapagos;
 
 /**
  * A behavior that always does the opposite of what the opponent did
- * last time!  The finch always cleans when faced with an unknown
+ * last time! The finch always cleans when faced with an unknown
  * opponent.
  */
 public class InverseTitForTat extends ActionMemoryBehavior {
@@ -18,35 +18,39 @@ public class InverseTitForTat extends ActionMemoryBehavior {
     }
 
     /**
-     * The inverse of what we remember.
+     * Will do the inverse of what we remembered. Clean for unknown finches. 
      */
     public Action decide(Finch finch) {
         if (super.decide(finch) == Action.CLEANING)
             return Action.IGNORING;
-        else return Action.CLEANING;
+        else
+        	return Action.CLEANING;
     }
     
     /**
-     * A new instance of the tit-for-tat behavior.
+     * A new instance of the Inverse tit-for-tat behavior.
      */
     public Behavior clone() {
         return new InverseTitForTat();
     }
     
     /**
-     * A toString method.
+     * @inheritDoc
      */
     public String toString() {
         return "Inverse Tit for Tat";
     }
     
-    public boolean equals(Object obj) {
-    	if(obj instanceof InverseTitForTat)
-    		return true;
-    	else
-    		return false;
+    /**
+     * @inheritDoc
+     */
+    public final boolean equals(Object obj) {
+    	return (obj instanceof InverseTitForTat);
     }
     
+    /**
+     * @inheritDoc
+     */
     public int hashCode() {
     	return toString().hashCode();
     }

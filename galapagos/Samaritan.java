@@ -1,5 +1,8 @@
 package galapagos;
 
+/**
+ * A simple finch-behavior that consequently cleans other finches.
+ */
 public class Samaritan implements Behavior {
     /**
      * Will always clean the other Finch
@@ -9,33 +12,36 @@ public class Samaritan implements Behavior {
     }
 
     /**
-     * Doesn't use the finch's action.
+     * Doesn't use the other finch's action.
      */
     public void response(Finch finch, Action action) {
         
     }
     
     /**
-     * A new instance of the samaritan behavior.
+     * A new Samaritan behavior.
      */
     public Behavior clone() {
         return new Samaritan();
     }
     
     /**
-     * A toString method.
+     * @inheritDoc
      */
     public String toString() {
         return "Samaritan";
     }
     
-    public boolean equals(Object obj) {
-    	if(obj instanceof Samaritan)
-    		return true;
-    	else
-    		return false;
+    /**
+     * @inheritDoc
+     */
+    public final boolean equals(Object obj) {
+    	return (obj instanceof Samaritan);
     }
     
+    /**
+     * @inheritDoc
+     */
     public int hashCode() {
     	return toString().hashCode();
     }

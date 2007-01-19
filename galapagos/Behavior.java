@@ -6,31 +6,47 @@ package galapagos;
 public interface Behavior extends Cloneable {
     
     /**
-     * This finch's choice of action in the meeting with the argument finch.
+     * Let's this Behavior decide whether it wants to clean or ignore a given finch.
+     * @param finch The finch to make a decision about.
+     * @return The choosen action.
      */
     public Action decide (Finch finch);
     
     /**
-     * This finch gets information about which action a finch just met choosed.
+     * Let's this Behavior do something (ex. remember the finch) when another finch 
+     * has taken an action (cleaned or ignored) againt this finch.
+     * @param finch The finch that has done something to this finch.
+     * @param action What the finch did.
      */
     public void response (Finch finch, Action action);
     
     /**
-     * A new instance of the same behavior.
+     * Creates a new instance of the same behavior.
+     * @return A new behavior of this type.
      */
     public Behavior clone();
       
     /**
-     * The toString()-method must only depend on the runtime-class.
+     * The name of this kind of Behavior.
+     * Must only depend on the runtime-class, by returning the same string for all
+     * Behaviors of this kind.
+     * @return The Behaviors name.
      */
     public String toString();
     
     /**
-     * Indicates whether another Object is equal to this one.
-     * Should return true if the Object is of the same Behavior-type as this one.
+     * Indicates whether another Object is "equal" to this one, in the sense that
+     * 2 Behaviors are "equal" if they are of the same type.
      * @param obj object to compare to.
      * @return true if obj is of the same Behavior-type as this one.
      */
     public boolean equals(Object obj);
+    
+    /**
+     * Returns a hashCode for this Behavior. Must ensure that all Behaviors of this
+     * type gives the same hashCode to fullfill the specification of Object.hashCode().
+     * A good way of implementing this is by using the hashCode of the Behaviors name.
+     * @return A hashCode that is equal for all instances of this Behavior. 
+     */
     public int hashCode();
 }

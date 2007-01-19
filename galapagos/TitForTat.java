@@ -10,33 +10,37 @@ public class TitForTat extends ActionMemoryBehavior {
     }
     
     /**
-     * Remembers what this finch did.
+     * Remembers what this finch did as the action
+     * we wan't to use next time we meet it.
      */
     public void response (Finch finch, Action action) {
         remember(finch,action);
     }
     
     /**
-     * A new instance of the tit-for-tat behavior.
+     * A new Tit-for-tat behavior.
      */
     public Behavior clone() {
         return new TitForTat();
     }
     
     /**
-     * A toString method.
+     * @inheritDoc
      */
     public String toString() {
         return "Tit for Tat";
     }
     
-    public boolean equals(Object obj) {
-    	if(obj instanceof TitForTat)
-    		return true;
-    	else
-    		return false;
+    /**
+     * @inheritDoc
+     */
+    public final boolean equals(Object obj) {
+    	return (obj instanceof TitForTat);
     }
     
+    /**
+     * @inheritDoc
+     */
     public int hashCode() {
     	return toString().hashCode();
     }

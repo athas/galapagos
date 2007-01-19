@@ -1,12 +1,19 @@
 package galapagos;
 
+/**
+ * A simple behavior that switches between ignoring and cleaning
+ * the finches it meets.
+ */
 public class FlipFlopper implements Behavior {
     Action last = Action.IGNORING;
+
     /**
-     * 
+     * Will do the opposite of what it did last time.
      */
     public Action decide(Finch finch) {
-        last = (last == Action.IGNORING) ? Action.CLEANING : Action.IGNORING;
+        last = (last == Action.IGNORING)
+        			? Action.CLEANING
+        		    : Action.IGNORING;
         return last;
     }
 
@@ -25,19 +32,22 @@ public class FlipFlopper implements Behavior {
     }
     
     /**
-     * A toString method.
+     * @inheritDoc
      */
     public String toString() {
         return "Flip-Flopper";
     }
     
-    public boolean equals(Object obj) {
-    	if(obj instanceof FlipFlopper)
-    		return true;
-    	else
-    		return false;
+    /**
+     * @inheritDoc
+     */
+    public final boolean equals(Object obj) {
+    	return (obj instanceof FlipFlopper);
     }
     
+    /**
+     * @inheritDoc
+     */
     public int hashCode() {
     	return toString().hashCode();
     }

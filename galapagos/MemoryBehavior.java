@@ -5,6 +5,7 @@ import java.util.*;
 /**
  * Every behavior that sometimes uses information about
  * how it is treated earlier extends this class.
+ * @param <DATA> The type of data the behavior needs to store.
  */
 public abstract class MemoryBehavior<DATA> implements Behavior {
     private final Map<Finch, DATA> finches;
@@ -39,7 +40,7 @@ public abstract class MemoryBehavior<DATA> implements Behavior {
     }
     
     /**
-     * Creates new instanse of this behavior.
+     * @inheritDoc
      */
     public abstract Behavior clone();
 }

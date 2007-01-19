@@ -1,8 +1,11 @@
 package galapagos;
 
+/**
+ * A finch behavior that randomly chooses between cleaning and ignoring other finches.
+ */
 public class RandomFinch implements Behavior {
     /**
-     * Chooses randomly between CLEANING and IGNORING the other finch
+     * Chooses randomly between CLEANING and IGNORING other finches.
      */
     public Action decide(Finch finch) {
         int choice = ((int) Math.random()) * 2;
@@ -27,26 +30,29 @@ public class RandomFinch implements Behavior {
     }
     
     /**
-     * A new instance of this behavior.
+     * A new RandomFinch behavior.
      */
     public Behavior clone() {
         return new RandomFinch();
     }
     
     /**
-     * A toString method.
+     * @inheritDoc
      */
     public String toString() {
         return "Random";
     }
     
-    public boolean equals(Object obj) {
-    	if(obj instanceof RandomFinch)
-    		return true;
-    	else
-    		return false;
+    /**
+     * @inheritDoc
+     */
+    public final boolean equals(Object obj) {
+    	return (obj instanceof RandomFinch);
     }
     
+    /**
+     * @inheritDoc
+     */
     public int hashCode() {
     	return toString().hashCode();
     }

@@ -1,7 +1,7 @@
 package galapagos;
 
 /**
- * A Tit-for-tat variant which some times (~ every fifth time) chooses to IGNORE the other finch.
+ * A Tit-for-tat variant which some times (approximately every fifth time) chooses to IGNORE the other finch.
  */
 public class ProbingTitForTat extends ActionMemoryBehavior {
     private int count;
@@ -47,22 +47,31 @@ public class ProbingTitForTat extends ActionMemoryBehavior {
         remember(finch, action);
     }
     
+    /**
+     * A new instance of the Probing Tit-for-tat behavior.
+     */
     public Behavior clone()
     {
         return new ProbingTitForTat();
     }
     
+    /**
+     * @inheritDoc
+     */
     public String toString() {
         return "Probing Tit for Tat";
     }
 
+    /**
+     * @inheritDoc
+     */
     public boolean equals(Object obj) {
-    	if(obj instanceof ProbingTitForTat)
-    		return true;
-    	else
-    		return false;
+    	return (obj instanceof ProbingTitForTat);
     }
     
+    /**
+     * @inheritDoc
+     */
     public int hashCode() {
     	return toString().hashCode();
     }
