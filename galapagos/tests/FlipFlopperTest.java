@@ -2,10 +2,17 @@ package galapagos.tests;
 
 import galapagos.*;
 
-
+/**
+ * Tests the FlipFlopper-behavior.
+ */
 public class FlipFlopperTest extends BehaviorTest {
-    public void testDecide()
-    {
+	
+	/**
+	 * Tests that the decide-method gives Action.CLEANING the
+	 * first time and thereafter switches between Action.IGNORING
+	 * and Action.CLEANING.
+	 */
+    public void testDecide() {
         assertEquals(behavior.decide(opponent), Action.CLEANING);
         assertEquals(behavior.decide(opponent), Action.IGNORING);
         assertEquals(behavior.decide(opponent), Action.CLEANING);
@@ -27,7 +34,7 @@ public class FlipFlopperTest extends BehaviorTest {
         return new FlipFlopper();
     }
 
-    public void testToString () {
-    	assertEquals(behavior.toString(),"Flip-Flopper");
+    public String behaviorName () {
+    	return "Flip-Flopper";
     }
 }

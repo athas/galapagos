@@ -16,8 +16,6 @@ import galapagos.*;
 public class AnalyzerTest extends BehaviorTest {
     public void testDecide()
     {
-      
-        
         behavior.decide(opponent);
         behavior.response(opponent, Action.IGNORING);
         behavior.decide(opponent);
@@ -49,7 +47,7 @@ public class AnalyzerTest extends BehaviorTest {
         return new Analyzer();
     }
 
-    public void testToString () {
-    	assertEquals(behavior.toString(),"Analyzer");
+    public String behaviorName () {
+    	return "Analyzer";
     }
 }

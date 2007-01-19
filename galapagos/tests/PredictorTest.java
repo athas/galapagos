@@ -3,7 +3,7 @@ package galapagos.tests;
 import galapagos.*;
 
 /**
- * Test that the Predictor uses the two-bit algorithm properly.
+ * Test that the Predictor uses the two-bit prediction algorithm properly.
  */
 public class PredictorTest extends BehaviorTest {
     public void testDecide()
@@ -41,7 +41,7 @@ public class PredictorTest extends BehaviorTest {
         return new Predictor();
     }
 
-    public void testToString () {
-    	assertEquals(behavior.toString(),"Predictor");
+    public String behaviorName () {
+    	return "Predictor";
     }
 }

@@ -95,7 +95,7 @@ public class WorldTest extends TestCase {
         
         for (int x = 0; x < world.width(); x++)
             for (int y = 0; y < world.height(); y++) {
-                List neighbourList = toIntegerList(world.getAt(x,y).filledNeighbours());
+                List<Integer> neighbourList = toIntegerList(world.getAt(x,y).filledNeighbours());
                 // Add the current element for ease of comparison.
                 neighbourList.add(world.getAt(x,y).getElement());
                 containsTheSame(neighbourList, list);

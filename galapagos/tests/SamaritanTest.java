@@ -2,10 +2,15 @@ package galapagos.tests;
 
 import galapagos.*;
 
-
+/**
+ * Test of the Samaritan behavior.
+ */
 public class SamaritanTest extends BehaviorTest {
-    public void testDecide()
-    {
+	
+	/**
+	 * Tests that the decide-method returns Action.CLEANING no matter what.
+	 */
+    public void testDecide() {
         assertEquals(behavior.decide(opponent), Action.CLEANING);
         
         //should also return CLEANING after response()-calls
@@ -18,5 +23,9 @@ public class SamaritanTest extends BehaviorTest {
     
     public Behavior getBehavior() {
         return new Samaritan();
+    }
+    
+    public String behaviorName () {
+    	return "Samaritan";
     }
 }

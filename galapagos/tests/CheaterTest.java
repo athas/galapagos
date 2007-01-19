@@ -2,8 +2,14 @@ package galapagos.tests;
 
 import galapagos.*;
 
-
+/**
+ * Test of the Cheater behavior.
+ */
 public class CheaterTest extends BehaviorTest {
+	
+	/**
+	 * Tests that the decide-method returns Action.IGNORING no matter what.
+	 */
     public void testDecide()
     {
         assertEquals(behavior.decide(opponent), Action.IGNORING);
@@ -20,7 +26,7 @@ public class CheaterTest extends BehaviorTest {
         return new Cheater();
     }
     
-    public void testToString () {
-    	assertEquals(behavior.toString(),"Cheater");
+    public String behaviorName() {
+    	return "Cheater";
     }
 }
