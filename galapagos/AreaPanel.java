@@ -85,12 +85,8 @@ public class AreaPanel extends JPanel implements Observer {
     /**
      * Draws the specified biotope to the screen
      * @param biotope The Biotope to draw.
-     * @require biotope.world.width == this.getWidth() * zoomFactor
-     *  		&& biotope.world.height == this.getHeight() * zoomFactor
      */
     public void drawBiotope(Biotope biotope) {
-    	assert biotope.world.width() == this.getWidth() * pixelSize;
-    	assert biotope.world.height() == this.getHeight() * pixelSize;
         for(World<GalapagosFinch>.Place place : biotope.world) {
             GalapagosFinch element = place.getElement();
             if(element != null)
