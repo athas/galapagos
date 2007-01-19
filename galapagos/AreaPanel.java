@@ -22,6 +22,7 @@ public class AreaPanel extends JPanel implements Observer {
     private int pixelSize;
     private int worldWidth;
     private int worldHeight;
+    private int offsetX, offsetY;
 
     private Image image;
     private int[] imagePixels;
@@ -136,6 +137,7 @@ public class AreaPanel extends JPanel implements Observer {
         
         int newPixelSize = Math.max(1, Math.min(pixelSizeWidth, pixelSizeHeight));
         
+        
         if(newPixelSize != pixelSize || source == null) {
         	pixelSize = newPixelSize;
 	        int imageWidth = worldWidth * pixelSize;
@@ -162,6 +164,9 @@ public class AreaPanel extends JPanel implements Observer {
 	        
 	        repaint();
         }
+        
+        offsetX = (this.getWidth() - worldWidth * pixelSize) / 2;
+        offsetY = (this.getHeight() - worldHeight * pixelSize) / 2;
     }
     
     public void setBounds(int x, int y, int width, int height) {
@@ -179,11 +184,19 @@ public class AreaPanel extends JPanel implements Observer {
      */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        int x = this.getWidth()/2 - worldWidth * pixelSize/2;
-        g.drawImage( image,  x, 0, this );
+
+        g.drawImage( image,  offsetX, offsetY, this );
     }
     
     public int pixelSize() {
     	return pixelSize;
+    }
+    
+    public int offsetX() {
+    	return offsetX;
+    }
+    
+    public int offsetY() {
+    	return offsetY;
     }
 }

@@ -89,19 +89,17 @@ public class GalapagosFrame extends JFrame {
                         biotope.putFinch(x, y, b.clone());
                 }
                 public void mousePressed(MouseEvent e) {
-                    maybeAddFinchAt((e.getX() - (area.getWidth() - 
-                                                 biotope.world.width()
-                                                 * area.pixelSize()) / 2) / 
+                    maybeAddFinchAt((e.getX() - area.offsetX()) / 
                                     area.pixelSize(),
-                                    e.getY() / area.pixelSize(),
+                                    (e.getY() - area.offsetY()) /
+                                    area.pixelSize(),
                                     selectedBehavior);
                 }
                 public void mouseDragged(MouseEvent e) {
-                    maybeAddFinchAt((e.getX() - (area.getWidth() - 
-                                                 biotope.world.width()
-                                                 * area.pixelSize()) / 2) / 
+                    maybeAddFinchAt((e.getX() - area.offsetX()) / 
                                     area.pixelSize(), 
-                                    e.getY() / area.pixelSize(), 
+                                    (e.getY() - area.offsetY()) /
+                                    area.pixelSize(), 
                                     selectedBehavior);
                 }
             };
