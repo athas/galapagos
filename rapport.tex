@@ -240,18 +240,33 @@ pga. hhv. utøj og alderdom. Disse {\tt Statistics} kan bruges af
 observerende objekter til at få et bredt billede af begivenhederne i
 en runde og over længere tid.
 
-I implementationen af {\tt Biotope} har vi afviget fra den oprindelige
-opgaveformulering, idet vi fandt det uretfærdigt at to finker, der
-indgår i et møde hvor de begge ignorerer den anden, hver får et
-livspoint, mens en finke, der ikke deltager i et møde i en runde, ikke
-får et livspoint. Vi ser ikke ideen i at det skulle være mere
-fordelagtigt at deltage i et møde, hvor begge deltagere ignorerer den
-anden, frem for slet ikke at deltage i et møde - hverken fra et
-biologisk eller spilteoretisk synspunkt er dette rimeligt. Derfor vil
-finker, der ikke deltager i et møde, i vores implementation få tildelt
-et enkelt livspoint.
 
 \subsection{Brugerinterface}
+Vores brugerinterface til at styre og vise {\tt Biotope}-objekter
+består som udgangspunkt af en instans af {\tt GalapagosFrame}. Dette
+vindue giver brugeren mulighed for gennem knapper at kontrollere den
+nuværende {\tt Biotope}. Dette sker gennem en instans af {\tt
+BiotopeController} der modtager "events" fra knapperne på vinduet, og
+ud fra dette får biotopen til at udføre det tilsvarende antal runder
+af simulationen. {\tt GalapagosFrame} giver desuden brugeren mulighed
+for at iagttage biotopen såvel visuelt (gennem en instans af {\tt
+AreaPanel}) som gennem en tabel over den nuværende tilstand for de
+forskellige {\tt Behaviors} i biotopen. Der er endda mulighed for at
+aktivere en ekstra funktionalitet der udskriver tabellens data til
+{\tt System.out} ved hjælp af klassen {\tt BiotopeLogger}. Sidste
+overordnede komponent i bruger interfacet er det selvstændige vindue
+{\tt BiotopeCreator} som man kan få adgang til fra {\tt
+GalapagosFrame}. {\tt BiotopeCreator} giver mulighed for at
+specificere parametrene for en ny {\tt Biotope} der derefter kan
+iagttages og manipuleres gennem {\tt GalapagosFrame}.
+
+\subsubsection{\tt GalapagosFrame}
+
+\subsubsection{\tt BiotopeController}
+
+\subsubsection{\tt BiotopeLogger}
+
+\subsubsection{\tt BiotopeCreator}
 
 \section{Konklusion}
 
