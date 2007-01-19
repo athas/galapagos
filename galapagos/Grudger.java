@@ -29,4 +29,15 @@ public class Grudger extends ActionMemoryBehavior {
     public String toString() {
         return "Grudger";
     }
+    
+    public boolean equals(Object obj) {
+    	if(obj instanceof Grudger)
+    		return true;
+    	else
+    		return false;
+    }
+    
+    public int hashCode() {
+    	return toString().hashCode();
+    }
 }

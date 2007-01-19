@@ -56,4 +56,14 @@ public class ProbingTitForTat extends ActionMemoryBehavior {
         return "Probing Tit for Tat";
     }
 
+    public boolean equals(Object obj) {
+    	if(obj instanceof ProbingTitForTat)
+    		return true;
+    	else
+    		return false;
+    }
+    
+    public int hashCode() {
+    	return toString().hashCode();
+    }
 }

@@ -22,7 +22,7 @@ import java.awt.event.*;
 public class GalapagosFrame extends JFrame implements Observer {
 
     private AreaPanel area;
-    public TreeMap<String, Color> colorMap;
+    public Map<Behavior, Color> colorMap;
     public int pixelSize;
     private NicerStatisticsPanel statistics;
     private BiotopeLogger logger;
@@ -303,7 +303,7 @@ public class GalapagosFrame extends JFrame implements Observer {
      */
     public Color colorByBehavior(Behavior behavior)
     {
-        Color c = colorMap.get(behavior.toString());
+        Color c = colorMap.get(behavior);
         assert c != null : "Color not defined for this Behavior";
         return c;
     }
@@ -319,14 +319,14 @@ public class GalapagosFrame extends JFrame implements Observer {
     private void makeBehaviorListAndColorMap(Map<Behavior, Color> behaviors)
     {
         this.behaviors = new ArrayList<Behavior>();
-        this.colorMap = new TreeMap<String, Color>();
-        Behavior currentBehavior;
+        this.colorMap = new HashMap<Behavior, Color>();
+        
         //go through all the behaviors in the behaviors-map and add its string representation to new map 
         for(Map.Entry<Behavior, Color> entry : behaviors.entrySet()) {
-            currentBehavior = entry.getKey();
-            assert !this.colorMap.containsKey(currentBehavior.toString()) : "Duplicate behaviors in Behavior-Color Map";
+        	Behavior currentBehavior = entry.getKey();
+            assert !this.colorMap.containsKey(currentBehavior) : "Duplicate behaviors in Behavior-Color Map";
             this.behaviors.add(currentBehavior);
-            this.colorMap.put(currentBehavior.toString(), entry.getValue());
+            this.colorMap.put(currentBehavior, entry.getValue());
         }
     }
     

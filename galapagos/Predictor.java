@@ -78,4 +78,15 @@ public class Predictor extends MemoryBehavior<Predictor.Prediction> {
     public String toString() {
         return "Predictor";
     }
+    
+    public boolean equals(Object obj) {
+    	if(obj instanceof Predictor)
+    		return true;
+    	else
+    		return false;
+    }
+    
+    public int hashCode() {
+    	return toString().hashCode();
+    }
 }

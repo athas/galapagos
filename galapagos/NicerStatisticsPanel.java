@@ -44,14 +44,14 @@ public class NicerStatisticsPanel extends JPanel implements Observer {
     
     private JLabel roundsLabel;
     private JLabel[][] informationLabels;
-    private Map<String, Color> colorMap;
+    private Map<Behavior, Color> colorMap;
     private int numberOfInformationRows;
     
     /**
      * Create a new StatisticsPanel for monitoring a Biotope.
      * @param frame The StatisticsPanel uses the colors specified in frame.
      */
-    public NicerStatisticsPanel(Map<String, Color> colorMap) {
+    public NicerStatisticsPanel(Map<Behavior, Color> colorMap) {
         roundsLabel = new JLabel();
         roundsLabel.setFont(roundsFont);
         Container roundsBox = Box.createHorizontalBox();
@@ -120,10 +120,10 @@ public class NicerStatisticsPanel extends JPanel implements Observer {
             int i = 0;
             for (Behavior currentBehavior : behaviors) {
                 // Variables containing data of the current row in the table (and the corresponding Behavior).
-                Statistics currentStat = biotope.statistics(currentBehavior.toString());
+                Statistics currentStat = biotope.statistics(currentBehavior);
                 JLabel[] currentRow = informationLabels[i+1];
                 
-                Color color = colorMap.get(currentBehavior.toString());
+                Color color = colorMap.get(currentBehavior);
                 currentRow[0].setText(currentBehavior.toString());
                 currentRow[0].setForeground(color);
                 currentRow[0].setVisible(true);

@@ -39,4 +39,15 @@ public class RandomFinch implements Behavior {
     public String toString() {
         return "Random";
     }
+    
+    public boolean equals(Object obj) {
+    	if(obj instanceof RandomFinch)
+    		return true;
+    	else
+    		return false;
+    }
+    
+    public int hashCode() {
+    	return toString().hashCode();
+    }
 }

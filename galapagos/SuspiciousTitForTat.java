@@ -28,4 +28,15 @@ public class SuspiciousTitForTat extends ActionMemoryBehavior {
     public String toString() {
         return "Suspicious Tit for Tat";
     }
+    
+    public boolean equals(Object obj) {
+    	if(obj instanceof SuspiciousTitForTat)
+    		return true;
+    	else
+    		return false;
+    }
+    
+    public int hashCode() {
+    	return toString().hashCode();
+    }
 }

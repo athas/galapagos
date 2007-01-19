@@ -29,4 +29,15 @@ public class TitForTat extends ActionMemoryBehavior {
     public String toString() {
         return "Tit for Tat";
     }
+    
+    public boolean equals(Object obj) {
+    	if(obj instanceof TitForTat)
+    		return true;
+    	else
+    		return false;
+    }
+    
+    public int hashCode() {
+    	return toString().hashCode();
+    }
 }

@@ -28,4 +28,15 @@ public class Samaritan implements Behavior {
     public String toString() {
         return "Samaritan";
     }
+    
+    public boolean equals(Object obj) {
+    	if(obj instanceof Samaritan)
+    		return true;
+    	else
+    		return false;
+    }
+    
+    public int hashCode() {
+    	return toString().hashCode();
+    }
 }

@@ -39,4 +39,15 @@ public class InverseTitForTat extends ActionMemoryBehavior {
     public String toString() {
         return "Inverse Tit for Tat";
     }
+    
+    public boolean equals(Object obj) {
+    	if(obj instanceof InverseTitForTat)
+    		return true;
+    	else
+    		return false;
+    }
+    
+    public int hashCode() {
+    	return toString().hashCode();
+    }
 }

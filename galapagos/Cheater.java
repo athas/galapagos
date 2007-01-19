@@ -31,4 +31,15 @@ public class Cheater implements Behavior
     public String toString() {
         return "Cheater";
     }
+    
+    public boolean equals(Object obj) {
+    	if(obj instanceof Cheater)
+    		return true;
+    	else
+    		return false;
+    }
+    
+    public int hashCode() {
+    	return toString().hashCode();
+    }
 }

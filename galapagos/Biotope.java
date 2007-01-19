@@ -19,7 +19,7 @@ public class Biotope extends Observable {
      */
     public final World<GalapagosFinch> world;
 
-    private final TreeMap<String,Statistics> statisticsTree;
+    private final Map<Behavior, Statistics> statistics;
     private final List<Behavior> finchBehaviors;
 
     private final static int HelpedGotHelpValue = 3;
@@ -98,7 +98,7 @@ public class Biotope extends Observable {
         this.finchesPerBehavior = finchesPerBehavior;
         this.finchBehaviors = behaviors;
         world = new World<GalapagosFinch>(width, height);
-        statisticsTree = new TreeMap<String,Statistics>();
+        statistics = new HashMap<Behavior,Statistics>();
         engagedFinches = new ArrayList<Boolean>(width * height);
         
         for (int i = 0; i < width * height; i++)
@@ -118,7 +118,7 @@ public class Biotope extends Observable {
              bIterator.hasNext();)
         {
             Behavior b = bIterator.next();
-            statisticsTree.put(b.toString(),new Statistics());
+            statistics.put(b, new Statistics());
             
             
             for (int i = 0;i < finchesPerBehavior && worldIterator.hasNext();i++)
@@ -142,7 +142,8 @@ public class Biotope extends Observable {
      * @ensure p.getElement() == null
      */
     private void placeFinch (World<GalapagosFinch>.Place p, Behavior b, Boolean born) {
-        Statistics stat = statisticsTree.get(b.toString());
+    	//System.out.println(b.getClass().getName());
+        Statistics stat = statistics.get(b);
         stat.incPopulation();
         GalapagosFinch finch = new GalapagosFinch(initialHitpoints,
                                                   maxHitpoints,
@@ -165,7 +166,7 @@ public class Biotope extends Observable {
         // If we have a finch here already, subtract it from the total
         // population of that type.
         if (p.getElement() != null) {
-            Statistics s = statisticsTree.get((p.getElement()).behavior().toString());
+            Statistics s = statistics.get((p.getElement()).behavior());
             s.decPopulation();
         }
         placeFinch(p, b, false);
@@ -190,7 +191,7 @@ public class Biotope extends Observable {
      * observers.
      */
     public void runRound () {
-        for (Statistics stat : statisticsTree.values())
+        for (Statistics stat : statistics.values())
             stat.newRound();
         breed();
         makeMeetings();
@@ -337,31 +338,32 @@ public class Biotope extends Observable {
      * @require world != null
      */
     private void grimReaper () {
-        for (World<GalapagosFinch>.Place p : world) if (p.getElement() != null) {
-            GalapagosFinch f = p.getElement();
-            f.changeHitpoints(-hitpointsPerRound);
-            f.makeOlder();
-            FinchStatus newStatus = f.status();
-            if (newStatus != FinchStatus.ALIVE) {
-                Statistics s = statisticsTree.get(f.behavior().toString());
-                if (newStatus == FinchStatus.DEAD_AGE)
-                    s.incDeadByAge();
-                    else s.incDeadByTicks();
-                s.decPopulation();
-                p.setElement(null);
-            }
-        }
+        for (World<GalapagosFinch>.Place p : world)
+        	if (p.getElement() != null) {
+	            GalapagosFinch finch = p.getElement();
+	            finch.changeHitpoints(-hitpointsPerRound);
+	            finch.makeOlder();
+	            FinchStatus newStatus = finch.status();
+	            if (newStatus != FinchStatus.ALIVE) {
+	                Statistics stats = statistics.get(finch.behavior());
+	                if (newStatus == FinchStatus.DEAD_AGE)
+	                	stats.incDeadByAge();
+	                    else stats.incDeadByTicks();
+	                stats.decPopulation();
+	                p.setElement(null);
+	            }
+        	}
     }
     
     /**
-     * Return the statistics for the behavior with the specified name.
+     * Return the statistics for the specified behavior.
      *
      * @require behavior must be the name of a known Behavior.
      */
-    public Statistics statistics(String behavior) {
-        assert(statisticsTree.containsKey(behavior))
+    public Statistics statistics(Behavior behavior) {
+        assert(statistics.containsKey(behavior))
             : "Asked to retrieve statistics for unknown behavior.";
-        return statisticsTree.get(behavior.toString());
+        return statistics.get(behavior);
     }
     
     /**

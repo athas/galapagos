@@ -24,4 +24,13 @@ public interface Behavior extends Cloneable {
      * The toString()-method must only depend on the runtime-class.
      */
     public String toString();
+    
+    /**
+     * Indicates whether another Object is equal to this one.
+     * Should return true if the Object is of the same Behavior-type as this one.
+     * @param obj object to compare to.
+     * @return true if obj is of the same Behavior-type as this one.
+     */
+    public boolean equals(Object obj);
+    public int hashCode();
 }

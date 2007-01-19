@@ -50,4 +50,15 @@ public class LenientGrudger extends ActionMemoryBehavior {
     public String toString() {
         return "Lenient Grudger";
     }
+    
+    public boolean equals(Object obj) {
+    	if(obj instanceof LenientGrudger)
+    		return true;
+    	else
+    		return false;
+    }
+    
+    public int hashCode() {
+    	return toString().hashCode();
+    }
 }
