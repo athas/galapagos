@@ -1,36 +1,67 @@
 package galapagos.tests;
 
 import galapagos.*;
-import java.util.HashMap;
-import java.awt.Color;
+import java.util.LinkedList;
+import java.util.List;
 import java.awt.event.*;
 import junit.framework.TestCase;
 
+/**
+ * Test of the BiotopeController
+ */
 public class BiotopeControllerTest extends TestCase {
-    HashMap<Behavior, Color> behaviors;
-    GalapagosFrame frame;
+    List<Behavior> behaviors;
     BiotopeController controller;
+    Biotope biotope; 
         
     protected void setUp() {
-        behaviors= new HashMap<Behavior, Color>();
-        behaviors.put(new Samaritan(), Color.RED);
-        behaviors.put(new Cheater(), Color.BLUE);
-        behaviors.put(new FlipFlopper(), Color.getHSBColor(0, 0, (float)0.5));
-        behaviors.put(new RandomFinch(), Color.MAGENTA);
-        behaviors.put(new Grudger(), Color.ORANGE.darker());
-        behaviors.put(new TitForTat(), Color.GREEN);
-        behaviors.put(new ProbingTitForTat(), Color.CYAN);
-        behaviors.put(new SuspiciousTitForTat(), Color.ORANGE);
-        frame = new GalapagosFrame(behaviors);
-        controller = frame.controller();
+        behaviors = new LinkedList<Behavior>();
+        behaviors.add(new Samaritan());
+        behaviors.add(new Cheater());
+        behaviors.add(new Grudger());
+        behaviors.add(new TitForTat());
+
+        biotope = new Biotope(30, 30, 0.167, 10, 7, 4, 10, 13, 10, behaviors);
+        controller = new BiotopeController(biotope);
     }
 
+    /**
+     * Tests that the controller answers the nextRound command.
+     */
     public void testNextRound() {
-        int oldRound = frame.biotope().round();
-        for (int i = 0; i < 50; i++) {
+        int oldRound = biotope.round();
+        for (int i = 0; i < 10; i++) {
             controller.actionPerformed(new ActionEvent(this, 0, "nextRound"));
-            assertEquals(oldRound + 1, frame.biotope().round());
-            oldRound = frame.biotope().round();
+            assertEquals(oldRound + 1, biotope.round());
+            oldRound = biotope.round();
         }
+    }
+    
+    /**
+     * Tests that the controller answers the severalRounds command.
+     * Will make an infinite loop if the severalRounds-method doesn't work
+     */
+    public void testSeveralRounds() {
+    	assertEquals(0, biotope.round());   	
+    	controller.runSeveralRounds(10);
+
+    	// wait for the biotope to complete the 
+    	//specified number of rounds
+    	while(biotope.round() < 10); 
+    	
+    	assertEquals(10, biotope.round());
+    }
+    
+    /**
+     * Tests that the controller answers the loop and stopSimulation commands.
+     * The test will make an infinite loop if the stopSimulation-command doesn't work.
+     */
+    public void testLoopingRounds() {
+    	assertEquals(0, biotope.round());   	
+    	controller.loop();
+
+    	while(biotope.round() < 40); // wait 40 rounds 
+    	controller.stopSimulation();
+    	assertEquals(40, biotope.round());
     }
 }
