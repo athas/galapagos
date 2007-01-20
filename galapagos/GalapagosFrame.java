@@ -230,7 +230,9 @@ public class GalapagosFrame extends JFrame {
         numberOfRounds.setMaximumSize(new Dimension(100,30));
         numberOfRounds.setMinimumSize(minimumButtonDimension);
         numberOfRounds.addChangeListener(controller);
-        numberOfRounds.setValue(100); // The initial value needs to be set seperatly to notify the controller of the value.
+        
+        // The initial value needs to be set seperatly to notify the controller of the value.
+        numberOfRounds.setValue(100);
         
         toggleLogging = new JCheckBox("Perform logging", isLogging);
         toggleLogging.addActionListener(new ActionListener () {
@@ -260,7 +262,9 @@ public class GalapagosFrame extends JFrame {
         timerInterval.setMaximumSize(new Dimension(100,30));
         timerInterval.setMinimumSize(minimumButtonDimension);
         timerInterval.addChangeListener(controller);
-        timerInterval.setValue(100); // The initial value needs to be set seperatly to notify the controller of the value.
+        
+        // The initial value needs to be set seperatly to notify the controller of the value.
+        timerInterval.setValue(100); 
         
         Container topContainer = Box.createHorizontalBox();
         topContainer.add(Box.createGlue());
@@ -296,7 +300,6 @@ public class GalapagosFrame extends JFrame {
     
     /**
      * Create a new JButton with the specified text and actionCommand.
-     * 
      * @param text The button's text
      * @param command The button's actionCommand
      * @return The new JButton
@@ -360,7 +363,7 @@ public class GalapagosFrame extends JFrame {
     }
     
     /**
-     * Get the combined size of all components preferred sizes plus 50
+     * Get the combined size of all components preferred sizes plus 100
      * extra pixels in width and height.
      */
     public Dimension combinedSize() {
