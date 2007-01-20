@@ -41,10 +41,12 @@ public class BiotopeControllerTest extends TestCase {
     // scope, but that only increases test coverage.
     public void testPutFinches() {
         // First, remove all finches.
-        controller.takeFinches(0, 0, 200);
+        controller.setManipulationRadius(200);
+        controller.takeFinches(0, 0);
         
         // Then, add some and see if they were actually added.
-        controller.putFinches(0, 0, 10, new Samaritan());
+        controller.setManipulationRadius(10);
+        controller.putFinches(0, 0, new Samaritan());
 
         Behavior samaritan = null;
 
@@ -60,7 +62,8 @@ public class BiotopeControllerTest extends TestCase {
 
     public void testRemoveFinches() {
         // First, fill everything with samaritans.
-        controller.putFinches(0, 0, 50, new Samaritan());
+        controller.setManipulationRadius(50);
+        controller.putFinches(0, 0, new Samaritan());
 
         Behavior samaritan = null;
 
@@ -74,7 +77,8 @@ public class BiotopeControllerTest extends TestCase {
         assertEquals(900, s.getStatByElement(Statistics.StatisticsElement.POPULATION));
 
         // Now remove everything.
-        controller.takeFinches(0, 0, 200);
+        controller.setManipulationRadius(200);
+        controller.takeFinches(0, 0);
         assertEquals(0, s.getStatByElement(Statistics.StatisticsElement.POPULATION));
     }
     

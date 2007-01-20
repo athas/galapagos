@@ -12,6 +12,7 @@ public class BiotopeController implements ActionListener, ChangeListener {
     private int roundsToGo;
     private boolean unlimited;
     private int numberOfRounds;
+    private int manipulationRadius;
     
     /**
      * Create a new BiotopeController, controlling the specified Biotope according to data from frame.
@@ -36,6 +37,7 @@ public class BiotopeController implements ActionListener, ChangeListener {
         roundTimer.stop();
         roundsToGo = 0;
         numberOfRounds = 0;
+        manipulationRadius = 0;
     }
     
     /**
@@ -84,6 +86,22 @@ public class BiotopeController implements ActionListener, ChangeListener {
     public void delay(int value) {
     	roundTimer.setDelay(value);
     }
+
+    /**
+     * Return the radius used for performing area-based manipulations
+     * of the Biotope in this controller.
+     */
+    public int getManipulationRadius() {
+        return manipulationRadius;
+    }
+
+    /**
+     * Set the radius used for performing area-based manipulation of
+     * the Biotope in this controller.
+     */
+    public void setManipulationRadius(int newRadius) {
+        manipulationRadius = newRadius;
+    }
     
     public void stateChanged (ChangeEvent e) {
     	JSpinner spinner = (JSpinner)e.getSource(); 
@@ -112,17 +130,17 @@ public class BiotopeController implements ActionListener, ChangeListener {
     }
 
     /**
-     * For the points inside the specified circle, invoke the call()
-     * on the provided pointFrobber.
+     * For the points inside the circle at the specified location,
+     * invoke the call() on the provided pointFrobber.
      *
      * @param centerX The x coordinate of the center of the circle.
      * @param centerY The y coordinate of the center of the circle.
-     * @param radius The (approximate) radius of the circle.
      * @param frobber The object that the call() method will be
      * invoked upon for each point that lies inside the circle.
      */
     private void forPointsInCircle(int centerX, int centerY, 
-                                   int radius, pointFrobber frobber) {
+                                   pointFrobber frobber) {
+        int radius = manipulationRadius;
         for (int x = -(radius + 2); x < radius + 1; x++)
             for (int y = -(radius + 2); y < radius + 1; y++)
                 if ((x * x + y * y) < radius * radius)
@@ -136,22 +154,20 @@ public class BiotopeController implements ActionListener, ChangeListener {
      *
      * @param centerX The x coordinate of the center of the circle.
      * @param centerY The y coordinate of the center of the circle.
-     * @param radius The (approximate) radius of the circle that
-     * will be filled with finches.
      * @param b A behavior object of the type that the new finch
      * should have.
      *
      * @require 0 <= x < biotope-world-width
      * @require 0 <= y <= biotope-world-height
      */
-    public void putFinches(int centerX, int centerY, int radius, final Behavior b) {
+    public void putFinches(int centerX, int centerY, final Behavior b) {
         assert (0 <= centerX && centerX <= biotope.world.width() &&
                 0 <= centerY && centerY <= biotope.world.height())
             : "Provided coordinate (" + centerX + ", " + centerY + ") lies outside the world.";
             
         final List<Biotope.FinchDescriptor> list = new LinkedList<Biotope.FinchDescriptor>();
 
-        forPointsInCircle(centerX, centerY, radius, new pointFrobber() {
+        forPointsInCircle(centerX, centerY, new pointFrobber() {
                 public void call(int x, int y) {
                     list.add(biotope.new 
                              AddFinchDescriptor(biotope.world.wrappedX(x),
@@ -170,19 +186,18 @@ public class BiotopeController implements ActionListener, ChangeListener {
      *
      * @param centerX The x coordinate of the position of the circle.
      * @param centerY The y coordinate of the position of the circle.
-     * @param radius The radius of the circle.
      *
      * @require 0 <= x < biotope-world-width
      * @require 0 <= y <= biotope-world-height
      */
-    public void takeFinches(int centerX, int centerY, int radius) {
+    public void takeFinches(int centerX, int centerY) {
         assert (0 <= centerX && centerX <= biotope.world.width() &&
                 0 <= centerY && centerY <= biotope.world.height())
             : "Provided coordinate (" + centerX + ", " + centerY + ") lies outside the world.";
         
         final List<Biotope.FinchDescriptor> list = new LinkedList<Biotope.FinchDescriptor>();
 
-        forPointsInCircle(centerX, centerY, radius, new pointFrobber() {
+        forPointsInCircle(centerX, centerY, new pointFrobber() {
                 public void call(int x, int y) {
                     list.add(biotope.new 
                              RemoveFinchDescriptor(biotope.world.wrappedX(x), 

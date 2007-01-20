@@ -45,7 +45,9 @@ public class GalapagosFrame extends JFrame {
     private ButtonGroup behaviorButtons;
     private JComponent behaviorButtonsBox;
     private JLabel behaviorButtonsLabel;
-    private JSlider manipulationRadiusSelector;
+    private JLabel manipulationRadiusLabel;
+    private JLabel manipulationRadiusDisplay;
+    private JSlider manipulationRadius;
     private Behavior selectedBehavior;
     private final static int insertFinchButtonMask = InputEvent.BUTTON1_DOWN_MASK;
     private final static int removeFinchButtonMask = InputEvent.BUTTON3_DOWN_MASK;
@@ -110,13 +112,12 @@ public class GalapagosFrame extends JFrame {
                     // world.
                     if (0 <= x && x < biotope.world.width() &&
                         0 <= y && y < biotope.world.height()) {
-                        int radius = manipulationRadiusSelector.getValue();
                         if (insertFinchDown(e)) {
                             if (selectedBehavior != null)
-                                controller.putFinches(x, y, radius, selectedBehavior);
+                                controller.putFinches(x, y, selectedBehavior);
                         }
                         else if (removeFinchDown(e))
-                            controller.takeFinches(x, y, radius);
+                            controller.takeFinches(x, y);
                     }
                 }
                 
@@ -172,7 +173,9 @@ public class GalapagosFrame extends JFrame {
             behaviorButtonsBox.add(button);
         }
 
-        behaviorButtonsBox.add(manipulationRadiusSelector);
+        behaviorButtonsBox.add(manipulationRadiusLabel);
+        behaviorButtonsBox.add(manipulationRadius);
+        behaviorButtonsBox.add(manipulationRadiusDisplay);
         behaviorButtonsBox.add(Box.createGlue());
 
         selectedBehavior = null;
@@ -307,7 +310,18 @@ public class GalapagosFrame extends JFrame {
         behaviorButtonsLabel.setFont(new Font("Dialog",Font.PLAIN,13));
 
         behaviorButtonsLabel = new JLabel("Pencil for freehand finch drawing");
-        manipulationRadiusSelector = new JSlider(JSlider.VERTICAL, 1, 25, 1);
+        manipulationRadiusLabel = new JLabel("Radius of pencil");
+        manipulationRadius = new JSlider(1, 25, 1);
+        manipulationRadius.setToolTipText("Set the radius of the biotope manipulation pencil");
+        manipulationRadius.setName("manipulationRadiusSlider");
+        manipulationRadiusDisplay = new JLabel(((Integer)manipulationRadius.getValue()).toString());
+        manipulationRadius.addChangeListener(new ChangeListener() {
+                public void stateChanged (ChangeEvent e) {
+                    int newValue = manipulationRadius.getValue();
+                    controller.setManipulationRadius(newValue);
+                    manipulationRadiusDisplay.setText(((Integer)newValue).toString());
+                }
+            });
 
 
         add(topContainer, BorderLayout.NORTH);
