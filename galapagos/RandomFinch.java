@@ -4,6 +4,16 @@ package galapagos;
  * A finch behavior that randomly chooses between cleaning and ignoring other finches.
  */
 public class RandomFinch implements Behavior {
+    private static final String DESCRIPTION = 
+        "Chooses randomly whether to clean (50% chance) or ignore.";
+    
+    /**
+     * @inheritDoc
+     */
+    public String description() {
+        return DESCRIPTION;
+    }
+    
     /**
      * Chooses randomly between CLEANING and IGNORING other finches.
      */

@@ -5,12 +5,23 @@ package galapagos;
  * reactions to maximize its gain.
  */
 public class BalancedAnalyzer extends AnalyzingBehavior {
+    private static final String DESCRIPTION = 
+        "Tries to analyse the best action against a given finch based on the points given " +
+        "for each possible outcome and a memory of all previous meetings with that finch";
+    
     private Behavior fallbackBehavior;
     private final static int HelpedGotHelpValue = 3;
     private final static int HelpedDidntGetHelpValue = 0;
     private final static int DidntHelpGotHelpValue = 5;
     private final static int DidntHelpDidntGetHelpValue = 1;
-    private int hitpointsLostPerRound = 2;
+    private int pointBalance = 2;
+
+    /**
+     * @inheritDoc
+     */
+    public String description() {
+        return DESCRIPTION;
+    }
 
     public BalancedAnalyzer () {
         fallbackBehavior = new Samaritan();
@@ -36,14 +47,14 @@ public class BalancedAnalyzer extends AnalyzingBehavior {
                 Action reaction = interaction.reaction;
                 if (action == Action.CLEANING) {
                     if (reaction == Action.CLEANING)
-                        cleaningGoodness += HelpedGotHelpValue - hitpointsLostPerRound;
+                        cleaningGoodness += HelpedGotHelpValue - pointBalance;
                     else if (reaction == Action.IGNORING)
-                        cleaningGoodness += HelpedDidntGetHelpValue - hitpointsLostPerRound;
+                        cleaningGoodness += HelpedDidntGetHelpValue - pointBalance;
                 } else if (action == Action.IGNORING){
                     if (reaction == Action.CLEANING)
-                        ignoringGoodness += DidntHelpGotHelpValue - hitpointsLostPerRound;
+                        ignoringGoodness += DidntHelpGotHelpValue - pointBalance;
                     if (reaction == Action.IGNORING)
-                        ignoringGoodness += DidntHelpDidntGetHelpValue - hitpointsLostPerRound;
+                        ignoringGoodness += DidntHelpDidntGetHelpValue - pointBalance;
                 }
             }
             if (cleaningGoodness != ignoringGoodness)

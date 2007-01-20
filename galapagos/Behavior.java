@@ -4,6 +4,10 @@ package galapagos;
  * The interface of the finch behaviors.
  */
 public interface Behavior extends Cloneable {
+    /**
+     * A short description of which strategy this Behavior uses.
+     */
+    public String description();
     
     /**
      * Let's this Behavior decide whether it wants to clean or ignore a given finch.

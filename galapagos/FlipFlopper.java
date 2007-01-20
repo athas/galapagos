@@ -5,8 +5,17 @@ package galapagos;
  * the finches it meets.
  */
 public class FlipFlopper implements Behavior {
+    private static final String DESCRIPTION = "Switches between cleaning and ignoring.";
+    
     Action last = Action.IGNORING;
 
+    /**
+     * @inheritDoc
+     */
+    public String description() {
+        return DESCRIPTION;
+    }
+    
     /**
      * Will do the opposite of what it did last time.
      */

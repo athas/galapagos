@@ -4,8 +4,19 @@ package galapagos;
  * A Tit-for-tat variant which some times (approximately every fifth time) chooses to IGNORE the other finch.
  */
 public class ProbingTitForTat extends ActionMemoryBehavior {
+    private static final String DESCRIPTION = 
+        "Normally does what the other finch did when they last met (and cleans the first meeting), "
+        + "but at random intervals it ignores anyway.";
+    
     private int count;
 
+    /**
+     * @inheritDoc
+     */
+    public String description() {
+        return DESCRIPTION;
+    }
+    
     /**
      * A new PropingTitForTat.
      */

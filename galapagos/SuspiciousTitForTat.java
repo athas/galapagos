@@ -4,6 +4,16 @@ package galapagos;
  * A Tit-for-tat variant with the default action being the only difference. 
  */
 public class SuspiciousTitForTat extends ActionMemoryBehavior {
+    private static final String DESCRIPTION = 
+        "Does what the other finch did when they last met. Ignores the first time.";
+    
+    /**
+     * @inheritDoc
+     */
+    public String description() {
+        return DESCRIPTION;
+    }
+    
     protected Action defaultAction () {
         return Action.IGNORING;
     }

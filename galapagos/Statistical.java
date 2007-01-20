@@ -17,6 +17,18 @@ public class Statistical extends MemoryBehavior<Statistical.Statistics> {
         }
     }
     
+    private static final String DESCRIPTION = 
+        "Tries to analyse the best action against a given finch based on estimates " +
+        "of the conditional probabilities of beeing helped when the Statistical helps " +
+        "og ignores the other finch";
+    
+    /**
+     * @inheritDoc
+     */
+    public String description() {
+        return DESCRIPTION;
+    }
+    
     public Action decide(Finch finch) {
         Statistics stat = recall(finch);
         if (stat == null) {

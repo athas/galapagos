@@ -5,12 +5,23 @@ package galapagos;
  * reactions to maximize its gain.
  */
 public class Analyzer extends AnalyzingBehavior {
+    private static final String DESCRIPTION = 
+        "Tries to analyse the best action against a given finch based on the points given " +
+        "for each possible outcome and a memory of all previous meetings with that finch";
+    
     private Behavior fallbackBehavior;
     private final static int HelpedGotHelpValue = 3;
     private final static int HelpedDidntGetHelpValue = 0;
     private final static int DidntHelpGotHelpValue = 5;
     private final static int DidntHelpDidntGetHelpValue = 1;
 
+    /**
+     * @inheritDoc
+     */
+    public String description() {
+        return DESCRIPTION;
+    }
+    
     public Analyzer () {
         fallbackBehavior = new Predictor();
     }

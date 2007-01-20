@@ -7,8 +7,18 @@ import java.util.LinkedList;
  * it two times, it will consequently ignore that finch. 
  */
 public class LenientGrudger extends ActionMemoryBehavior {
+    private static final String DESCRIPTION = 
+        "Cleans a specific finch as long as the LenientGrudger is ignored at most one time.";
+    
     private final LinkedList<Finch> blacklist;
 
+    /**
+     * @inheritDoc
+     */
+    public String description() {
+        return DESCRIPTION;
+    }
+    
     public LenientGrudger () {
         super();
         blacklist = new LinkedList<Finch>();

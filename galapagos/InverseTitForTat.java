@@ -6,6 +6,16 @@ package galapagos;
  * opponent.
  */
 public class InverseTitForTat extends ActionMemoryBehavior {
+    private static final String DESCRIPTION = 
+        "Does the opposite of what the other finch did when they last met. Cleans the first time.";
+    
+    /**
+     * @inheritDoc
+     */
+    public String description() {
+        return DESCRIPTION;
+    }
+    
     protected Action defaultAction() {
         return Action.IGNORING;
     }

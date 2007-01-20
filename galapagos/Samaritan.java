@@ -4,6 +4,16 @@ package galapagos;
  * A simple finch-behavior that consequently cleans other finches.
  */
 public class Samaritan implements Behavior {
+    private static final String DESCRIPTION = 
+        "Always cleans other finches.";
+    
+    /**
+     * @inheritDoc
+     */
+    public String description() {
+        return DESCRIPTION;
+    }
+    
     /**
      * Will always clean the other Finch
      */

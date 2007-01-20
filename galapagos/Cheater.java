@@ -4,6 +4,15 @@ package galapagos;
  * A simple finch-behavior that consequently ignores other finches.
  */
 public class Cheater implements Behavior {
+    private static final String DESCRIPTION = "Always ignores other finches.";
+    
+    /**
+     * @inheritDoc
+     */
+    public String description() {
+        return DESCRIPTION;
+    }
+    
     /**
      * Will never clean the other Finch
      */
