@@ -24,7 +24,6 @@ public class Galapagos {
         behaviors.put(new SuspiciousTitForTat(), Color.ORANGE);
         behaviors.put(new Predictor(), Color.GREEN.darker());
         behaviors.put(new Analyzer(), Color.BLUE.darker());
-        behaviors.put(new BalancedAnalyzer(), Color.getHSBColor(0.08F,0.8F,1F));
         behaviors.put(new Statistical(), Color.getHSBColor(0.5F,0.7F,0.7F));
         
         GalapagosFrame frame = new GalapagosFrame(behaviors);
