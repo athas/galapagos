@@ -43,7 +43,7 @@ public class GalapagosFrame extends JFrame {
     private JSpinner timerInterval;
 
     private ButtonGroup behaviorButtons;
-    private Container behaviorButtonsBox;
+    private JComponent behaviorButtonsBox;
     private JLabel behaviorButtonsLabel;
     private Behavior selectedBehavior;
     private final static int insertFinchButtonMask = InputEvent.BUTTON1_DOWN_MASK;
@@ -165,6 +165,7 @@ public class GalapagosFrame extends JFrame {
                         selectedBehavior = b;
                     }
                 });
+            button.setToolTipText(b.description());
             behaviorButtons.add(button);
             behaviorButtonsBox.add(button);
         }
@@ -195,8 +196,9 @@ public class GalapagosFrame extends JFrame {
      */
     private void initializeControls() {
         //create top controls
-        newBiotope = newButton ("New Biotope", "newBiotope");
         newBiotope = new JButton("New Biotope");
+        newBiotope.setToolTipText("Create a new biotope for simulation.");
+        newBiotope.setMinimumSize(minimumButtonDimension);
         newBiotope.setActionCommand("newBiotope");
         newBiotope.addActionListener(new ActionListener () {
         	public void actionPerformed(ActionEvent e) {
@@ -219,12 +221,14 @@ public class GalapagosFrame extends JFrame {
                 switchButtonsState(true);
             }
         });
-        nextRound = newButton("Next Round", "nextRound");
-        severalRounds = newButton("Compute Several Rounds", "severalRounds");
-        unlimitedRounds = newButton("Go!", "unlimitedRounds");
-        stopRounds = newButton("Stop Simulation", "stopRounds");
+        
+        nextRound = newButton("Next Round", "nextRound", "Run a single round of simulation.");
+        severalRounds = newButton("Compute Several Rounds", "severalRounds", "Run the specified number of rounds.");
+        unlimitedRounds = newButton("Go!", "unlimitedRounds", "Run an unlimited number of rounds.");
+        stopRounds = newButton("Stop Simulation", "stopRounds", "Stop currently running series of simulation rounds.");
         
         numberOfRounds = new JSpinner(new RevisedSpinnerNumberModel(0,0,Integer.MAX_VALUE,10));
+        numberOfRounds.setToolTipText("Set number of simulation rounds to run");
         numberOfRounds.setName("numberOfRoundsSpinner");
         numberOfRounds.setPreferredSize(standardSpinnerSize);
         numberOfRounds.setMaximumSize(new Dimension(100,30));
@@ -235,6 +239,7 @@ public class GalapagosFrame extends JFrame {
         numberOfRounds.setValue(100);
         
         toggleLogging = new JCheckBox("Perform logging", isLogging);
+        toggleLogging.setToolTipText("Enable/disable console logging");
         toggleLogging.addActionListener(new ActionListener () {
                 public void actionPerformed(ActionEvent e) {
                     if (isLogging)
@@ -246,6 +251,7 @@ public class GalapagosFrame extends JFrame {
             });
 
         toggleDisplayRefresh = new JCheckBox("Update display", isRefreshing);
+        toggleDisplayRefresh.setToolTipText("Enable/disable updating of the biotope display area.");
         toggleDisplayRefresh.addActionListener(new ActionListener () {
                 public void actionPerformed(ActionEvent e) {
                     if (isRefreshing)
@@ -257,6 +263,7 @@ public class GalapagosFrame extends JFrame {
             });
         
         timerInterval = new JSpinner(new RevisedSpinnerNumberModel(0,0,Integer.MAX_VALUE,100));
+        timerInterval.setToolTipText("Set the minimum number of milliseconds between simulation rounds.");
         timerInterval.setName("timerIntervalSpinner");
         timerInterval.setPreferredSize(standardSpinnerSize);
         timerInterval.setMaximumSize(new Dimension(100,30));
@@ -289,7 +296,12 @@ public class GalapagosFrame extends JFrame {
         outerLeftContainer.add(Box.createGlue());
 
         behaviorButtonsBox = Box.createVerticalBox();
-        behaviorButtonsLabel = new JLabel("Pencil for freehand finch drawing");
+        behaviorButtonsLabel = new JLabel(
+                "<HTML><B>Pencil for freehand finch drawing:</B><br>" +
+                "<I>Use the left mouse button to draw finches.<br>" +
+                "Use the right mouse button to delete finches.</I></HTML>");
+        
+        behaviorButtonsLabel.setFont(new Font("Dialog",Font.PLAIN,13));
 
         add(topContainer, BorderLayout.NORTH);
         add(area,BorderLayout.CENTER);
@@ -302,10 +314,12 @@ public class GalapagosFrame extends JFrame {
      * Create a new JButton with the specified text and actionCommand.
      * @param text The button's text
      * @param command The button's actionCommand
+     * @param toolTip A tool tip for the button.
      * @return The new JButton
      */
-    public JButton newButton(String text, String command) {
+    public JButton newButton(String text, String command, String toolTip) {
         JButton button = new JButton(text);
+        button.setToolTipText(toolTip);
         button.setActionCommand(command);
         button.addActionListener(controller);
         button.setMinimumSize(minimumButtonDimension);
