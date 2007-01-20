@@ -345,16 +345,16 @@ statistik over de enkelte adfærdsmønstre til {\tt System.out} hver
 runde. {\tt BiotopeLogger} bliver tilføjet som {\tt Observer} til den
 aktuelle biotop, men er desuden beskrevet yderligere nedenfor.
 
-Det nederste panel indeholder et {\tt NicerStatisticsPanel} der hver
+Det nederste panel indeholder et {\tt StatisticsPanel} der hver
 runde opdateres med en generel status for hver af de adfærdsmønstre
 der er i biotopen. Dette foregår også ved at {\tt
-  NicerStatisticsPanel} bliver tilføjet som {\tt Observer} til den
-nuværende biotop. Da {\tt NicerStatisticsPanel} får den
+  StatisticsPanel} bliver tilføjet som {\tt Observer} til den
+nuværende biotop. Da {\tt StatisticsPanel} får den
 anvendte {\tt Map<Behavior, Color>} med i sin konstruktør, er det
 derefter uafhængigt af {\tt GalapagosFrame}, og kan med meget få
 kodemæssige ændringer erstattes af et andet (og måske) bedre panel til
 udskrivning af information om biotop-tilstanden til brugeren.  {\tt
-  NicerStatisticsPanel} er beskrevet yderligere nedenfor.
+  StatisticsPanel} er beskrevet yderligere nedenfor.
 
 \subsubsection{\tt BiotopeController}
 
@@ -409,12 +409,12 @@ en slags skriver vi at den slags er uddød. Tilsvarende gøres i
 total-rækken opmærksom på når der ikke er nogen levende finker
 tilbage.
 
-\subsubsection{\tt NicerStatisticsPanel}
-{\tt NicerStatisticsPanel}
+\subsubsection{\tt StatisticsPanel}
+{\tt StatisticsPanel}
 fungere på stort set samme måde som {\tt BiotopeLogger}, men da det
 her skal vises i et Java-vindue bliver vi nødt til at bruge nogle
 Java-komponenter til at vise teksten. Den fundamentale forskel på {\tt
-  BiotopeLogger} og {\tt NicerStatisticsPanel} er at panelet har et
+  BiotopeLogger} og {\tt StatisticsPanel} er at panelet har et
 todimensionalt array af {\tt JLabel}s, som den ændrer teksten på hver gang
 der er sket en opdatering, mens {\tt BiotopeLogger}en hver runde
 konstruerer et
