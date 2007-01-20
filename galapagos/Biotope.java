@@ -160,8 +160,16 @@ public class Biotope extends Observable {
      * Put a new finch in the world at position x, y. The finch will
      * have the provided behavior, and it will overwrite any already
      * existing finch at the position.
+     *
+     * @require 0 <= x < biotope-world-width
+     * @require 0 <= y <= biotope-world-height
      */
     public void putFinch (int x, int y, Behavior b) {
+        assert (0 <= x && x < world.width())
+            : "Cannot put finch beyond the borders of the world";
+        assert (y <= x && y < world.height())
+            : "Cannot put finch beyond the borders of the world";
+
         World<GalapagosFinch>.Place p = world.getAt(x, y);
         // If we have a finch here already, subtract it from the total
         // population of that type.
