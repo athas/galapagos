@@ -23,7 +23,7 @@ public class Biotope extends Observable
     private final World<GalapagosFinch> world;
 
     private final Map<Behavior, Statistics> statistics;
-    private final List<Behavior> finchBehaviors;
+    private final ArrayList<Behavior> finchBehaviors;
 
     private final static int HelpedGotHelpValue = 3;
     private final static int HelpedDidntGetHelpValue = 0;
@@ -99,7 +99,8 @@ public class Biotope extends Observable
         this.minMaxAge = minMaxAge;
         this.maxMaxAge = maxMaxAge;
         this.finchesPerBehavior = finchesPerBehavior;
-        this.finchBehaviors = behaviors;
+        this.finchBehaviors = new ArrayList<Behavior>(behaviors.size());
+        this.finchBehaviors.addAll(behaviors);
         world = new World<GalapagosFinch>(width, height);
         statistics = new HashMap<Behavior,Statistics>();
         engagedFinches = new ArrayList<Boolean>(width * height);
@@ -464,7 +465,7 @@ public class Biotope extends Observable
      * permitted to modify this list.
      */
     public List<Behavior> behaviors () {
-        return finchBehaviors;
+        return (List) finchBehaviors.clone();
     }
     
     /**
