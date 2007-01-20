@@ -220,7 +220,8 @@ public class Biotope extends Observable
 
     /**
      * Return the finch at the specified coordinate. This method is
-     * mostly intended for testing the Biotope class.
+     * mostly intended for testing the Biotope class. If there is no
+     * finch at the specified position, this method will return null.
      *
      * @param x The x coordinate of the finch to return.
      * @param y The y coordinate of the finch to return.
