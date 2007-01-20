@@ -17,7 +17,21 @@ public class BiotopeController implements ActionListener, ChangeListener {
      */
     public BiotopeController (Biotope biotope) {
         this.biotope = biotope;
-        roundTimer = new Timer(0, this);
+        roundTimer = new Timer(0, new ActionListener() {
+        	public void actionPerformed(ActionEvent event) {
+                if (unlimited) {
+                	BiotopeController.this.biotope.runRound();
+                } else {
+                    if (roundsToGo > 0) {
+                        roundsToGo--;
+                        BiotopeController.this.biotope.runRound();
+                    }
+                    
+                    if (roundsToGo <= 0)
+                        roundTimer.stop();
+                }
+        	}
+        });
         roundTimer.stop();
         roundsToGo = 0;
         numberOfRounds = 0;
@@ -30,45 +44,44 @@ public class BiotopeController implements ActionListener, ChangeListener {
         this.biotope = biotope;
     }
     
-    public void stopSimulation() {
-    	roundTimer.stop();
-    	roundsToGo = 0;
+    public void actionPerformed(ActionEvent e) {        
+        String command = e.getActionCommand();
+        
+        if (command.equals("nextRound"))
+        	nextRound();
+        else if (command.equals("severalRounds"))
+        	runSeveralRounds(numberOfRounds);
+        else if (command.equals("unlimitedRounds"))
+        	loop();
+        else if (command.equals("stopRounds"))
+        	stopSimulation();
     }
     
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == roundTimer) {
-            if (unlimited) {
-                biotope.runRound();
-            } else {
-                if (roundsToGo > 0) {
-                    roundsToGo--;
-                    biotope.runRound();
-                }
-                if (roundsToGo <= 0)
-                    roundTimer.stop();
-            }
-            return;
-        }
-        
-        String command = e.getActionCommand();
-        if (command.equals("nextRound")) {
-            unlimited = false;
-            roundsToGo = 0;
-            roundTimer.stop();
-            biotope.runRound();
-        } else if (command.equals("severalRounds")) {
-            unlimited = false;
-            roundsToGo = numberOfRounds;
-            roundTimer.start();
-        } else if (command.equals("unlimitedRounds")) {
-            unlimited = true;
-            roundsToGo = 0;
-            roundTimer.start();
-        } else if (command.equals("stopRounds")) {
-            unlimited = false;
-            roundsToGo = 0;
-            roundTimer.stop();
-        }
+    public void runSeveralRounds(int rounds) {
+    	unlimited = false;
+    	roundsToGo = rounds;
+    	roundTimer.start();
+    }
+    
+    public void nextRound() {
+    	stopSimulation();
+        biotope.runRound();
+    }
+    
+    public void stopSimulation() {
+        unlimited = false;
+        roundsToGo = 0;
+        roundTimer.stop();
+    }
+    
+    public void loop() {
+    	unlimited = true;
+        roundsToGo = 0;
+        roundTimer.start();
+    }
+    
+    public void delay(int value) {
+    	roundTimer.setDelay(value);
     }
     
     public void stateChanged (ChangeEvent e) {
@@ -77,7 +90,7 @@ public class BiotopeController implements ActionListener, ChangeListener {
     	int value = (Integer)spinner.getValue();
     	
     	if(spinner.getName().equals("timerIntervalSpinner"))
-    		roundTimer.setDelay(value);
+    		delay(value);
     	else if(spinner.getName().equals("numberOfRoundsSpinner"))
     		this.numberOfRounds = value;
     }
