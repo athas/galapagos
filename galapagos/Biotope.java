@@ -157,6 +157,26 @@ public class Biotope extends Observable {
     }
 
     /**
+     * Remove the finch at be specified Place. If there is no finch at
+     * the provided Place, calling this method is a no-op. If a
+     * finch is removed, it will be subtracted from the appropriate
+     * population count in the statistics.
+     *
+     * @param p The place in the world we wish to remove a finch from.
+     */
+    private void removeFinch(World<GalapagosFinch>.Place p) {
+        // If we have a finch here, subtract it from the total
+        // population of that type.
+        if (p.getElement() != null) {
+            Statistics s = statistics.get((p.getElement()).behavior());
+            s.decPopulation();
+            p.setElement(null);
+        }
+    }
+
+    // The following two methods are intended for use by clients.
+
+    /**
      * Put a new finch in the world at position x, y. The finch will
      * have the provided behavior, and it will overwrite any already
      * existing finch at the position.
@@ -171,13 +191,28 @@ public class Biotope extends Observable {
             : "Cannot put finch beyond the borders of the world";
 
         World<GalapagosFinch>.Place p = world.getAt(x, y);
-        // If we have a finch here already, subtract it from the total
-        // population of that type.
-        if (p.getElement() != null) {
-            Statistics s = statistics.get((p.getElement()).behavior());
-            s.decPopulation();
-        }
+        removeFinch(p);
         placeFinch(p, b, false);
+        setChanged();
+        notifyObservers();
+    }
+    
+    /**
+     * Remove the finch at be specified coordinates. If there is no
+     * finch at the provided location, calling this method is a
+     * no-op. If a finch is removed, it will be subtracted from the
+     * appropriate population count in the statistics.
+     *
+     * @require 0 <= x < biotope-world-width
+     * @require 0 <= y <= biotope-world-height
+     */
+    public void takeFinch(int x, int y) {
+        assert (0 <= x && x < world.width())
+            : "Cannot removen finch beyond the borders of the world";
+        assert (y <= x && y < world.height())
+            : "Cannot remove finch beyond the borders of the world";
+
+        removeFinch(world.getAt(x, y));
         setChanged();
         notifyObservers();
     }
@@ -357,8 +392,7 @@ public class Biotope extends Observable {
 	                if (newStatus == FinchStatus.DEAD_AGE)
 	                	stats.incDeadByAge();
 	                    else stats.incDeadByTicks();
-	                stats.decPopulation();
-	                p.setElement(null);
+                        removeFinch(p);
 	            }
         	}
     }
