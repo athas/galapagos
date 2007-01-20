@@ -6,6 +6,7 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicSeparatorUI;
 
 /**
  * A Dialog
@@ -18,6 +19,7 @@ public class BiotopeCreator extends JDialog {
     private final JSpinner minMaxAgeSpinner, maxMaxAgeSpinner;
     private final JSpinner finchesPerBehaviorSpinner;
     private final JCheckBox[] behaviorCheckboxes;
+    private final JCheckBox selectAll;
     private final JButton okButton, cancelButton;
     private final JButton setVariantOneButton, setVariantTwoButton, setVariantThreeButton;
     private List<Behavior> behaviors;
@@ -75,10 +77,28 @@ public class BiotopeCreator extends JDialog {
         // Behavior selection.
         JPanel behaviorsOptionGroup = new JPanel(new GridBagLayout());
         behaviorsOptionGroup.setBorder(BorderFactory.createTitledBorder("Behaviors"));
+        
+        //Create a checkbox to select all behaviors.
+        selectAll = new JCheckBox("Select all behaviors", true);
+        selectAll.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) 
+        	{
+        		for (int i = 0; i < behaviorCheckboxes.length; i++)
+        			behaviorCheckboxes[i].setSelected(selectAll.isSelected());
+        	}
+        });
+        
+        behaviorsOptionGroup.add(selectAll);
+        behaviorsOptionGroup.add(selectAll, getComponentConstraints(0, 0, GridBagConstraints.WEST));
+        
+        //create a seperation between the select all checkbox and the rest
+        JSeparator seperator = new JSeparator();
+        seperator.setUI(new BasicSeparatorUI());
+        behaviorsOptionGroup.add(seperator, getContainerConstraints(0, 1, GridBagConstraints.REMAINDER,  1));
+        
         behaviorCheckboxes = new JCheckBox[this.behaviors.size()];
         for (int i = 0; i < behaviorCheckboxes.length; i++) {
             behaviorCheckboxes[i] = new JCheckBox(this.behaviors.get(i).toString(),true);
-            behaviorCheckboxes[i].setToolTipText(this.behaviors.get(i).description());
             behaviorsOptionGroup.add(behaviorCheckboxes[i], getComponentConstraints(i / 10, i % 10, GridBagConstraints.WEST));
         }
         
