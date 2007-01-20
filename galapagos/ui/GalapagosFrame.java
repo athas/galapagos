@@ -313,6 +313,7 @@ public class GalapagosFrame extends JFrame {
         
         manipulationRadiusLabel = new JLabel("Radius of pencil");
         manipulationRadius = new JSlider(1, 25, 1);
+        manipulationRadius.setAlignmentX(0.0F);
         manipulationRadius.setToolTipText("Set the radius of the biotope manipulation pencil");
         manipulationRadius.setName("manipulationRadiusSlider");
         manipulationRadiusDisplay = new JLabel(((Integer)manipulationRadius.getValue()).toString());
