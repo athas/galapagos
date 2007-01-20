@@ -268,6 +268,40 @@ biologisk eller spilteoretisk synspunkt er dette rimeligt. Derfor vil
 finker, der i en runde ikke deltager i et møde, i vores
 implementation få tildelt et enkelt livspoint.
 
+\subsubsection{Biotope.FinchDescriptor}
+
+I vores program tilbyder vi muligheden for at indsætte og fjerne
+finker under kørsel - denne manipulation er ikke nødvendigvis
+begrænset til enkelte felter, men kan i stedet påvirke adskillige
+felter inden i en cirkel på samme tid. Den åbenlyse implementation har
+en klar defekt - efter hver manipulation, det være at fjerne eller
+tilføje en finke til et felt, bliver metoden {\tt notifyObservers}
+kaldet og den grafiske repræsentation opdateret. Dette betyder at man
+i stedet for blot at se en cirkel blive udfyldt med finker af den
+valgte opførsel på en gang, vil kunne iagttage cirklen blive udfyldt
+felt for felt, en både ydelsesmæssigt og brugerinterfacemæssig defekt.
+Vi ønsker altså at lave en serie af ændringer uden at {\tt
+  notifyObservers} bliver kaldt imellem, men samtidigt ønsker vi ikke
+at give klienter til {\tt Biotope} mulighed for at ændre tilstanden
+uden at observatører bliver oplyst om det. At understøtte dette i {\tt
+  Biotope} kræver et særligt design baseret på designmønstret {\em
+  Visitor}. Overordnet defineres der en offentlig abstrakt indre
+klasse i {\tt Biotope} ved navn {\tt FinchDescriptor} - instanser af
+underklasser af denne klasse beskriver en handling på et specifikt
+felt i biotopen, og i {\tt Biotope} er en metode {\tt
+  applyDescriptors} defineret, som sørger for at de handlinger, der er
+beskrevet af en liste af {\tt FinchDescriptor}-objekter, bliver
+udført, og eventuelle observatører orienteret om eventuelle ændringer.
+{\tt FinchDescriptor}-klassen specificerer en metode {\tt apply} som
+bruges til at udføre ændringen beskrevet i det konkrete {\tt
+  FinchDescriptor}-objekt på den leverede {\tt Biotope}-instans. Dette
+sikrer os fra at være nødsaget til at bruge {\tt instanceof} til
+specifikt at håndtere alle underklasser af {\tt FinchDescriptor} i
+{\tt applyDescriptors}, men i stedet uddelegere dette til det konkrete
+objekt, som så er i stand til at benytte private metoder i {\tt
+  Biotope} til at udføre sin beskrevne ændring uden at {\tt
+  notifyObservers} bliver kaldt.
+
 \subsection{Brugerinterface}
 Vores brugerinterface bruges til at styre og vise biotopobjekter.
 Det består som udgangspunkt af en instans af {\tt GalapagosFrame}. Dette
