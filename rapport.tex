@@ -8,7 +8,7 @@
 
 \title{Eksamensprojekt i Objektorienteret \linebreak programmering og design}
 
-\author{Martin Dybdal, Mikkel Abrahamsen, Sune Precht Reeh, Troels Henriksen}
+\author{Mikkel Abrahamsen, Martin Dybdal, Troels Henriksen, Sune Precht Reeh}
 
 \date{Januar 2007}
 \begin{document}
@@ -25,13 +25,13 @@ Mikkel Abrahamsen
 
 \noindent Eksamensnummer: 37
 
-\vspace{20pt} \noindent Sune Precht Reeh
+\vspace{20pt} \noindent Martin Dybdal
 
-\noindent Kai Hoffmanns Allé 27
+\noindent Lyngestationsvej 3F
 
-\noindent 2750 Ballerup
+\noindent 3540 Lynge
 
-\noindent Eksamensnummer: 64
+\noindent Eksamensnummer: 21
 
 \vspace{20pt} \noindent Troels Henriksen
 
@@ -41,34 +41,35 @@ Mikkel Abrahamsen
 
 \noindent Eksamensnummer: 72
 
-\vspace{20pt} \noindent Martin Dybdal
+\vspace{20pt} \noindent Sune Precht Reeh
 
-\noindent Lyngestationsvej 3F
+\noindent Kai Hoffmanns Allé 27
 
-\noindent 3540 Lynge
+\noindent 2750 Ballerup
 
-\noindent Eksamensnummer: 21
+\noindent Eksamensnummer: 64
 
 \section{Programdesign}
 
 Programmet er opdelt efter klare ansvarsgrænser med veldefinerede
 interfaces der adskiller programmets logik i logiske enheder. En
-overordnet ramme fungerer som kontrolpanel for simulationen, der er
+overordnet ramme (en instans af {\tt GalapagosFrame})
+fungerer som kontrolpanel for simulationen, der er
 repræsenteret som en instans af klassen {\tt Biotope}. Rammen
-interagerer ikke meget med de klasser der opbygger simulationen (såsom
-datastrukturen verdens tilstand gemmes i, eller den konkrete klasse
+interagerer ikke med de klasser der opbygger simulationen (såsom
+den datastruktur verdens tilstand gemmes i, eller den konkrete klasse
 der repræsenterer finker), men uddelegerer i stedet dette til
-simulationsklassen. Det er dog nødvendigt at lade rammen kende til
-visse specifikke simulationsklasser, for at f.eks. statistik kan
-præsenteres på en brugbar måde.
+biotopobjektet. %Det er dog nødvendigt at lade rammen kende til
+%visse specifikke simulationsklasser, for at f.eks. statistik kan
+%præsenteres på en brugbar måde.
 
 Interaktionen mellem simulationen og brugerinterfacet er struktureret
 efter {\em Model-View-Controller}-designmønstret, hvori modellen (i
-vores tilfælde, biotop-simulationen) er uafhængig af hvorledes dens
+vores tilfælde biotop-simulationen) er uafhængig af hvorledes dens
 tilstand bliver repræsenteret grafisk eller tekstuelt, og hvor dens
 virkemåde styres igennem et dedikeret {\em Controller}-objekt. I vores
-implementation er de grafiske kontrolværktøjer, som knapper, forbundet
-til kommandoer i vores {\em Controller}, der så igen manipulerer
+implementation er de grafiske kontrolværktøjer, fx knapper, forbundet
+til kommandoer i vores Controller, der så igen manipulerer
 biotop-objektet.
 
 \subsection{Model}
@@ -78,32 +79,34 @@ biotop-objektet.
 Den fundamentale datastruktur, der ligger til grund for hele
 simulationens verden, er den passende navngivede klasse {\tt World}.
 Denne klasse giver i sin enkelthed adgang til et todimensionalt array
-af {\tt World.Place} objekter. Disse {\tt World.Place}s skaber verdens
+af {\tt World.Place}-objekter (fremover kaldet felter).
+Disse felter skaber verdens
 torusform, som krævet i opgaven, idet de har metoder til at finde
-nabo-{\tt World.Place}s. Et af disse objekter, placeret på en kant,
-vil give de passende objekter på den modsatte kant, når der bliver
-spurgt om dets naboer. Et {\tt World.Place}-objekt kan indeholde et
+nabofelter. Et af disse objekter, placeret på en kant,
+vil give de passende felter på den modsatte kant, når der bliver
+spurgt om dets naboer. Et felt kan indeholde et
 andet objekt - dets {\em element}. I vores simulation er
-finke-objekterne placeret som elementer i {\tt World.Place}-objekter,
+finkeobjekterne placeret som elementer på felterne,
 men da man kan forestille sig at der sidenhen kan være behov for at
 lave {\tt World}-strukturer med andre typer objekter end finker, har
 vi valgt at parametrisere {\tt World}-klassen over den type elementer
-som {\tt World.Place}-objekterne indeholder.
+som felterne indeholder.
 % Skal det nævnes at World er en form for ArrayList Dekorator? evt formulering: 
 % (kræver en mindre rettelse længere nede)
 %
-% Man kan se {\tt World} som en {\tt ArrayList} "Decorator". I det at vi
+% Man kan se {\tt World} som en {\tt ArrayList} "Decorator". Idet at vi
 % internt bruger en sådan liste til at repræsentere torus-formen.
 
-Metoderne {\tt World.Place.filledNeighbors} og {\tt
-  World.Place.emptyNeighbors} bruges til at finde alle de naboceller
-der hhv. indeholder elementer eller er tomme. De skal benyttes når
+Et felt har metoderne {\tt filledNeighbors} og {\tt
+  emptyNeighbors} til at finde alle de nabofelter
+der indeholder elementer hhv. er tomme. De skal benyttes når
 finker skal få afkom og møde andre finker.
 
-Under simulationen er der endnu en interessant facilitet vi ofte har
-behov for at udføre på vores verden. Når der skal arrangeres møder og
+%Under simulationen er der endnu en interessant facilitet vi ofte har
+%behov for at udføre på vores verden.
+Når der skal arrangeres møder og
 skabes afkom skal vi iterere igennem alle finker i verden, men for
-ikke skabe favoritter, skal dette helst ske i pseudotilfældig
+ikke skabe favoritter skal dette helst ske i pseudotilfældig
 rækkefølge. Ydermere ønsker vi et iteratorbaseret interface for at
 gøre koden så elegant som muligt. En åbenlys implementation er at lade
 {\tt World} klone dets underliggende lager (en enkeltdimensional {\tt
@@ -111,13 +114,13 @@ gøre koden så elegant som muligt. En åbenlys implementation er at lade
 returnere en iterator. Dette ville resultere i allokeringen af et nyt
 array for hver gang vi har behov for at iterere igennem elementerne i
 {\tt World} i pseudotilfældig rækkefølge - en åbenlys ineffektiv
-implementation. Vi har - ved at observere at {\tt
-  World.Place}-objekterne i {\tt World} altid er de samme (det er kun
+implementation. Vi har - ved at observere at felterne
+ i {\tt World} aldrig udskiftes eller ombyttes (det er kun
 deres elementer der ændrer sig) - fundet på en mere effektiv
 implementation, hvor vi i {\tt World}, sideløbende med det almindelige
-lager, gemmer et alternativt lager, der indeholder de samme {\tt
-  World.Place}-objekter som det primære, men i en anden rækkefølge.
-Idet det er de samme {\tt World.Place}-objekter der bliver modificeret
+lager, gemmer et alternativt lager, der indeholder de samme felter
+som det primære, men i en anden rækkefølge.
+Idet det er de samme felter der bliver modificeret
 når der tilføjes og fjernes finker, vil dette sekundære array altid
 være opdateret mht.  indhold, og vi kan implementere tilfældig
 iteration blot ved at kalde {\tt Collections.shuffle} på det og
@@ -129,59 +132,58 @@ iteration.
 
 En instans af klassen {\tt GalapagosFinch} repræsenterer én finke.
 Klassen {\tt GalapagosFinch} implementerer interfacet {\tt Finch}, der
-bruges som reference til en {\tt GalapagosFinch} på steder hvor det
-ikke er tilsigtet at man skal kunne få ekstra oplysninger om {\tt
-  GalapagsoFinch}en eller ændre den på nogen måde (det vil naturligvis
+bruges som reference til en finke på steder hvor det
+ikke er tilsigtet at man skal kunne få ekstra oplysninger om finken
+eller ændre den på nogen måde (det vil naturligvis
 stadig være muligt at "type-caste" en {\tt Finch} til {\tt
   GalapagosFinch} og herefter ændre på den eller få yderligere
 oplysninger om fx dens alder).
 
-En {\tt GalapagosFinch} har én {\tt Behavior}. Det er {\tt
-  Behavior}ens ansvar at afgøre om {\tt GalapagosFinch}en vil hjælpe
-en given finke eller ej, ligesom {\tt Behavior}en underrettes om
-hvorledes andre finker har handlet overfor {\tt GalapagosFinch}en.
+En finke har én {\tt Behavior} (fremover kaldet finkens adfærd).
+Det er adfærdens ansvar at afgøre om finken vil hjælpe
+en given finke eller ej, ligesom adfærden underrettes om
+hvorledes andre finker har handlet overfor finken.
 
-Metoden {\tt decide} i {\tt GalapagosFinch} bruges når man har brug
-for at få at vide, om {\tt GalapagosFinch}en vil hjælpe en anden {\tt
-  Finch} eller ej (i første tilfælde returneres {\tt
+Finkens metoden {\tt decide} bruges når man har brug
+for at få at vide, om finken vil hjælpe en anden finke
+eller ej (i første tilfælde returneres {\tt
   FinchStatus.CLEANING}, i andet tilfælde returneres {\tt
   FinchStatus.IGNORING}).
 
-Med metoden {\tt response} modtager {\tt GalapagosFinch}en information
-om hvordan en given anden {\tt Finch} har handlet mod den. Dette gives
-videre til {\tt GalapagosFinch}ens {\tt Behavior}, ved at kalde dennes
+Med metoden {\tt response} modtager finken information
+om hvordan en given anden finke har handlet mod den. Dette gives
+videre til finkens adfærd, ved at kalde dennes
 {\tt response}-metode.
 
-Både {\tt Galapagos.decide} og {\tt Galapagos.response} propagerer
-bare ansvaret videre til finkens {\tt Behavior}.
+Både finkens {\tt decide}- og {\tt response}-metode propagerer
+altså ansvaret videre til finkens adfærd.
 
-Metoden {\tt status} bruges til at afgøre om {\tt GalapagosFinch}en er
+Metoden {\tt status} bruges til at afgøre om finken er
 levende, død af utøj eller død af alderdom, sådan at man kan fjerne
 den fra simulationen hvis den ikke længere bør være der.
 
 \subsubsection{\tt Behavior}
 % måske bør vi nævne at vi bruger Strategy-pattern
 % bare for at vise at vi er bevidste om det.
-Interfacet {\tt Behavior} er en specifikation af en finkes opførsel i
+Interfacet {\tt Behavior} er en specifikation af en finkes adfærd i
 forbindelse med møder med andre finker.
 
-Resultatet af {\tt decide} beskriver om en {\tt Finch} skal hjælpes
+Resultatet af {\tt decide} beskriver om en anden finke skal hjælpes
 eller ej.
 
 {\tt response} modtager information om hvordan en anden finke handlede
-under et møde med den {\tt GalapagosFinch} som den pågældende {\tt
-  Behavior} tilhører.
+under et møde med den finken som den pågældende adfærd tilhører.
 
 Enhver implementation af {\tt Behavior} har sin egen {\tt
- toString}-metode der returnerer navnet på den givne {\tt Behavior}
+ toString}-metode der returnerer navnet på den givne adfærd
 (det er dette navn der i sidste ende bliver vist af vores
 bruger-interface). Man kan således bruge {\tt toString} til at afgøre
-hvilken konkret klasse som et givent {\tt Behavior}-objekt er en
+hvilken konkret klasse et givent {\tt Behavior}-objekt er en
 instans af.
 
 Til dette formål har vi dog også krævet at enhver konkret {\tt
   Behavior}-klasse skal overskrive {\tt equals} således at {\tt
-  a.equals(b)} er sand for to {\tt Behavior}s objekter hvis og kun
+  a.equals(b)} er sand for to {\tt Behavior}-objekter hvis og kun
 hvis {\tt a} og {\tt b} er instanser af den samme {\tt Behavior}.
 
 {\tt Behavior}-interfacet kræver derfor også at {\tt hashCode}
@@ -189,35 +191,37 @@ overskrives så alle {\tt Behavior}s af samme klasse giver samme {\tt
   hashCode} (hvorved specifikationen af {\tt hashCode} i {\tt Object}
 er overholdt).
 
-Enhver klasse der repræsenterer en finkeopførsel som afhænger af
+Enhver klasse der repræsenterer en finkeadfærd som afhænger af
 hvordan finken er blevet behandlet, udvider den abstrakte klasse {\tt
   MemoryBehavior}.
 
 {\tt MemoryBehavior} er parametriseret med den generiske variabel {\tt
   DATA}, og instansvariablen {\tt finches} er et {\tt
   WeakHashMap<Finch, DATA>}, som bruges når man ønsker at knytte {\tt
-  DATA} til en eller anden {\tt Finch}. Dette danner grundlaget for
+  DATA} til en eller anden finke. Dette danner grundlaget for
 senere at kunne afgøre hvordan der skal handles i et møde ud fra de
 foregående møder.
 
 {\tt MemoryBehavior} indeholder metoden {\tt recall} til at hente den
-{\tt DATA} der er knyttet til en given {\tt Finch}, og {\tt remember}
-til at knytte {\tt DATA} til en given {\tt Finch} i {\tt finches}.
+{\tt DATA} der er knyttet til en given finke, og {\tt remember}
+til at knytte {\tt DATA} til en given finke og lagre det i {\tt finches}.
 
 Den abstrakte klasse {\tt ActionMemoryBehavior} udvider {\tt
-  MemoryBehavior<Action>}, og udvides af alle typer af opførsler der
-til en given {\tt Finch} kun behøver at huske én {\tt Action}.
-Eksempler på dette er {\tt Grudger} og {\tt TitForTat}.
+  MemoryBehavior<Action>}, og udvides af alle typer af adfærd der
+til en given finke kun behøver at huske én {\tt Action}.
+Eksempler på disse adfærdsmønstre er {\tt Grudger} og {\tt TitForTat}.
 
 \subsubsection{\tt Biotope}
 
 {\tt Biotope}-klassen er simulationens grundsten, den klasse der
-implementerer al logikken i programmet. {\tt Biotope} har en instans,
-{\tt world}, af {\tt World<GalapagosFinch>}. {\tt Biotope} er ganske
-simpel at bruge - en {\tt Biotope} konstrueres bl.a. ud fra en liste
+implementerer al logikken i programmet. Biotopen har en instans,
+{\tt world}, af {\tt World<GalapagosFinch>}.
+% {\tt Biotope} er ganske
+%simpel at bruge -
+En biotop konstrueres bl.a. ud fra en liste
 af {\tt Behavior}-objekter, og denne liste indeholder alle de
-opførsler som finker i biotopen skal kunne have. Derudover kan man ved
-konstruktion af en {\tt Biotope} angive størrelsen af {\tt world},
+adfærdsmønstre som finker i biotopen skal kunne have. Derudover kan man ved
+konstruktion af en biotop angive størrelsen af {\tt world},
 ynglesandsynlighed, maksimalt antal livspoint af en finke, startpoint,
 rundepris, nedre grænse for maksimal alder, øvre grænse for maksimal
 alder og antallet af finker med hver opførsel der skal sættes i verden
@@ -226,25 +230,24 @@ kan ikke ændres når biotopen er skabt.
 
 Ved at kalde metoden {\tt runRound} simuleres en enkelt runde, og
 eventuelle observerende objekter gøres opmærksomme på ændringer i
-simulationens tilstand. Det er {\tt Biotope}-klassens ansvar at
-oprette og vedligeholde verdenen ({\tt world}) og finkerne ({\tt
-  GalapagosFinch}'erne) i den.
+simulationens tilstand. Det er biotopobjektets ansvar at
+oprette og vedligeholde verdenen ({\tt world}) og finkerne i den.
 
 For at simulationen skal være fair, er det nødvendigt at finkerne i
 tilfældig rækkefølge får mulighed for at få afkom. Der opstår nemlig
 utvivlsomt situationer hvor flere finker deles om samme tomme nabofelt
 som kan fyldes med afkom, og så er det ikke en god idé at bruge en
 naiv iteration, som f.eks. række for række igennem verden, da det så
-ville favoritisere finker nordvest i spilverdenen. Ligeledes må vi på
-tilfældig vis løbe finkerne igennem og finde en mødepartner til dem.
-Det er {\tt Biotope}-klassens ansvar at sørge for at disse situationer
+ville favoritisere finker nordvest i verdenen. Ligeledes må vi på
+tilfældig vis løbe finkerne igennem for at finde en mødepartner til dem.
+Det er biotopobjektets ansvar at sørge for at disse situationer
 bliver løst på fair vis.
 
-Det er også {\tt Biotope}-klassens ansvar at samle ændringer undervejs
+Det er også biotopobjektets ansvar at samle ændringer undervejs
 i en runde i {\tt Statistics}-objekter. Et sådant objekt indeholder
 information om hvor mange finker der er, hvor mange nye finker der er
 kommet til verden, og hvor mange der har forladt verden pga. hhv. utøj
-og alderdom. Disse {\tt Statistics} kan bruges af observerende
+og alderdom. Disse statistikker kan bruges af observerende
 objekter til at få et bredt billede af begivenhederne i en runde og
 over længere tid.
 
@@ -260,19 +263,19 @@ finker, der ikke deltager i et møde, i vores implementation få tildelt
 et enkelt livspoint.
 
 \subsection{Brugerinterface}
-Vores brugerinterface til at styre og vise {\tt Biotope}-objekter
-består som udgangspunkt af en instans af {\tt GalapagosFrame}. Dette
+Vores brugerinterface bruges til at styre og vise biotopobjekter.
+Det består som udgangspunkt af en instans af {\tt GalapagosFrame}. Dette
 vindue giver brugeren mulighed for gennem knapper at kontrollere den
-nuværende {\tt Biotope}. Dette sker gennem en instans af {\tt
+nuværende biotop. Dette sker gennem en instans af {\tt
   BiotopeController} der modtager "events" fra knapperne på vinduet,
 og ud fra dette får biotopen til at udføre det tilsvarende antal
 runder af simulationen. {\tt GalapagosFrame} giver desuden brugeren
 mulighed for at iagttage biotopen såvel visuelt (gennem en instans af
-{\tt AreaPanel}) som gennem en tabel over den nuværende tilstand for
-de forskellige {\tt Behaviors} i biotopen. Der er endda mulighed for
+{\tt AreaPanel}) som gennem en tabel over den nuværende tilstand af
+de forskellige adfærdsmønstre i biotopen. Der er endda mulighed for
 at aktivere en ekstra funktionalitet der udskriver tabellens data til
 {\tt System.out} ved hjælp af klassen {\tt BiotopeLogger}. Sidste
-overordnede komponent i bruger interfacet er det selvstændige vindue
+overordnede komponent i bruger-interfacet er det selvstændige vindue
 {\tt BiotopeCreator} som man kan få adgang til fra {\tt
   GalapagosFrame}. {\tt BiotopeCreator} giver mulighed for at
 specificere parametrene for en ny {\tt Biotope} der derefter kan
@@ -280,61 +283,67 @@ iagttages og manipuleres gennem {\tt GalapagosFrame}.
 
 \subsubsection{\tt GalapagosFrame}
 En {\tt GalapagosFrame} er den komponent der står for at oprette alle
-de andre hovedkomponenter i programmet (dvs. selve {\tt
-  Biotope}-instanserne, en {\tt BiotopeController} og de andre dele af
+de andre hovedkomponenter i programmet (dvs. selve biotopobjektet,
+en {\tt BiotopeController} og de andre dele af
 bruger-interfacet). {\tt GalapagosFrame} tager en {\tt Map<Behavior,
   Color>} som argument i sin konstruktør. Denne {\tt Map} specificerer
-hvilke {\tt Behavior}s der er tilgængelige til konstruktion af
+hvilke adfærdsmønstre der mulige at have med i
 biotoper i programmet, samt hvilke farver der repræsenterer de
-forskellige {\tt Behavior}s i den visuelle visning af biotoperne. Det
-er på denne måde let at introducere nye {\tt Behavior}s til programmet
+forskellige adfærdsmønstre i den visuelle visning af biotoperne. Det
+er på denne måde let at introducere nye adfærdsmønstre til programmet
 da dette kun skal gøres et enkelt sted hvorefter resten af programmet
-skalerer sig selv til at passe med antallet af {\tt Behavior}s.
+skalerer sig selv til at passe med antallet af adfærdsmønstre.
 
 Den visuelle repræsentation af {\tt GalapagosFrame} er delt op i fem
-områder. Det øverste panel indeholder de primære kontrolmuligheder for
-den aktuelle {\tt Biotope}. Alle komponenterne på dette panel (bortset
+områder (paneler).
+
+Det øverste panel indeholder de primære kontrolmuligheder for
+den aktuelle biotop. Alle komponenterne på dette panel (bortset
 fra knappen ``New Biotope'') sender events til {\tt
   BiotopeController}'en der håndterer de konkrete deltaljer om at få
 biotopen til at udføre det ønskede antal simulationsrunder (``Next
-Round'': én runde. ``Several Rounds'': det angivne antal runder.
-``Go!'': et ubegrænset antal runder) eller stoppe for udførslen af
+Round'': én runde; ``Several Rounds'': det angivne antal runder;
+``Go!'': et ubegrænset antal runder) eller stoppe udførslen af
 flere runder (``Stop Simulation''). ``New Biotope''-knappen åbner
 programmets {\tt BiotopeCreator} der står for at indsamle gyldige
-parametre fra brugeren til en ny {\tt Biotope}, og undervejs er det
-ikke muligt at manipulere med den nuværende {\tt Biotope} - idet {\tt
+parametre fra brugeren til en ny biotop, og undervejs er det
+ikke muligt at manipulere med den nuværende biotop - idet {\tt
   BiotopeCreator}'en bliver vist som en modal dialog.
 
 Det midterste panel på {\tt GalapagosFrame} indeholder den visuelle
 visning af biotopen i form af en instans af {\tt AreaPanel}. {\tt
   AreaPanel} er tilføjet som {\tt Observer} til den nuværende {\tt
-  Biotope}, og opdaterer sig selv når den aktuelle {\tt Biotope}
+  Biotope}, og opdaterer sig selv når den aktuelle biotop
 ændrer sig. {\tt AreaPanel} ændrer desuden pixel-størrelsen for de
 enkelte felter i visningen af biotopen således at hele biotopen vises
 så stort som muligt på vinduet (forudsat at vinduet ikke gøres så småt
 at biotopen ikke kan vises selv med en feltstørrelse på 1x1 pixels).
 
 Panelet til højre på vinduet indholder en {\tt OptionButton} for hver
-{\tt Behavior} i biotopen (dvs. kun dem der var i biotopen da denne
+adfærd i biotopen (dvs. kun dem der var i biotopen da denne
 blev oprettet), og gør det i kombination med {\tt AreaPanel} muligt at
-tilføje nye finker til biotopen med musen.
+tilføje nye finker til biotopen med musen (venstre musetast).
+Tilsvarende kan man slette finker med højre musetast (om det virkelig
+er den højre musetast er muligvis muse- og systemafhængigt).
+En {\tt JSlider} under
+disse knapper gør det muligt at variere radius på ``finkepenslen''.
 
 Det venstre panel indeholder tre indstillingsmuligheder. Det er muligt
 at indstille det minimale tidsrum der går mellem at en
 simulationsrunde udføres i biotopen (når {\tt BiotopeController}'en er
 sat til at udføre flere runder i træk). Det er desuden muligt at slå
-opdateringen af {\tt AreaPanel} fra hvilket kan mindske tiden for
+opdateringen af {\tt AreaPanel} fra, hvilket kan mindske tiden for
 udførsel af mange runder i træk. Til sidst indeholder det venstre
-muligheden for at aktivere en {\tt BiotopeLogger} der udskrive en
-statistik over de enkelte {\tt Behaviors} til {\tt System.out} hver
+panel muligheden for at aktivere en {\tt BiotopeLogger} der udskrive en
+statistik over de enkelte adfærdsmønstre til {\tt System.out} hver
 runde. {\tt BiotopeLogger} bliver tilføjet som {\tt Observer} til den
-aktuelle {\tt Biotope}, men er desuden beskrevet yderligere nedenfor.
+aktuelle biotop, men er desuden beskrevet yderligere nedenfor.
 
 Det nederste panel indeholder et {\tt NicerStatisticsPanel} der hver
-runde opdateres med en generel status for hver af de {\tt Behavior}s
+runde opdateres med en generel status for hver af de adfærdsmønstre
 der er i biotopen. Dette foregår også ved at {\tt
   NicerStatisticsPanel} bliver tilføjet som {\tt Observer} til den
-nuværende {\tt Biotope}. Da {\tt NicerStatisticsPanel} får den
+nuværende biotop. Da {\tt NicerStatisticsPanel} får den
 anvendte {\tt Map<Behavior, Color>} med i sin konstruktør, er det
 derefter uafhængigt af {\tt GalapagosFrame}, og kan med meget få
 kodemæssige ændringer erstattes af et andet (og måske) bedre panel til
@@ -359,47 +368,87 @@ vha. musen, det er også kontrollen der ændrer biotopen når dette er
 sket.
 
 \subsubsection{\tt BiotopeLogger}
-BiotopeLogger er som beskrevet ovenfor en Observer der sørger for at
+{\tt BiotopeLogger} er som beskrevet ovenfor en {\tt Observer}
+ der sørger for at
 udskrive statistik om hver enkelt runde. For at få statistikken gjort
 enklere at læse har vi formateret den på tabelform. En naiv metode til
-at hente statistikken for hver Behavior ville være at for hver kolonne
-man vil have (F.eks. antallet af fødte finker) kaldte man den
-tilsvarende metode på {\tt Statistics}-objektet. {\tt Statistics} gør
+at hente statistikken for hver adfærd ville være at man for hver kolonne
+man vil have (f.eks. antallet af fødte finker) kaldte den
+tilsvarende metode på statistikobjektet. Statistikklassen
+({\tt Statistics}) gør
 dette meget nemmere end som så, da den har et {\tt enum
   StatisticsElement} der indeholder alle de forskellige elementer der
-er i et {\tt Statistics}-objekt. For at lave en kolonne for hver type
+er i et statistikobjekt. For at lave en kolonne for hver type
 statistik gennemløber vi bare alle de forskellige statistikelementer
-og beder {\tt Statistics}-objekterne om de værdier der svarer til de
-enkelte statistikelementer. Ved at kalde {\tt name()} på et {\tt
-  StatisticsElement} kan man få en forklaring i tekst af hvad dette
+og beder statistikobjekterne om de værdier der svarer til de
+enkelte statistikelementer. Ved at kalde {\tt name()} på et
+statistikelement kan man få en forklaring i tekst af hvad dette
 statistikelement angiver, dette bruger vi til titlerne i kolonnerne.
-På den måde er det også blevet nemmere at udbygge {\tt Statistics} så
+På den måde er det også blevet nemmere at udbygge statistikklassen så
 den kan gemme statistik over flere ting, uden at man også skal ændre
-på loggeren. For at loggeren også virker når der kommer rigtig mange
-finker har vi gjort så kolonnerne udvider sig i bredden alt efter hvor
+på loggeren. For at loggeren også virker når et statistikobjekt
+indeholder store tal
+har vi gjort så kolonnerne udvider sig i bredden alt efter hvor
 meget tekst der skal stå i de enkelte celler.
 
 Den nederste række i tabellen er en total for hver af de enkelte
-kolonner, den bliver udregnet undervejs og tilsidst tilføjet som
-sidste række i det todimensionelle array. 
+kolonner - den bliver udregnet undervejs og tilsidst tilføjet som
+sidste række i det todimensionale array. 
 
 For at gøre det nemmere at se hvornår en race uddør har vi lavet et
-speciel tilfælde for {\tt StatisticsElement.POPULATION} som angiver
-hvormange finker der er med hvert adfærdsmønster. Når der 0 finker af
-en slags skriver vi at de er uddøde. Der er også et tilsvarende
-special tilfælde i total-rækken, for den situation at alle finker er
-døde.
+specialtilfælde for hvordan antallet af finker med en given adfærd
+udskrives.
+Når der 0 finker af
+en slags skriver vi at den slags er uddød. Tilsvarende gøres i
+total-rækken opmærksom på når der ikke er nogen levende finker
+tilbage.
 
-\subsection{\tt NicerStatisticsPanel} {\tt NicerStatisticsPanel}
-fungere på stort set samme måde som {\tt BiotopeLoggeren}, men da det
+\subsubsection{\tt NicerStatisticsPanel}
+{\tt NicerStatisticsPanel}
+fungere på stort set samme måde som {\tt BiotopeLogger}, men da det
 her skal vises i et Java-vindue bliver vi nødt til at bruge nogle
 Java-komponenter til at vise teksten. Den fundamentale forskel på {\tt
   BiotopeLogger} og {\tt NicerStatisticsPanel} er at panelet har et
-todimensionelt array af JLabels, som den ændrer teksten på hver gang
-der er sket en opdatering. Og BiotopeLoggeren konstruerer et
-to-dimensionelt array af tekstværdier hver runde som den så udskriver.
+todimensionalt array af {\tt JLabel}s, som den ændrer teksten på hver gang
+der er sket en opdatering, mens {\tt BiotopeLogger}en hver runde
+konstruerer et
+todimensionalt array af tekstværdier som den så udskriver.
 
 \section{Konklusion}
+Vores program virker (så vidt vi kan se) efter hensigten. Vi mener at
+vores program i\-mø\-de\-kom\-mer alle opgavens krav.
 
+Vi har valgt ikke at
+implementere bevægelse af finkerne. Det forringer
+finkernes mulighed for at benytte sig af deres eventuelle
+hukommelse, idet det meget sjældnere vil ske at to finker gentagne
+gange mødes, og det synes vi er en stor ulempe.
+
+Vi har også valgt ikke at implementere mutation blandt finkerne. Vi er
+interesserede i at studere hvordan bestemte adfærdsmønstre klarer sig
+i forhold til hinanden, og mutation ville
+besværliggøre dette.
+
+Vi har heller ikke implementeret en adfærdstype hvor afkom arver
+ophavets viden om andre finker. Det vil være temmelig nemt at lave ved i
+en adfærds {\tt clone}-metode at sørger for at den nye instans af
+adfærden får en kopi af den gamle instans' erindringer.
+
+Af udvidelser af programmet som vi gerne ville lave kan nævnes:
+\begin{itemize}
+\item[1.]
+  Grafer som viser antallene af finker tilhørende de forskellige
+  adfærdsmønstre gennem hele den pågældende simulation. Dette ville
+  især være interessant i biotoper hvor antallet af finker
+  tilsyneladende ændrer sig periodisk (fx Cheaters mod Samaritans i en
+  $30\times 30$-biotop).
+\item[2.]
+  En facilitet der gør det muligt at få programmet til at afholde
+  ``turneringer'' i overlevelse. Man vælger en mængde
+  forskellige adfærdsmønstre og specificerer turneringsbiotopens
+  egenskaber, hvorefter programmet konstruerer og simulerer
+  én-mod-én-biotoper for at finde en mulig rangorden af de
+  specificerede adfærdsmønstres overlevelsesevner.
+\end{itemize}
 \end{document}
 Troels Henriksen
