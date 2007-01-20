@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.swing.*;
 
-public class NicerStatisticsPanel extends JPanel implements Observer {
+public class StatisticsPanel extends JPanel implements Observer {
     //The number of columns in the output-table, computed by the number of StatisticElements
     private static final int COLUMNS;
     
@@ -51,7 +51,7 @@ public class NicerStatisticsPanel extends JPanel implements Observer {
      * Create a new StatisticsPanel for monitoring a Biotope.
      * @param frame The StatisticsPanel uses the colors specified in frame.
      */
-    public NicerStatisticsPanel(Map<Behavior, Color> colorMap) {
+    public StatisticsPanel(Map<Behavior, Color> colorMap) {
         roundsLabel = new JLabel();
         roundsLabel.setFont(roundsFont);
         Container roundsBox = Box.createHorizontalBox();
