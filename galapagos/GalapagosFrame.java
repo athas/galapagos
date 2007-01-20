@@ -46,6 +46,8 @@ public class GalapagosFrame extends JFrame {
     private Container behaviorButtonsBox;
     private JLabel behaviorButtonsLabel;
     private Behavior selectedBehavior;
+    private final static int insertFinchButtonMask = InputEvent.BUTTON1_DOWN_MASK;
+    private final static int removeFinchButtonMask = InputEvent.BUTTON3_DOWN_MASK;
 
     private boolean isLogging;
     private boolean isRefreshing;
@@ -79,28 +81,49 @@ public class GalapagosFrame extends JFrame {
         isLogging = false;
         
         area = new AreaPanel(this.colorMap);
+        // This class is anonymous because it is not generally usable,
+        // but highly specialized.
         MouseInputAdapter listener = new MouseInputAdapter () {
-                public void maybeAddFinchAt(int x, int y, Behavior b) { 
-                    // Only add a finch if x,y is within the bounds of
-                    // the world.
-                    if (0 <= x && x < biotope.world.width() &&
-                        0 <= y && y < biotope.world.height() &&
-                        b != null)
-                        controller.putFinch(x, y, b);
+                /**
+                 * Return true if the button for inserting finches is
+                 * down in the provided InputEvent.
+                 */
+                public boolean insertFinchDown(MouseEvent e) {
+                    return (e.getModifiersEx() & insertFinchButtonMask) == 
+                        insertFinchButtonMask;
                 }
+                
+                /**
+                 * Return true if the button for removing finches is
+                 * down in the provided InputEvent.
+                 */
+                public boolean removeFinchDown(MouseEvent e) {
+                    return (e.getModifiersEx() & removeFinchButtonMask) == 
+                        removeFinchButtonMask;
+                }
+                
+                public void maybeDoFinchAction(MouseEvent e) {
+                    int x = (e.getX() - area.offsetX()) / area.pixelSize();
+                    int y = (e.getY() - area.offsetY()) / area.pixelSize();
+
+                    // Only act if x,y is within the bounds of the
+                    // world.
+                    if (0 <= x && x < biotope.world.width() &&
+                        0 <= y && y < biotope.world.height()) {
+                        if (insertFinchDown(e)) {
+                            if (selectedBehavior != null)
+                                controller.putFinch(x, y, selectedBehavior);
+                        }
+                        else if (removeFinchDown(e))
+                            controller.takeFinch(x, y);
+                    }
+                }
+                
                 public void mousePressed(MouseEvent e) {
-                    maybeAddFinchAt((e.getX() - area.offsetX()) / 
-                                    area.pixelSize(),
-                                    (e.getY() - area.offsetY()) /
-                                    area.pixelSize(),
-                                    selectedBehavior);
+                    maybeDoFinchAction(e);
                 }
                 public void mouseDragged(MouseEvent e) {
-                    maybeAddFinchAt((e.getX() - area.offsetX()) / 
-                                    area.pixelSize(), 
-                                    (e.getY() - area.offsetY()) /
-                                    area.pixelSize(), 
-                                    selectedBehavior);
+                    maybeDoFinchAction(e);
                 }
             };
         area.addMouseListener(listener);
@@ -266,7 +289,7 @@ public class GalapagosFrame extends JFrame {
 
         behaviorButtonsBox = Box.createVerticalBox();
         behaviorButtonsLabel = new JLabel("Pencil for freehand finch drawing");
-        
+
         add(topContainer, BorderLayout.NORTH);
         add(area,BorderLayout.CENTER);
         add(statistics, BorderLayout.SOUTH);

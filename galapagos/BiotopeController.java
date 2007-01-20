@@ -98,4 +98,15 @@ public class BiotopeController implements ActionListener, ChangeListener {
     public void putFinch(int x, int y, Behavior b) {
         biotope.putFinch(x, y, b);
     }
+
+    /**
+     * Remove the finch at the provided location. If there is no finch
+     * at that location, calling this method is a no-op.
+     *
+     * @param x The x coordinate of the position of the finch to be removed.
+     * @param y The y coordinate of the position of the finch to be removed.
+     */
+    public void takeFinch(int x, int y) {
+        biotope.takeFinch(x, y);
+    }
 }
