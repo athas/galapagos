@@ -73,8 +73,8 @@ public class Biotope extends Observable {
      * @require 0 <= finchesPerBehavior
      */
     public Biotope (int width, int height, double breedingProbability, int maxHitpoints, 
-            int initialHitpoints, int hitpointsPerRound, int minMaxAge, int maxMaxAge,
-            int finchesPerBehavior, List<Behavior> behaviors) {
+                    int initialHitpoints, int hitpointsPerRound, int minMaxAge, int maxMaxAge,
+                    int finchesPerBehavior, List<Behavior> behaviors) {
         assert (0.0 <= breedingProbability && breedingProbability <= 1.0) 
             : "breedingProbability must be between 0 and 1, inclusive.";
         assert (0 < initialHitpoints)
@@ -116,17 +116,17 @@ public class Biotope extends Observable {
         Iterator<World<GalapagosFinch>.Place> worldIterator = world.randomIterator();
         for (Iterator<Behavior> bIterator = finchBehaviors.iterator();
              bIterator.hasNext();)
-        {
-            Behavior b = bIterator.next();
-            statistics.put(b, new Statistics());
+            {
+                Behavior b = bIterator.next();
+                statistics.put(b, new Statistics());
             
             
-            for (int i = 0;i < finchesPerBehavior && worldIterator.hasNext();i++)
-                {   
-                    World<GalapagosFinch>.Place p = worldIterator.next();
-                    placeFinch(p,b,false);
-                }
-        }
+                for (int i = 0;i < finchesPerBehavior && worldIterator.hasNext();i++)
+                    {   
+                        World<GalapagosFinch>.Place p = worldIterator.next();
+                        placeFinch(p,b,false);
+                    }
+            }
     }
     
     /**
@@ -154,6 +154,7 @@ public class Biotope extends Observable {
         else
             finch.makeOlder();
         p.setElement(finch);
+        setChanged();
     }
 
     /**
@@ -171,6 +172,7 @@ public class Biotope extends Observable {
             Statistics s = statistics.get((p.getElement()).behavior());
             s.decPopulation();
             p.setElement(null);
+            setChanged();
         }
     }
 
@@ -192,7 +194,6 @@ public class Biotope extends Observable {
         World<GalapagosFinch>.Place p = world.getAt(x, y);
         removeFinch(p);
         placeFinch(p, b, false);
-        setChanged();
         notifyObservers();
     }
     
@@ -211,7 +212,6 @@ public class Biotope extends Observable {
             : "Cannot remove finch from " + x + "," + y + ", it is beyond the borders of the world";
         
         removeFinch(world.getAt(x, y));
-        setChanged();
         notifyObservers();
     }
 
@@ -380,19 +380,19 @@ public class Biotope extends Observable {
      */
     private void grimReaper () {
         for (World<GalapagosFinch>.Place p : world)
-        	if (p.getElement() != null) {
-	            GalapagosFinch finch = p.getElement();
-	            finch.changeHitpoints(-hitpointsPerRound);
-	            finch.makeOlder();
-	            FinchStatus newStatus = finch.status();
-	            if (newStatus != FinchStatus.ALIVE) {
-	                Statistics stats = statistics.get(finch.behavior());
-	                if (newStatus == FinchStatus.DEAD_AGE)
-	                	stats.incDeadByAge();
-	                    else stats.incDeadByTicks();
-                        removeFinch(p);
-	            }
-        	}
+            if (p.getElement() != null) {
+                GalapagosFinch finch = p.getElement();
+                finch.changeHitpoints(-hitpointsPerRound);
+                finch.makeOlder();
+                FinchStatus newStatus = finch.status();
+                if (newStatus != FinchStatus.ALIVE) {
+                    Statistics stats = statistics.get(finch.behavior());
+                    if (newStatus == FinchStatus.DEAD_AGE)
+                        stats.incDeadByAge();
+                    else stats.incDeadByTicks();
+                    removeFinch(p);
+                }
+            }
     }
     
     /**
@@ -436,6 +436,90 @@ public class Biotope extends Observable {
      */
     public void doNotifyObservers () {
         setChanged();
+        notifyObservers();
+    }
+
+    /**
+     * This abstract class functions as a base for classes that
+     * describes some specific actions on finches (or really, places
+     * in the world) at specific coordinates. Modifying a Biotope as
+     * described by a FinchDescriptor is called applying the
+     * FinchDescriptor.
+     */
+    public abstract class FinchDescriptor {
+        /**
+         * The x coordinate of where to perform an action.
+         */
+        protected final int x;
+    
+        /**
+         * The y coordinate of where to perform an action.
+         */
+        protected final int y;
+
+        /**
+         * Apply this FinchDescriptor to the provided Biotope,
+         * carrying out the operation (or "payload") described by this
+         * descriptor.
+         */
+        abstract protected void apply(Biotope biotope);
+    
+        /**
+         * Create a new FinchDescriptor describing an action at the
+         * specified coordinate.
+         */
+        public FinchDescriptor(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    /**
+     * This descriptor describes the removal of a finch at a specified
+     * location. If there is no finch at the specified location,
+     * applying this descriptor is a no-op.
+     */
+    public class RemoveFinchDescriptor extends FinchDescriptor {
+        protected void apply(Biotope biotope) {
+            biotope.removeFinch(world.getAt(x, y));
+        }
+    
+        /**
+         * Create a descriptor that describes the removal of a finch
+         * at the specified location.
+         */
+        public RemoveFinchDescriptor(int x, int y) {
+            super(x,y);
+        }
+    }
+    
+    /**
+     * This descriptor describes the creation of a finch with a
+     * provided behavior at a specified location. Any finch already at
+     * the specified location will be replaced.
+     */
+    public class AddFinchDescriptor extends FinchDescriptor {
+        protected final Behavior behavior;
+
+        protected void apply(Biotope biotope) {
+            World<GalapagosFinch>.Place p = biotope.world.getAt(x, y);
+            biotope.removeFinch(p);
+            biotope.placeFinch(p, behavior, false);
+        }
+    
+        /**
+         * Create a descriptor that describes the creation of a finch with
+         * the specified behavior at the specified location.
+         */
+        public AddFinchDescriptor(int x, int y, Behavior behavior) {
+            super(x,y);
+            this.behavior = behavior;
+        }
+    }
+
+    public void applyDescriptors(List<FinchDescriptor> descriptors) {
+        for (FinchDescriptor descriptor : descriptors)
+            descriptor.apply(this);
         notifyObservers();
     }
 }

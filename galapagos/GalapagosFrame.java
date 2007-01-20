@@ -45,6 +45,7 @@ public class GalapagosFrame extends JFrame {
     private ButtonGroup behaviorButtons;
     private JComponent behaviorButtonsBox;
     private JLabel behaviorButtonsLabel;
+    private JSlider manipulationRadiusSelector;
     private Behavior selectedBehavior;
     private final static int insertFinchButtonMask = InputEvent.BUTTON1_DOWN_MASK;
     private final static int removeFinchButtonMask = InputEvent.BUTTON3_DOWN_MASK;
@@ -109,12 +110,13 @@ public class GalapagosFrame extends JFrame {
                     // world.
                     if (0 <= x && x < biotope.world.width() &&
                         0 <= y && y < biotope.world.height()) {
+                        int radius = manipulationRadiusSelector.getValue();
                         if (insertFinchDown(e)) {
                             if (selectedBehavior != null)
-                                controller.putFinch(x, y, selectedBehavior);
+                                controller.putFinches(x, y, radius, selectedBehavior);
                         }
                         else if (removeFinchDown(e))
-                            controller.takeFinch(x, y);
+                            controller.takeFinches(x, y, radius);
                     }
                 }
                 
@@ -151,8 +153,8 @@ public class GalapagosFrame extends JFrame {
     public void setBiotope(Biotope biotope) {
     	this.biotope = biotope;
     	
-        //Create RadioButton's on the GalapagosFrame
-        //for the spawning-tool
+        // Create RadioButtons and other widgets on the GalapagosFrame
+        // for the spawning-tool
         behaviorButtons = new ButtonGroup();
         behaviorButtonsBox.removeAll();
         behaviorButtonsBox.add(Box.createGlue());
@@ -170,6 +172,7 @@ public class GalapagosFrame extends JFrame {
             behaviorButtonsBox.add(button);
         }
 
+        behaviorButtonsBox.add(manipulationRadiusSelector);
         behaviorButtonsBox.add(Box.createGlue());
 
         selectedBehavior = null;
@@ -302,6 +305,10 @@ public class GalapagosFrame extends JFrame {
                 "Use the right mouse button to delete finches.</I></HTML>");
         
         behaviorButtonsLabel.setFont(new Font("Dialog",Font.PLAIN,13));
+
+        behaviorButtonsLabel = new JLabel("Pencil for freehand finch drawing");
+        manipulationRadiusSelector = new JSlider(JSlider.VERTICAL, 1, 25, 1);
+
 
         add(topContainer, BorderLayout.NORTH);
         add(area,BorderLayout.CENTER);

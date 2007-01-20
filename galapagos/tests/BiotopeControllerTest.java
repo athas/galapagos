@@ -36,6 +36,47 @@ public class BiotopeControllerTest extends TestCase {
             oldRound = biotope.round();
         }
     }
+
+    // The putFinches/removeFinches tests kinda cover each other in
+    // scope, but that only increases test coverage.
+    public void testPutFinches() {
+        // First, remove all finches.
+        controller.takeFinches(0, 0, 200);
+        
+        // Then, add some and see if they were actually added.
+        controller.putFinches(0, 0, 10, new Samaritan());
+
+        Behavior samaritan = null;
+
+        for (Behavior b : biotope.behaviors())
+            if (b instanceof Samaritan)
+                samaritan = b;
+
+        assertNotNull(samaritan);
+
+        Statistics s = biotope.statistics(samaritan);
+        assertEquals(305, s.getStatByElement(Statistics.StatisticsElement.POPULATION));
+    }
+
+    public void testRemoveFinches() {
+        // First, fill everything with samaritans.
+        controller.putFinches(0, 0, 50, new Samaritan());
+
+        Behavior samaritan = null;
+
+        for (Behavior b : biotope.behaviors())
+            if (b instanceof Samaritan)
+                samaritan = b;
+
+        assertNotNull(samaritan);
+
+        Statistics s = biotope.statistics(samaritan);
+        assertEquals(900, s.getStatByElement(Statistics.StatisticsElement.POPULATION));
+
+        // Now remove everything.
+        controller.takeFinches(0, 0, 200);
+        assertEquals(0, s.getStatByElement(Statistics.StatisticsElement.POPULATION));
+    }
     
     /**
      * Tests that the controller answers the severalRounds command.
