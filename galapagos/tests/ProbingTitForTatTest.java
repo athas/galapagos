@@ -1,6 +1,7 @@
 package galapagos.tests;
 
-import galapagos.*;
+import galapagos.biotope.*;
+import galapagos.behaviors.*;
 
 /**
  * Test of the Probing Tit For Tat behavior.

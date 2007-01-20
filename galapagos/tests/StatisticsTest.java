@@ -1,7 +1,7 @@
 package galapagos.tests;
 
 import junit.framework.TestCase;
-import galapagos.*;
+import galapagos.biotope.Statistics;
 
 public class StatisticsTest extends TestCase {
 

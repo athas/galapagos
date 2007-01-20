@@ -1,7 +1,8 @@
 package galapagos.tests;
 
 import junit.framework.TestCase;
-import galapagos.*;
+import galapagos.biotope.*;
+import galapagos.behaviors.*;
 
 /**
  * Tests the GalapagosFinch class  by making a GalapagosFinch and
