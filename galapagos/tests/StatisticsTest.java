@@ -5,57 +5,144 @@ import galapagos.*;
 
 public class StatisticsTest extends TestCase {
 
-	public void elementTest(Statistics s) 
-	{
-		assertTrue(s.getStatByElement(Statistics.StatisticsElement.POPULATION) ==
-			s.getPopulation());
-		assertTrue(s.getStatByElement(Statistics.StatisticsElement.BORN_THIS_ROUND) ==
-			s.getBornThisRound());
-		assertTrue(s.getStatByElement(Statistics.StatisticsElement.DEAD_TICKS_THIS_ROUND) ==
-			s.getDeadByTicksThisRound());
-		assertTrue(s.getStatByElement(Statistics.StatisticsElement.DEAD_AGE_THIS_ROUND) ==
-			s.getDeadByAgeThisRound());
-		assertTrue(s.getStatByElement(Statistics.StatisticsElement.BORN_TOTAL) ==
-			s.getBorn());
-		assertTrue(s.getStatByElement(Statistics.StatisticsElement.DEAD_TICKS_TOTAL) ==
-			s.getDeadByTicks());
-		assertTrue(s.getStatByElement(Statistics.StatisticsElement.DEAD_AGE_TOTAL) ==
-			s.getDeadByAge());
+	private Statistics statistics;
+
+	public void setUp () {
+		statistics = new Statistics();
 	}
 	
-	public void testStatistics () {
-		Statistics s = new Statistics();
-		// Check the initial values.
-		assertTrue(s.getPopulation() == 0);
-		assertTrue(s.getBorn() == 0);
-		assertTrue(s.getDeadByAge() == 0);
-		assertTrue(s.getDeadByTicks() == 0);
-		assertTrue(s.getBornThisRound() == 0);
-		assertTrue(s.getDeadByAgeThisRound() == 0);
-		assertTrue(s.getDeadByTicksThisRound() == 0);
-		elementTest(s);
-		// Check increase mathods and get-methods.
-		s.incBorn();
-		s.incDeadByAge();
-		s.incDeadByTicks();
-		s.incPopulation();
-		assertTrue(s.getPopulation() == 1);
-		assertTrue(s.getBorn() == 1);
-		assertTrue(s.getDeadByAge() == 1);
-		assertTrue(s.getDeadByTicks() == 1);
-		assertTrue(s.getBornThisRound() == 1);
-		assertTrue(s.getDeadByAgeThisRound() == 1);
-		assertTrue(s.getDeadByTicksThisRound() == 1);
-		elementTest(s);
-		// Check newRound().
-		s.newRound();
-		assertTrue(s.getBornThisRound() == 0);
-		assertTrue(s.getDeadByAgeThisRound() == 0);
-		assertTrue(s.getDeadByTicksThisRound() == 0);
-		elementTest(s);
-		// Check decPopulation().
-		s.decPopulation();
-		assertTrue(s.getPopulation() == 0);
-		elementTest(s);
+	/**
+	 * Checks the initial values.
+	 */
+	public void testConstructor () {
+		assertEquals(0, statistics.getPopulation());
+		assertEquals(0, statistics.getBorn());
+		assertEquals(0, statistics.getDeadByAge());
+		assertEquals(0, statistics.getDeadByTicks());
+		assertEquals(0, statistics.getBornThisRound());
+		assertEquals(0, statistics.getDeadByAgeThisRound());
+		assertEquals(0, statistics.getDeadByTicksThisRound());
+		elementTest(statistics);
+	}
+	
+	/**
+	 * Tests the incPopulation() and decPopulation() of Statistics.
+	 */
+	public void testIncDecPopulation () {
+		statistics.incPopulation();
+		assertEquals(1, statistics.getPopulation());
+		assertEquals(0, statistics.getBorn());
+		assertEquals(0, statistics.getDeadByAge());
+		assertEquals(0, statistics.getDeadByTicks());
+		assertEquals(0, statistics.getBornThisRound());
+		assertEquals(0, statistics.getDeadByAgeThisRound());
+		assertEquals(0, statistics.getDeadByTicksThisRound());
+		elementTest(statistics);
+		
+		statistics.decPopulation();
+		assertEquals(0, statistics.getPopulation());
+		assertEquals(0, statistics.getBorn());
+		assertEquals(0, statistics.getDeadByAge());
+		assertEquals(0, statistics.getDeadByTicks());
+		assertEquals(0, statistics.getBornThisRound());
+		assertEquals(0, statistics.getDeadByAgeThisRound());
+		assertEquals(0, statistics.getDeadByTicksThisRound());
+		elementTest(statistics);
+	}
+	
+	/**
+	 * Tests the incBorn() of Statistics.
+	 */
+	public void testIncrementBorn () {
+		statistics.incBorn();
+		assertEquals(0, statistics.getPopulation());
+		assertEquals(1, statistics.getBorn());
+		assertEquals(0, statistics.getDeadByAge());
+		assertEquals(0, statistics.getDeadByTicks());
+		assertEquals(1, statistics.getBornThisRound());
+		assertEquals(0, statistics.getDeadByAgeThisRound());
+		assertEquals(0, statistics.getDeadByTicksThisRound());
+		elementTest(statistics);
+	}
+	
+	/**
+	 * Tests the incDeadByAge() of Statistics.
+	 */
+	public void testIncrementDeadByAge () {
+		statistics.incDeadByAge();
+		assertEquals(0, statistics.getPopulation());
+		assertEquals(0, statistics.getBorn());
+		assertEquals(1, statistics.getDeadByAge());
+		assertEquals(0, statistics.getDeadByTicks());
+		assertEquals(0, statistics.getBornThisRound());
+		assertEquals(1, statistics.getDeadByAgeThisRound());
+		assertEquals(0, statistics.getDeadByTicksThisRound());
+		elementTest(statistics);
+	}
+	
+	/**
+	 * Tests the incDeadByTicks() of Statistics.
+	 */
+	public void testIncrementDeadByTicks () {
+		statistics.incDeadByTicks();
+		assertEquals(0, statistics.getPopulation());
+		assertEquals(0, statistics.getBorn());
+		assertEquals(0, statistics.getDeadByAge());
+		assertEquals(1, statistics.getDeadByTicks());
+		assertEquals(0, statistics.getBornThisRound());
+		assertEquals(0, statistics.getDeadByAgeThisRound());
+		assertEquals(1, statistics.getDeadByTicksThisRound());
+		elementTest(statistics);
+	}
+	
+	/**
+	 * Tests that newRound resets the round-specific values.
+	 */
+	public void testNewRound () {
+		statistics.incBorn();
+		statistics.incDeadByAge();
+		statistics.incDeadByTicks();
+		statistics.incPopulation();
+		assertEquals(1, statistics.getPopulation());
+		assertEquals(1, statistics.getBorn());
+		assertEquals(1, statistics.getDeadByAge());
+		assertEquals(1, statistics.getDeadByTicks());
+		assertEquals(1, statistics.getBornThisRound());
+		assertEquals(1, statistics.getDeadByAgeThisRound());
+		assertEquals(1, statistics.getDeadByTicksThisRound());
+		elementTest(statistics);
+		
+		statistics.newRound();
+		assertEquals(1, statistics.getPopulation());
+		assertEquals(1, statistics.getBorn());
+		assertEquals(1, statistics.getDeadByAge());
+		assertEquals(1, statistics.getDeadByTicks());
+		assertEquals(0, statistics.getBornThisRound());
+		assertEquals(0, statistics.getDeadByAgeThisRound());
+		assertEquals(0, statistics.getDeadByTicksThisRound());
+		elementTest(statistics);
+	}
+	
+	/**
+	 * Test helper testing that the values returned by getStatByElement()
+	 * gives the same as the corresponding method on Statistics.
+	 * @param statistics The statistics that should be tested.
+	 */
+	public void elementTest(Statistics statistics) 
+	{
+		assertEquals(statistics.getPopulation(),
+				statistics.getStatByElement(Statistics.StatisticsElement.POPULATION));
+		assertEquals(statistics.getBornThisRound(),
+				statistics.getStatByElement(Statistics.StatisticsElement.BORN_THIS_ROUND));
+		assertEquals(statistics.getDeadByTicksThisRound(),
+				statistics.getStatByElement(Statistics.StatisticsElement.DEAD_TICKS_THIS_ROUND));
+		assertEquals(statistics.getDeadByAgeThisRound(),
+				statistics.getStatByElement(Statistics.StatisticsElement.DEAD_AGE_THIS_ROUND));
+		assertEquals(statistics.getBorn(),
+				statistics.getStatByElement(Statistics.StatisticsElement.BORN_TOTAL));
+		assertEquals(statistics.getDeadByTicks(),
+				statistics.getStatByElement(Statistics.StatisticsElement.DEAD_TICKS_TOTAL));
+		assertEquals(statistics.getDeadByAge(),
+				statistics.getStatByElement(Statistics.StatisticsElement.DEAD_AGE_TOTAL));
 	}
 }

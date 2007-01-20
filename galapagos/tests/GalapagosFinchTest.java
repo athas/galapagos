@@ -4,50 +4,88 @@ import junit.framework.TestCase;
 import galapagos.*;
 
 /**
- * Tests the GalapagosFinch class.
+ * Tests the GalapagosFinch class  by making a GalapagosFinch and
+ * checking that the correct values are returned when using each of the
+ * public queries, and that we get the right values after using each of the
+ * public commands.
  */
 public class GalapagosFinchTest extends TestCase {
-
+	GalapagosFinch finch;
+	public void setUp () {
+		finch = new GalapagosFinch(5, 10, 2, new Samaritan());
+	}
+	
 	/**
-	 * We test the GalapagosFinch class by making a GalapagosFinch and
-	 * checking that the correct values are returned when using each of the
-	 * public quaries, and that we get the right values after using each of the
-	 * public commands.
-	 *
+	 * Test that the finch is initialized with the correct values.
 	 */
-	public void testGalapagosFinch1 () {
-		// Checking new finch.
-		GalapagosFinch fi1 = new GalapagosFinch(5, 10, 2, new Samaritan());
-		assertTrue(fi1.age() == 0);
-		assertTrue(fi1.hitpoints() == 5);
-		assertTrue(fi1.behavior().equals(new Samaritan()));
-		assertTrue(fi1.status() == FinchStatus.ALIVE);
+	public void testConstructor () {
+		assertEquals(0, finch.age());
+		assertEquals(5, finch.hitpoints());
+		assertEquals(new Samaritan(), finch.behavior());
+		assertEquals(FinchStatus.ALIVE, finch.status());
+	}
+	
+	/**
+	 * Tests makeOlder and age()
+	 */
+	public void testMakeOlder () {
+		finch.makeOlder();
+		assertEquals(1, finch.age());
 		
-		// Checking makeOlder and age.
-		fi1.makeOlder();
-		assertTrue(fi1.age() == 1);
+		finch.makeOlder();
+		assertEquals(2, finch.age());
+	}
+	
+	/**
+	 * Tests that the finch indicates correctly when its dead by age. 
+	 */
+	public void testStatusDeadByAge() {
+		assertEquals(FinchStatus.ALIVE, finch.status());
+		finch.makeOlder();
+		assertEquals(FinchStatus.ALIVE, finch.status());
+		finch.makeOlder();
+		assertEquals(FinchStatus.DEAD_AGE, finch.status());
+	}
+	
+	/**
+	 * Tests that the finch indicates correctly when its dead by ticks. 
+	 */
+	public void testStatusDeadByTicks() {
+		finch.changeHitpoints(-4);
+		assertEquals(FinchStatus.ALIVE, finch.status());
 		
-		// Checking status.
-		fi1.makeOlder();
-		assertTrue(fi1.status() == FinchStatus.DEAD_AGE);
+		finch.changeHitpoints(-1);
+		assertEquals(FinchStatus.DEAD_TICKS, finch.status());
+	}
+	
+	/**
+	 * Tests changeHitpoints
+	 */
+	public void testChangeHitpoints() {
+		finch.changeHitpoints(0);
+		assertEquals(5, finch.hitpoints());
 		
-		// Checking changeHitPoints
-		fi1.changeHitpoints(0);
-		assertTrue(fi1.hitpoints() == 5);
+		finch.changeHitpoints(-2);
+		assertEquals(3, finch.hitpoints());
+		
+		finch.changeHitpoints(2);
+		assertEquals(5, finch.hitpoints());
 		
 		// Checking that the maximal number of hitpoints indeed is 10.
-		fi1.changeHitpoints(12);
-		assertTrue(fi1.hitpoints() == 10);
-		
-		// Checking status (a finch that is both dead by
-		// ticks and age has the status DEAD_TICKS).
-		fi1.changeHitpoints(-10);
-		assertTrue(fi1.status() == FinchStatus.DEAD_TICKS);
-		
-		GalapagosFinch fi2 = new GalapagosFinch(5,10,2,new Cheater());
+		finch.changeHitpoints(12);
+		assertEquals(10, finch.hitpoints());
+	}
+	
+	/**
+	 * Tests that decide() just gives the same as its behaviors decide-method.
+	 */
+	public void testDecide () {
+
+		GalapagosFinch opponent = new GalapagosFinch(5, 10, 2, new Cheater());
 		
 		// Checking decide.
-		assertTrue(fi1.decide(fi2) == fi1.behavior().decide(fi2));
+		assertEquals(finch.behavior().decide(opponent), finch.decide(opponent));
+		assertEquals(opponent.behavior().decide(finch), opponent.decide(finch));
 	}
 	
 }
