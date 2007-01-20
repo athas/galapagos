@@ -5,8 +5,9 @@ package galapagos;
  */
 public class ProbingTitForTat extends ActionMemoryBehavior {
     private static final String DESCRIPTION = 
-        "Normally does what the other finch did when they last met (and cleans the first meeting), "
-        + "but at random intervals it ignores anyway.";
+        "<HTML>Normally does what the other finch did when<br>" +
+        "they last met (and cleans the first meeting),<br>" +
+        "but at random intervals it ignores anyway.</HTML>";
     
     private int count;
 

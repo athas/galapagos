@@ -78,6 +78,7 @@ public class BiotopeCreator extends JDialog {
         behaviorCheckboxes = new JCheckBox[this.behaviors.size()];
         for (int i = 0; i < behaviorCheckboxes.length; i++) {
             behaviorCheckboxes[i] = new JCheckBox(this.behaviors.get(i).toString(),true);
+            behaviorCheckboxes[i].setToolTipText(this.behaviors.get(i).description());
             behaviorsOptionGroup.add(behaviorCheckboxes[i], getComponentConstraints(i / 10, i % 10, GridBagConstraints.WEST));
         }
         

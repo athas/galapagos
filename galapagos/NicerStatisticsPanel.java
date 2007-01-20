@@ -125,6 +125,7 @@ public class NicerStatisticsPanel extends JPanel implements Observer {
                 
                 Color color = colorMap.get(currentBehavior);
                 currentRow[0].setText(currentBehavior.toString());
+                currentRow[0].setToolTipText(currentBehavior.description());
                 currentRow[0].setForeground(color);
                 currentRow[0].setVisible(true);
                 

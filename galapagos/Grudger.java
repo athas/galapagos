@@ -2,7 +2,8 @@ package galapagos;
 
 public class Grudger extends ActionMemoryBehavior {
     private static final String DESCRIPTION = 
-        "Cleans a specific finch as long as the Grudger is cleaned in return every time.";
+        "<HTML>Cleans a specific finch as long as the<br>" + 
+        "Grudger is cleaned in return every time.</HTML>";
     
     /**
      * @inheritDoc

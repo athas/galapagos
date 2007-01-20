@@ -6,7 +6,8 @@ package galapagos;
  */
 public class TitForTat extends ActionMemoryBehavior {
     private static final String DESCRIPTION = 
-        "Does what the other finch did when they last met. Cleans the first time.";
+        "<HTML>Does what the other finch did when<br>" +
+        "they last met. Cleans the first time.</HTML>";
     
     /**
      * @inheritDoc

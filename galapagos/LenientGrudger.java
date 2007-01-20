@@ -8,7 +8,8 @@ import java.util.LinkedList;
  */
 public class LenientGrudger extends ActionMemoryBehavior {
     private static final String DESCRIPTION = 
-        "Cleans a specific finch as long as the LenientGrudger is ignored at most one time.";
+        "<HTML>Cleans a specific finch as long as the<br>" +
+        "LenientGrudger is ignored at most one time.</HTML>";
     
     private final LinkedList<Finch> blacklist;
 

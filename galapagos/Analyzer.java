@@ -6,8 +6,9 @@ package galapagos;
  */
 public class Analyzer extends AnalyzingBehavior {
     private static final String DESCRIPTION = 
-        "Tries to analyse the best action against a given finch based on the points given " +
-        "for each possible outcome and a memory of all previous meetings with that finch";
+        "<HTML>Tries to analyse the best action against a given finch<br>" + 
+        "based on the points given for each possible outcome<br>" + 
+        "and a memory of all previous meetings with that finch.</HTML>";
     
     private Behavior fallbackBehavior;
     private final static int HelpedGotHelpValue = 3;

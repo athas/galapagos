@@ -7,7 +7,8 @@ package galapagos;
  */
 public class InverseTitForTat extends ActionMemoryBehavior {
     private static final String DESCRIPTION = 
-        "Does the opposite of what the other finch did when they last met. Cleans the first time.";
+        "<HTML>Does the opposite of what the other finch did<br>" +
+        "when they last met. Cleans the first time.</HTML>";
     
     /**
      * @inheritDoc
