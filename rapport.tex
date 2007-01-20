@@ -343,6 +343,21 @@ udskrivning af information om biotop-tilstanden til brugeren.  {\tt
 
 \subsubsection{\tt BiotopeController}
 
+{\tt BiotopeController}'en står for at styre biotopen ud fra hvad
+brugeren klikker på i det grafisk brugerinterface. Dens primære
+funktion er at få biotopen til at køre nogle runder.  Når brugeren
+eksempelvis beder om at lade simulationen køre i 30 runder, så vil
+kontrollen sørge for at de 30 runder bliver kørt. På samme måde sørger
+den for at stoppe simulationen når brugeren beder om det.
+
+Kontrollen bruger en {\tt Timer} til at køre runderne, den gør det
+enkelt at ændre hvor lang tid der skal gå i mellem runde eller om
+programmet bare skal køre så hurtigt som maskinen tillader.
+
+Vi har gjort det muligt selv at indsætte og fjerne finker fra biotopen
+vha. musen, det er også kontrollen der ændrer biotopen når dette er
+sket.
+
 \subsubsection{\tt BiotopeLogger}
 BiotopeLogger er som beskrevet ovenfor en Observer der sørger for at
 udskrive statistik om hver enkelt runde. For at få statistikken gjort
