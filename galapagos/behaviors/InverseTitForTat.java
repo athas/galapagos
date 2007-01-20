@@ -23,7 +23,7 @@ public class InverseTitForTat extends ActionMemoryBehavior {
      * The Action performed when nothing is known about the given finch.
      */
     protected Action defaultAction() {
-        return Action.IGNORING;
+        return Action.CLEANING;
     }
 
     /**
