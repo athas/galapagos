@@ -79,10 +79,8 @@ public class BiotopeTest extends TestCase {
         	Biotope(4, 4, 0.33, 12, 7, 3, 10, 13, 0, behaviors);
         
         // There should be no finches in the world
-        Iterator<World<GalapagosFinch>.Place> worldIterator = biotope.worldIterator();
-        while (worldIterator.hasNext()) {
-            assertNull(worldIterator.next().getElement());
-        }
+        for (World<GalapagosFinch>.Place p : biotope)
+            assertNull(p.getElement());
         
         //Statistics for all behaviors should be 0.
         for (Behavior be : behaviors)
@@ -124,10 +122,9 @@ public class BiotopeTest extends TestCase {
         assertEquals(0, stats.getDeadByAgeThisRound());
         assertEquals(1, stats.getPopulation());
     	
-    	World<GalapagosFinch>.Place place = biotope.getAt(2, 2);
-    	assertNotNull(place.getElement());
-    	
-    	GalapagosFinch finch = place.getElement();
+    	assertNotNull(biotope.getFinchAt(2, 2));
+        
+    	GalapagosFinch finch = biotope.getFinchAt(2, 2);
     	
     	assertEquals(new Samaritan(), finch.behavior());
     	assertEquals(1, finch.age());
@@ -153,35 +150,37 @@ public class BiotopeTest extends TestCase {
      */
     public void testBreed () {       
         Biotope biotope = new
-        	Biotope(4, 4, 0.33, 12, 7, 0, 100, 100, 0, behaviors);
+            Biotope(4, 4, 0.33, 12, 7, 0, 100, 100, 0, behaviors);
     
         // We make a new Samaritan at place (2,2).
         biotope.putFinch(2, 2, new Samaritan());
         
-    	World<GalapagosFinch>.Place p = biotope.biotope.getAt(2, 2);
-    	
-    	GalapagosFinch fi = p.getElement();
+    	GalapagosFinch fi = biotope.getFinchAt(2, 2);
     	
     	Statistics s = biotope.statistics(fi.behavior());
 		
     	// Repeat making new rounds until the population has increased.
-		// The finch fi should make a new finch at some point before it
-		// dies.
-		while (s.getPopulation() != 2) biotope.runRound();
+        // The finch fi should make a new finch at some point before it
+        // dies.
+        while (s.getPopulation() != 2) biotope.runRound();
 		
-		assertEquals(1, s.getBorn());
-		assertEquals(1, s.getBornThisRound());
-		assertEquals(0, s.getDeadByTicks());
-		assertEquals(0, s.getDeadByTicksThisRound());
-		assertEquals(0, s.getDeadByAge());
-		assertEquals(0, s.getDeadByAgeThisRound());
+        assertEquals(1, s.getBorn());
+        assertEquals(1, s.getBornThisRound());
+        assertEquals(0, s.getDeadByTicks());
+        assertEquals(0, s.getDeadByTicksThisRound());
+        assertEquals(0, s.getDeadByAge());
+        assertEquals(0, s.getDeadByAgeThisRound());
     	
     	// Get the place at which the finch fi has made a new finch.
-    	List<World<GalapagosFinch>.Place> neighbours = p.filledNeighbours();
+        List<World<GalapagosFinch>.Place> places = new LinkedList<World<GalapagosFinch>.Place>();
+
+        for (World<GalapagosFinch>.Place place : biotope)
+            if (place.getElement() != null && place.getElement() != fi)
+                places.add(place);
     	
     	//should only have the just born finch as neighbour
-    	assertEquals(1, neighbours.size());
-    	World<GalapagosFinch>.Place newPlace = neighbours.get(0);
+    	assertEquals(1, places.size());
+    	World<GalapagosFinch>.Place newPlace = places.get(0);
     	GalapagosFinch fi2 = newPlace.getElement();
     	assertEquals(new Samaritan(), fi2.behavior());
     	assertEquals(1, fi2.age());
@@ -216,11 +215,10 @@ public class BiotopeTest extends TestCase {
      */
     public void testMeeting1 () {
     	Biotope b = meetingTestSetUp(new Samaritan(),new Samaritan());
-    	World<GalapagosFinch> world = b.world;
     	b.runRound();
     	
-    	GalapagosFinch fi1 = biotope.getAt(2, 2).getElement();
-    	GalapagosFinch fi2 = biotope.getAt(2, 3).getElement();
+    	GalapagosFinch fi1 = b.getFinchAt(2, 2);
+    	GalapagosFinch fi2 = b.getFinchAt(2, 3);
 
     	// fi1 and fi2 should have 3
     	// hitpoints each because of the meeting.
@@ -236,11 +234,10 @@ public class BiotopeTest extends TestCase {
      */
     public void testMeeting2 () {
     	Biotope b = meetingTestSetUp(new Cheater(),new Cheater());
-    	World<GalapagosFinch> world = b.world;
     	b.runRound();
     	
-    	GalapagosFinch fi1 = biotope.getAt(2, 2).getElement();
-    	GalapagosFinch fi2 = biotope.getAt(2, 3).getElement();
+    	GalapagosFinch fi1 = b.getFinchAt(2, 2);
+    	GalapagosFinch fi2 = b.getFinchAt(2, 3);
 
     	// fi1 and fi2 should have 1
     	// hitpoints each because of the meeting.
@@ -257,9 +254,8 @@ public class BiotopeTest extends TestCase {
      */
     public void testMeeting3 () {
     	Biotope b = meetingTestSetUp(new Samaritan(),new Cheater());
-    	World<GalapagosFinch> world = b.world;
-    	GalapagosFinch fi1 = biotope.getAt(2, 2).getElement();
-    	GalapagosFinch fi2 = biotope.getAt(2, 3).getElement();
+    	GalapagosFinch fi1 = b.getFinchAt(2, 2);
+    	GalapagosFinch fi2 = b.getFinchAt(2, 3);
     	b.runRound();
     	
     	// fi1 should have 0 hitpoints. fi2 should have 5.
@@ -282,12 +278,11 @@ public class BiotopeTest extends TestCase {
     	
         Biotope b = new
         	Biotope(4, 4, 0.00, 10, 1, 0, 3, 3, 0, behaviors);
-        World<GalapagosFinch> world = b.world;
     
         // We make a new Samaritan at place (2,2).
         b.putFinch(2,2, new Samaritan());
         
-    	GalapagosFinch fi = biotope.getAt(2, 2).getElement();
+    	GalapagosFinch fi = b.getFinchAt(2, 2);
     	
     	b.runRound();
     	
@@ -295,7 +290,7 @@ public class BiotopeTest extends TestCase {
     	assertEquals(2, fi.age());
     	
     	// fi should be in the world:
-    	assertEquals(fi, biotope.getAt(2, 2).getElement());
+    	assertEquals(fi, b.getFinchAt(2, 2));
     	
     	Statistics stats = b.statistics(new Samaritan());
     	
@@ -312,7 +307,7 @@ public class BiotopeTest extends TestCase {
     	assertEquals(3, fi.age());
     	
     	// fi should not be in the world:
-    	assertNull(biotope.getAt(2, 2).getElement());
+    	assertNull(b.getFinchAt(2, 2));
     	
     	assertEquals(0, stats.getBorn());
     	assertEquals(0, stats.getBornThisRound());
@@ -340,7 +335,7 @@ public class BiotopeTest extends TestCase {
         // We make a new Samaritan at place (2,2).
         biotope.putFinch(2,2, new Samaritan());
         
-    	GalapagosFinch fi = biotope.biotope.getAt(2, 2).getElement();
+    	GalapagosFinch fi = biotope.getFinchAt(2, 2);
     	
     	biotope.runRound();
     	
@@ -349,7 +344,7 @@ public class BiotopeTest extends TestCase {
     	assertEquals(1,fi.hitpoints());
     	
     	// fi should be in the world
-    	assertEquals(fi, biotope.biotope.getAt(2, 2).getElement());
+    	assertEquals(fi, biotope.getFinchAt(2, 2));
     	
     	Statistics stats = biotope.statistics(new Samaritan());
     	
@@ -366,7 +361,7 @@ public class BiotopeTest extends TestCase {
     	assertEquals(0,fi.hitpoints());
     	
     	// fi should not be in the world:
-    	assertNull(biotope.biotope.getAt(2, 2).getElement());
+    	assertNull(biotope.getFinchAt(2, 2));
     	
     	assertEquals(0, stats.getBorn());
     	assertEquals(0, stats.getBornThisRound());
