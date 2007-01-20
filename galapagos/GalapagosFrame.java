@@ -308,8 +308,7 @@ public class GalapagosFrame extends JFrame {
                 "Use the right mouse button to delete finches.</I></HTML>");
         
         behaviorButtonsLabel.setFont(new Font("Dialog",Font.PLAIN,13));
-
-        behaviorButtonsLabel = new JLabel("Pencil for freehand finch drawing");
+        
         manipulationRadiusLabel = new JLabel("Radius of pencil");
         manipulationRadius = new JSlider(1, 25, 1);
         manipulationRadius.setToolTipText("Set the radius of the biotope manipulation pencil");
@@ -322,7 +321,6 @@ public class GalapagosFrame extends JFrame {
                     manipulationRadiusDisplay.setText(((Integer)newValue).toString());
                 }
             });
-
 
         add(topContainer, BorderLayout.NORTH);
         add(area,BorderLayout.CENTER);
