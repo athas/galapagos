@@ -118,7 +118,7 @@ public class BiotopeCreator extends JDialog {
         // OK and CANCEL.
         JPanel buttonPanel = new JPanel(new FlowLayout());
         okButton = new JButton("Genesis!");
-        okButton.setToolTipText("Create a new biotope with the selected specifikations.");
+        okButton.setToolTipText("Create a new biotope with the selected specifications.");
         okButton.setActionCommand("okButton");
         okButton.addActionListener(new ActionListener () {
             public void actionPerformed(ActionEvent e) {
@@ -139,7 +139,7 @@ public class BiotopeCreator extends JDialog {
         JPanel standardSettingsPanel = new JPanel(new FlowLayout());
         setVariantOneButton = new JButton("Set variant #1");
         setVariantOneButton.setToolTipText(
-                "<HTML>Set specifikation to standard variant 1,<br>" +
+                "<HTML>Set specifications to standard variant 1,<br>" +
                 "with five random behaviors chosen.</HTML>");
         setVariantOneButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -149,7 +149,7 @@ public class BiotopeCreator extends JDialog {
             });
         setVariantTwoButton = new JButton("Set variant #2");
         setVariantTwoButton.setToolTipText(
-                "<HTML>Set specifikation to standard variant 2,<br>" +
+                "<HTML>Set specifications to standard variant 2,<br>" +
                 "with five random behaviors chosen.</HTML>");
         setVariantTwoButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -159,7 +159,7 @@ public class BiotopeCreator extends JDialog {
             });
         setVariantThreeButton = new JButton("Set variant #3");
         setVariantThreeButton.setToolTipText(
-                "<HTML>Set specifikation to standard variant 3,<br>" +
+                "<HTML>Set specifications to standard variant 3,<br>" +
                 "with five random behaviors chosen.</HTML>");
         setVariantThreeButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
