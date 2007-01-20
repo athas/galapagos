@@ -1,7 +1,16 @@
 package galapagos;
 
-public class Statistical extends MemoryBehavior<Statistical.Statistics> {
-    protected class Statistics {
+/**
+ * A Behavior that estimates the conditional probabilities of being helped 
+ * when either helping or ignoring a given other finch, and uses this
+ * information to decide what to do.
+ */
+public class Statistical extends MemoryBehavior<Statistical.Memory> {
+    /**
+     * An internal class for organising the data to remember for the
+     * finches that this Statistical meets.
+     */
+    protected class Memory {
         public int helpedGotHelp;
         public int helpedTotal;
         public int didntHelpGotHelp;
@@ -9,7 +18,7 @@ public class Statistical extends MemoryBehavior<Statistical.Statistics> {
         public Action lastAction;
         public Action secondToLastAction;
         
-        public Statistics () {
+        public Memory () {
             helpedGotHelp = 0;
             helpedTotal = 0;
             didntHelpGotHelp = 0;
@@ -30,10 +39,17 @@ public class Statistical extends MemoryBehavior<Statistical.Statistics> {
         return DESCRIPTION;
     }
     
+    /**
+     * The Statistical behavior tries to calculate the conditional probabilities
+     * of being helped by the specified finch next turn in the cases that this 
+     * behavior decides to clean, or decides to ignore the specified finch.
+     * The probabilities are estimated using memory of earlier encounters with the 
+     * same finch.
+     */
     public Action decide(Finch finch) {
-        Statistics stat = recall(finch);
+        Memory stat = recall(finch);
         if (stat == null) {
-            stat = new Statistics();
+            stat = new Memory();
             remember(finch, stat);
             stat.lastAction = Action.CLEANING;
             return Action.CLEANING;
@@ -53,32 +69,13 @@ public class Statistical extends MemoryBehavior<Statistical.Statistics> {
         }
     }
 
-    /*public Action decide(Finch finch) {
-        Statistics stat = recall(finch);
-        Action choice;
-        
-        if (stat == null) {
-            stat = new Statistics();
-            remember(finch, stat);
-            choice = Action.CLEANING;
-        } else if (stat.helpedTotal + stat.didntHelpTotal == 0)
-            choice = Action.IGNORING;
-        else if (stat.didntHelpTotal * 9 >= stat.helpedTotal)
-            choice = Action.CLEANING;
-        else if (stat.helpedTotal * 9 >= stat.didntHelpTotal)
-            choice = Action.IGNORING;
-        else if (((double)stat.helpedGotHelp) / stat.helpedTotal >= 
-            ((double)stat.didntHelpGotHelp) / stat.didntHelpTotal)
-            choice = Action.CLEANING;
-        else
-            choice = Action.IGNORING;
-        
-        stat.lastAction = choice;
-        return choice;
-    }*/
-
+    /**
+     * Takes the Action made by the specified finch, and pair it with this behaviors 
+     * action from the last round. This pair of an action and a reaction is used with earlier 
+     * memory to determine which action to take at the next meeting with the specified finch.
+     */
     public void response(Finch finch, Action action) {
-        Statistics stat = recall(finch);
+        Memory stat = recall(finch);
         if (stat.secondToLastAction == Action.IGNORING) {
             stat.didntHelpTotal++;
             if (action == Action.CLEANING) {
@@ -94,18 +91,30 @@ public class Statistical extends MemoryBehavior<Statistical.Statistics> {
         stat.secondToLastAction = stat.lastAction;
     }
     
+    /**
+     * @inheritDoc
+     */
     public String toString() {
         return "Statistical";
     }
     
+    /**
+     * @inheritDoc
+     */
     public boolean equals(Object obj) {
         return obj instanceof Statistical;
     }
     
+    /**
+     * @inheritDoc
+     */
     public int hashCode() {
         return toString().hashCode();
     }
     
+    /**
+     * @inheritDoc
+     */
     public Behavior clone() {
         return new Statistical();
     }
