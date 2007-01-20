@@ -4,7 +4,7 @@ import java.util.*;
 
 /**
  * Every behavior that sometimes uses information about
- * how it is treated earlier extends this class.
+ * finches it met earlier, extends this class.
  * @param <DATA> The type of data the behavior needs to store.
  */
 public abstract class MemoryBehavior<DATA> implements Behavior {
@@ -12,6 +12,7 @@ public abstract class MemoryBehavior<DATA> implements Behavior {
     
     /**
      * Constructor for MemoryBehavior.
+     * @ensure {@code this.recall(finch) == null} for any {@code Finch}.
      */
     public MemoryBehavior() {
         //The garbage collector removes items from WeakHashMap's

@@ -17,25 +17,21 @@ public class InverseTitForTat extends ActionMemoryBehavior {
         return DESCRIPTION;
     }
     
+    /**
+     * The Action performed when nothing is known about the given finch.
+     */
     protected Action defaultAction() {
         return Action.IGNORING;
     }
 
     /**
-     * Remembers what this finch did.
+     * Remembers the opposite of what this finch did.
      */
     public void response (Finch finch, Action action) {
-        remember(finch,action);
-    }
-
-    /**
-     * Will do the inverse of what we remembered. Clean for unknown finches.
-     */
-    public Action decide(Finch finch) {
-        if (super.decide(finch) == Action.CLEANING)
-            return Action.IGNORING;
+        if (action == Action.CLEANING)
+            remember(finch,Action.IGNORING);
         else
-            return Action.CLEANING;
+            remember(finch,Action.CLEANING);
     }
 
     /**
