@@ -43,8 +43,8 @@ public class BiotopeCreator extends JDialog {
         // Hitpoint options.
         JPanel hitpointsOptionGroup = new JPanel(new GridBagLayout());
         hitpointsOptionGroup.setBorder(BorderFactory.createTitledBorder("Finch hitpoints"));
-        initialHitpointsSpinner = newIntegerSpinner(5, 1, 1, "A finch starts with this amount of hitpoints.");
-        maxHitpointsSpinner = newIntegerSpinner(10, 1, 1, "The maximum number of hitpoints a finch can have.");
+        initialHitpointsSpinner = newIntegerSpinner(7, 1, 1, "A finch starts with this amount of hitpoints.");
+        maxHitpointsSpinner = newIntegerSpinner(20, 1, 1, "The maximum number of hitpoints a finch can have.");
         hitpointsPerRoundSpinner = newIntegerSpinner(3, 1, 0, "The number of hitpoints lost each round due to ticks.");
         hitpointsOptionGroup.add(new JLabel("Initial hitpoints",SwingConstants.CENTER), getComponentConstraints(0,0, GridBagConstraints.CENTER));
         hitpointsOptionGroup.add(initialHitpointsSpinner, getComponentConstraints(0,1, GridBagConstraints.CENTER));
@@ -59,7 +59,7 @@ public class BiotopeCreator extends JDialog {
         minMaxAgeSpinner = newIntegerSpinner(10, 1, 2, 
                 "<HTML>The minimum age a finch must have<br>" +
                 "before it can die of old age.</HTML>");
-        maxMaxAgeSpinner = newIntegerSpinner(20, 1, 2, 
+        maxMaxAgeSpinner = newIntegerSpinner(13, 1, 2, 
                 "<HTML>The minimum age a finch can have<br>" +
                 "before it dies of old age.</HTML>");
         ageOptionGroup.add(new JLabel("Least maximum age",SwingConstants.CENTER), getComponentConstraints(0,0, GridBagConstraints.CENTER));
@@ -70,12 +70,12 @@ public class BiotopeCreator extends JDialog {
         // Breeding probability and Finches per Behavior.
         JPanel otherOptionGroup = new JPanel(new GridBagLayout());
         otherOptionGroup.setBorder(BorderFactory.createTitledBorder("Other parametres"));
-        breedingProbabilitySpinner = new JSpinner(new RevisedSpinnerNumberModel(0.33,0.0,1.0,0.01));
+        breedingProbabilitySpinner = new JSpinner(new RevisedSpinnerNumberModel(1.0/6.0,0.0,1.0,0.01));
         breedingProbabilitySpinner.setPreferredSize(new Dimension(50,22));
         breedingProbabilitySpinner.setToolTipText(
                 "<HTML>The probability that a given finch<br>" +
                 "breeds in the beginning of a round.</HTML>");
-        finchesPerBehaviorSpinner = newIntegerSpinner(30, 1, 0, 
+        finchesPerBehaviorSpinner = newIntegerSpinner(40, 1, 0, 
                 "<HTML>The number of finches of each chosen<br>" +
                 "behavior in the new biotope.</HTML>");
         otherOptionGroup.add(new JLabel("Breeding probability",SwingConstants.CENTER), getComponentConstraints(0,0, GridBagConstraints.CENTER));
