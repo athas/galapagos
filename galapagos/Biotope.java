@@ -187,7 +187,7 @@ public class Biotope extends Observable {
     public void putFinch (int x, int y, Behavior b) {
         assert (0 <= x && x < world.width() &&
                 0 <= y && y < world.height())
-            : "Cannot put finch beyond at " + x + "," + y + ", it is beyond the borders of the world";
+            : "Cannot put finch at " + x + "," + y + ", it is beyond the borders of the world";
         
         World<GalapagosFinch>.Place p = world.getAt(x, y);
         removeFinch(p);
@@ -208,7 +208,7 @@ public class Biotope extends Observable {
     public void takeFinch(int x, int y) {
         assert (0 <= x && x < world.width() &&
                 0 <= y && y < world.height())
-            : "Cannot remove finch fron " + x + "," + y + ", it is beyond the borders of the world";
+            : "Cannot remove finch from " + x + "," + y + ", it is beyond the borders of the world";
         
         removeFinch(world.getAt(x, y));
         setChanged();
