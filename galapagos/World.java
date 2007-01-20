@@ -48,6 +48,30 @@ public class World<T> implements Iterable<World<T>.Place> {
     }
 
     /**
+     * Return x wrapped to the width of this World. An x value off to
+     * the side of the actual edge of the World will be wrapped to the
+     * other side.
+     *
+     * @return An integer in the range [0; width of world[.
+     */
+    public int wrappedX(int x) {
+        if (x < 0) return wrappedX(width + x);
+        else return x % width;
+    }
+        
+    /**
+     * Return y wrapped to the width of this World. An y value above
+     * or below the actual edges of the World will be wrapped to the
+     * other side.
+     *
+     * @return An integer in the range [0; height of world[.
+     */
+    public int wrappedY(int y) {
+        if (y < 0) return wrappedY(height + y);
+        return y % height;
+    }
+
+    /**
      * A position in the world, contains a single element. Objects of
      * this class are immutable, but may change when the setAt()
      * method of World is invoked.
@@ -96,30 +120,6 @@ public class World<T> implements Iterable<World<T>.Place> {
          */
         public int yPosition() {
             return yPosition;
-        }
-
-        /**
-         * Return x wrapped to the width of the World of this
-         * Place. An x value off to the side of the actual edge of the
-         * World will be wrapped to the other side.
-         *
-         * @return An integer in the range [0; width of world[.
-         */
-        private int wrappedX(int x) {
-            if (x < 0) return wrappedX(width + x);
-            else return x % width;
-        }
-        
-        /**
-         * Return y wrapped to the width of the World of this
-         * Place. An y value above or below the actual edges of the
-         * World will be wrapped to the other side.
-         *
-         * @return An integer in the range [0; height of world[.
-         */
-        private int wrappedY(int y) {
-            if (y < 0) return wrappedY(height + y);
-            return y % height;
         }
 
         /**
