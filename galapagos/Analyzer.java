@@ -11,10 +11,10 @@ public class Analyzer extends AnalyzingBehavior {
         "and a memory of all previous meetings with that finch.</HTML>";
     
     private Behavior fallbackBehavior;
-    private final static int HelpedGotHelpValue = 3;
-    private final static int HelpedDidntGetHelpValue = 0;
-    private final static int DidntHelpGotHelpValue = 5;
-    private final static int DidntHelpDidntGetHelpValue = 1;
+    private final static int HelpedGotHelpValue = 1;
+    private final static int HelpedDidntGetHelpValue = -2;
+    private final static int DidntHelpGotHelpValue = 3;
+    private final static int DidntHelpDidntGetHelpValue = -1;
 
     /**
      * @inheritDoc
