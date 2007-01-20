@@ -33,8 +33,8 @@ public class BiotopeCreator extends JDialog {
         // The world size options.
         JPanel sizeOptionGroup = new JPanel(new GridBagLayout());
         sizeOptionGroup.setBorder(BorderFactory.createTitledBorder("World size"));
-        widthSpinner = newIntegerSpinner(100, 10, 1);
-        heightSpinner = newIntegerSpinner(100, 10, 1);
+        widthSpinner = newIntegerSpinner(100, 10, 1, "The width of the world.");
+        heightSpinner = newIntegerSpinner(100, 10, 1, "The height of the world.");
         sizeOptionGroup.add(new JLabel("Width",SwingConstants.CENTER), getComponentConstraints(0,0, GridBagConstraints.CENTER));
         sizeOptionGroup.add(widthSpinner, getComponentConstraints(0,1, GridBagConstraints.CENTER));
         sizeOptionGroup.add(new JLabel("Height",SwingConstants.CENTER), getComponentConstraints(0,2, GridBagConstraints.CENTER));
@@ -43,9 +43,9 @@ public class BiotopeCreator extends JDialog {
         // Hitpoint options.
         JPanel hitpointsOptionGroup = new JPanel(new GridBagLayout());
         hitpointsOptionGroup.setBorder(BorderFactory.createTitledBorder("Finch hitpoints"));
-        initialHitpointsSpinner = newIntegerSpinner(5, 1, 1);
-        maxHitpointsSpinner = newIntegerSpinner(10, 1, 1);
-        hitpointsPerRoundSpinner = newIntegerSpinner(3, 1, 0);
+        initialHitpointsSpinner = newIntegerSpinner(5, 1, 1, "A finch starts with this amount of hitpoints.");
+        maxHitpointsSpinner = newIntegerSpinner(10, 1, 1, "The maximum number of hitpoints a finch can have.");
+        hitpointsPerRoundSpinner = newIntegerSpinner(3, 1, 0, "The number of hitpoints lost each round due to ticks.");
         hitpointsOptionGroup.add(new JLabel("Initial hitpoints",SwingConstants.CENTER), getComponentConstraints(0,0, GridBagConstraints.CENTER));
         hitpointsOptionGroup.add(initialHitpointsSpinner, getComponentConstraints(0,1, GridBagConstraints.CENTER));
         hitpointsOptionGroup.add(new JLabel("Max. hitpoints",SwingConstants.CENTER), getComponentConstraints(0,3, GridBagConstraints.CENTER));
@@ -56,8 +56,12 @@ public class BiotopeCreator extends JDialog {
         // Age options.
         JPanel ageOptionGroup = new JPanel(new GridBagLayout());
         ageOptionGroup.setBorder(BorderFactory.createTitledBorder("Finch age"));
-        minMaxAgeSpinner = newIntegerSpinner(10, 1, 2);
-        maxMaxAgeSpinner = newIntegerSpinner(20, 1, 2);
+        minMaxAgeSpinner = newIntegerSpinner(10, 1, 2, 
+                "<HTML>The minimum age a finch must have<br>" +
+                "before it can die of old age.</HTML>");
+        maxMaxAgeSpinner = newIntegerSpinner(20, 1, 2, 
+                "<HTML>The minimum age a finch can have<br>" +
+                "before it dies of old age.</HTML>");
         ageOptionGroup.add(new JLabel("Least maximum age",SwingConstants.CENTER), getComponentConstraints(0,0, GridBagConstraints.CENTER));
         ageOptionGroup.add(minMaxAgeSpinner, getComponentConstraints(0,1, GridBagConstraints.CENTER));
         ageOptionGroup.add(new JLabel("Greatest maximum age",SwingConstants.CENTER), getComponentConstraints(0,2, GridBagConstraints.CENTER));
@@ -68,7 +72,12 @@ public class BiotopeCreator extends JDialog {
         otherOptionGroup.setBorder(BorderFactory.createTitledBorder("Other parametres"));
         breedingProbabilitySpinner = new JSpinner(new RevisedSpinnerNumberModel(0.33,0.0,1.0,0.01));
         breedingProbabilitySpinner.setPreferredSize(new Dimension(50,22));
-        finchesPerBehaviorSpinner = newIntegerSpinner(30, 1, 0);
+        breedingProbabilitySpinner.setToolTipText(
+                "<HTML>The probability that a given finch<br>" +
+                "breeds in the beginning of a round.</HTML>");
+        finchesPerBehaviorSpinner = newIntegerSpinner(30, 1, 0, 
+                "<HTML>The number of finches of each chosen<br>" +
+                "behavior in the new biotope.</HTML>");
         otherOptionGroup.add(new JLabel("Breeding probability",SwingConstants.CENTER), getComponentConstraints(0,0, GridBagConstraints.CENTER));
         otherOptionGroup.add(breedingProbabilitySpinner, getComponentConstraints(0,1, GridBagConstraints.CENTER));
         otherOptionGroup.add(new JLabel("Finches per behavior",SwingConstants.CENTER), getComponentConstraints(0,2, GridBagConstraints.CENTER));
@@ -80,6 +89,7 @@ public class BiotopeCreator extends JDialog {
         
         //Create a checkbox to select all behaviors.
         selectAll = new JCheckBox("Select all behaviors", true);
+        selectAll.setToolTipText("Select/deselect all behaviors.");
         selectAll.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) 
         	{
@@ -106,6 +116,7 @@ public class BiotopeCreator extends JDialog {
         // OK and CANCEL.
         JPanel buttonPanel = new JPanel(new FlowLayout());
         okButton = new JButton("Genesis!");
+        okButton.setToolTipText("Create a new biotope with the selected specifikations.");
         okButton.setActionCommand("okButton");
         okButton.addActionListener(new ActionListener () {
             public void actionPerformed(ActionEvent e) {
@@ -113,6 +124,7 @@ public class BiotopeCreator extends JDialog {
             }
         });
         cancelButton = new JButton("Abort creation");
+        cancelButton.setToolTipText("Return to the old biotope. No changes are made.");
         cancelButton.setActionCommand("cancelButton");
         cancelButton.addActionListener(new ActionListener () {
             public void actionPerformed(ActionEvent e) {
@@ -124,6 +136,9 @@ public class BiotopeCreator extends JDialog {
 
         JPanel standardSettingsPanel = new JPanel(new FlowLayout());
         setVariantOneButton = new JButton("Set variant #1");
+        setVariantOneButton.setToolTipText(
+                "<HTML>Set specifikation to standard variant 1,<br>" +
+                "with five random behaviors chosen.</HTML>");
         setVariantOneButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     setConfiguration(1.0/6.0, 3, 20, 7, 10, 13, 40);
@@ -131,6 +146,9 @@ public class BiotopeCreator extends JDialog {
                 }
             });
         setVariantTwoButton = new JButton("Set variant #2");
+        setVariantTwoButton.setToolTipText(
+                "<HTML>Set specifikation to standard variant 2,<br>" +
+                "with five random behaviors chosen.</HTML>");
         setVariantTwoButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     setConfiguration(1.0/6.0, 4, 20, 10, 20, 23, 40);
@@ -138,6 +156,9 @@ public class BiotopeCreator extends JDialog {
                 }
             });
         setVariantThreeButton = new JButton("Set variant #3");
+        setVariantThreeButton.setToolTipText(
+                "<HTML>Set specifikation to standard variant 3,<br>" +
+                "with five random behaviors chosen.</HTML>");
         setVariantThreeButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     setConfiguration(1.0/12.0, 3, 20, 13, 11, 14, 40);
@@ -255,13 +276,14 @@ public class BiotopeCreator extends JDialog {
      * The max value is set to Integer.MAX_VALUE.
      * @param startValue The spinner's start-value.
      * @param stepSize The step size of the spinner.
+     * @param toolTip The tool tip of the spinner.
      * @return The created spinner.
      */
-    private JSpinner newIntegerSpinner(int startValue, int stepSize, int minValue)
+    private JSpinner newIntegerSpinner(int startValue, int stepSize, int minValue, String toolTip)
     {
         JSpinner spinner = new JSpinner(new RevisedSpinnerNumberModel(startValue, minValue, Integer.MAX_VALUE, stepSize));
         spinner.setPreferredSize(standardSpinnerSize);
-        
+        spinner.setToolTipText(toolTip);
         return spinner;
     }
     
