@@ -1,5 +1,9 @@
 package galapagos;
 
+import galapagos.behaviors.*;
+import galapagos.biotope.Behavior;
+import galapagos.ui.GalapagosFrame;
+
 import java.util.HashMap;
 import java.awt.Color;
 

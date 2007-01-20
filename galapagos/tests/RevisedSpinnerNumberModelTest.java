@@ -1,6 +1,7 @@
 package galapagos.tests;
 
-import galapagos.RevisedSpinnerNumberModel;
+import galapagos.ui.RevisedSpinnerNumberModel;
+
 import javax.swing.SpinnerNumberModel;
 import junit.framework.TestCase;
 

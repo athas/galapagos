@@ -1,6 +1,7 @@
 package galapagos.tests;
 
-import galapagos.*;
+import galapagos.behaviors.*;
+import galapagos.biotope.*;
 
 /**
  * Test of the Lenient Grudger behavior.

@@ -1,6 +1,7 @@
 package galapagos.tests;
 
-import galapagos.*;
+import galapagos.behaviors.*;
+import galapagos.biotope.*;
 
 /**
  * Test that the Analyzer behavior works properly.

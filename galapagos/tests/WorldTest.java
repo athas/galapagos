@@ -1,6 +1,6 @@
 package galapagos.tests;
 
-import galapagos.*;
+import galapagos.biotope.World;
 import junit.framework.*;
 import java.util.*;
 

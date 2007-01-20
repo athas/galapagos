@@ -1,6 +1,7 @@
 package galapagos.tests;
 
-import galapagos.*;
+import galapagos.behaviors.*;
+import galapagos.biotope.*;
 
 /**
  * Test that the Predictor uses the two-bit prediction algorithm properly.

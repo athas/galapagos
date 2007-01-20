@@ -1,6 +1,7 @@
 package galapagos.tests;
 
-import galapagos.*;
+import galapagos.behaviors.*;
+import galapagos.biotope.*;
 
 /**
  * Test of the Random behavior, the decide method is

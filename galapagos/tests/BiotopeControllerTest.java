@@ -1,6 +1,9 @@
 package galapagos.tests;
 
-import galapagos.*;
+import galapagos.behaviors.*;
+import galapagos.biotope.*;
+import galapagos.ui.BiotopeController;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.awt.event.*;
