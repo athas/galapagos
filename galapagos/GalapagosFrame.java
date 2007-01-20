@@ -73,8 +73,7 @@ public class GalapagosFrame extends JFrame {
      * behaviors, b1.toString() != b2.toString() must hold.
      */
     
-    public GalapagosFrame(Map<Behavior, Color> behaviors)
-    {
+    public GalapagosFrame(Map<Behavior, Color> behaviors) {
         makeBehaviorListAndColorMap(behaviors);
         
         isRefreshing = true;
@@ -142,10 +141,14 @@ public class GalapagosFrame extends JFrame {
         // Create a new Biotope with the default-settings of the BiotopeCreator. 
         biotopeCreator = new BiotopeCreator(this.behaviors);
         setBiotope(biotopeCreator.createBiotope());
+        
+        Dimension size = combinedSize();
+        pack();
+        setSize(size);
+        validate();
     }
     
-    public void setBiotope(Biotope biotope)
-    {
+    public void setBiotope(Biotope biotope) {
     	this.biotope = biotope;
     	
         //Create RadioButton's on the GalapagosFrame
@@ -185,18 +188,12 @@ public class GalapagosFrame extends JFrame {
         
         
         biotope.doNotifyObservers();
-        setSize(combinedSize());
-        validate();
-        pack();
-        setSize(combinedSize());
-        validate();
     }
     
     /**
      * Create and position the controls of the main interface. 
      */
-    private void initializeControls()
-    {
+    private void initializeControls() {
         //create top controls
         newBiotope = newButton ("New Biotope", "newBiotope");
         newBiotope = new JButton("New Biotope");
@@ -304,8 +301,7 @@ public class GalapagosFrame extends JFrame {
      * @param command The button's actionCommand
      * @return The new JButton
      */
-    public JButton newButton(String text, String command)
-    {
+    public JButton newButton(String text, String command) {
         JButton button = new JButton(text);
         button.setActionCommand(command);
         button.addActionListener(controller);
@@ -336,8 +332,7 @@ public class GalapagosFrame extends JFrame {
      * 
      * @ensure this.colorByBehavior(b).equals(behaviors.get(b)) for all Behavior objects b in behaviors.
      */
-    private void makeBehaviorListAndColorMap(Map<Behavior, Color> behaviors)
-    {
+    private void makeBehaviorListAndColorMap(Map<Behavior, Color> behaviors) {
         this.behaviors = new ArrayList<Behavior>();
         colorMap = new HashMap<Behavior, Color>();
         
@@ -382,8 +377,8 @@ public class GalapagosFrame extends JFrame {
          * This is reflected in a structural difference in the computation of the
          * combined Dimension of the five areas of the BorderLayout.
          */  
-        int width = 50 + Math.max(leftDim.width + centerDim.width + rightDim.width, Math.max(topDim.width, bottomDim.width));
-        int height = 50 + topDim.height + bottomDim.height + Math.max(centerDim.height, Math.max(leftDim.height, rightDim.height));
+        int width = 100 + Math.max(leftDim.width + centerDim.width + rightDim.width, Math.max(topDim.width, bottomDim.width));
+        int height = 100 + topDim.height + bottomDim.height + Math.max(centerDim.height, Math.max(leftDim.height, rightDim.height));
         return new Dimension(width, height);
     }
     
