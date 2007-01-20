@@ -86,7 +86,7 @@ public class GalapagosFrame extends JFrame {
                     if (0 <= x && x < biotope.world.width() &&
                         0 <= y && y < biotope.world.height() &&
                         b != null)
-                        biotope.putFinch(x, y, b.clone());
+                        controller.putFinch(x, y, b);
                 }
                 public void mousePressed(MouseEvent e) {
                     maybeAddFinchAt((e.getX() - area.offsetX()) / 

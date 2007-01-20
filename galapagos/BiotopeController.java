@@ -81,4 +81,21 @@ public class BiotopeController implements ActionListener, ChangeListener {
     	else if(spinner.getName().equals("numberOfRoundsSpinner"))
     		this.numberOfRounds = value;
     }
+
+    /**
+     * Add a finch with a behavior of the provided type to the Biotope
+     * controlled by this BiotopeController. Any finch already at the
+     * provided position will be replaced.
+     *
+     * @param x The x coordinate of the position of the inserted finch.
+     * @param y The y coordinate of the position of the inserted finch.
+     * @param b A behavior object of the type that the new finch
+     * should have.
+     *
+     * @require 0 <= x < biotope-world-width
+     * @require 0 <= y <= biotope-world-height
+     */
+    public void putFinch(int x, int y, Behavior b) {
+        biotope.putFinch(x, y, b);
+    }
 }
