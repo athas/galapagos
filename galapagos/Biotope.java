@@ -5,9 +5,12 @@ import java.util.*;
 /**
  * A simulation of a torus-shaped world containing finches of
  * different social behaviors. The finches will interact the way their
- * behavior type specifies, and will breed randomly.
+ * behavior type specifies, and will breed randomly. The biotope
+ * permits iteration through all places in the simulated world.
  */
-public class Biotope extends Observable {
+public class Biotope extends Observable 
+    implements Iterable<World<GalapagosFinch>.Place> {
+    
     private final double breedingProbability;
     private final int maxHitpoints, initialHitpoints, hitpointsPerRound;
     private final int minMaxAge, maxMaxAge;
@@ -17,7 +20,7 @@ public class Biotope extends Observable {
     /**
      * The world used in this simulation.
      */
-    public final World<GalapagosFinch> world;
+    private final World<GalapagosFinch> world;
 
     private final Map<Behavior, Statistics> statistics;
     private final List<Behavior> finchBehaviors;
@@ -203,16 +206,34 @@ public class Biotope extends Observable {
      * no-op. If a finch is removed, it will be subtracted from the
      * appropriate population count in the statistics.
      *
-     * @require 0 <= x < biotope-world-width
-     * @require 0 <= y <= biotope-world-height
+     * @require 0 <= x < this.width()
+     * @require 0 <= y <= this.height()
      */
     public void takeFinch(int x, int y) {
         assert (0 <= x && x < world.width() &&
                 0 <= y && y < world.height())
-            : "Cannot remove finch from " + x + "," + y + ", it is beyond the borders of the world";
+            : "Cannot remove finch from (" + x + "," + y + "), it is beyond the borders of the world";
         
         removeFinch(world.getAt(x, y));
         notifyObservers();
+    }
+
+    /**
+     * Return the finch at the specified coordinate. This method is
+     * mostly intended for testing the Biotope class.
+     *
+     * @param x The x coordinate of the finch to return.
+     * @param y The y coordinate of the finch to return.
+     *
+     * @require 0 <= x < this.width()
+     * @require 0 <= y <= this.height()
+     */
+    public GalapagosFinch getFinchAt(int x, int y) {
+        assert (0 <= x && x < world.width() &&
+                0 <= y && y < world.height())
+            : "Cannot get finch at (" + x + "," + y + "), it is beyond the borders of the world";
+
+        return world.getAt(x, y).getElement();
     }
 
     /**
@@ -416,10 +437,24 @@ public class Biotope extends Observable {
     }
     
     /**
+     * Return the width of the biotope world in cells.
+     */
+    public int width() {
+        return world.width();
+    }
+
+    /**
+     * Return the height of the biotope world in cells.
+     */
+    public int height() {
+        return world.height();
+    }
+    
+    /**
      * Return an iterator for walking through the places of the world
      * of this Biotope object.
      */
-    public Iterator<World<GalapagosFinch>.Place> worldIterator () {
+    public Iterator<World<GalapagosFinch>.Place> iterator () {
         return world.iterator();
     }
     

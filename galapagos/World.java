@@ -48,6 +48,14 @@ public class World<T> implements Iterable<World<T>.Place> {
     }
 
     /**
+     * Wrap the provided value to the maximum.
+     */
+    public static int wrap(int max, int value) {
+        if (value < 0) return wrap(max, max + value);
+        else return value % max;
+    }
+
+    /**
      * Return x wrapped to the width of this World. An x value off to
      * the side of the actual edge of the World will be wrapped to the
      * other side.
@@ -55,9 +63,10 @@ public class World<T> implements Iterable<World<T>.Place> {
      * @return An integer in the range [0; width of world[.
      */
     public int wrappedX(int x) {
-        if (x < 0) return wrappedX(width + x);
-        else return x % width;
+        return wrap(width(), x);
     }
+
+  
         
     /**
      * Return y wrapped to the width of this World. An y value above
@@ -67,8 +76,7 @@ public class World<T> implements Iterable<World<T>.Place> {
      * @return An integer in the range [0; height of world[.
      */
     public int wrappedY(int y) {
-        if (y < 0) return wrappedY(height + y);
-        return y % height;
+        return wrap(height(), y);
     }
 
     /**

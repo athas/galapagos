@@ -110,8 +110,8 @@ public class GalapagosFrame extends JFrame {
 
                     // Only act if x,y is within the bounds of the
                     // world.
-                    if (0 <= x && x < biotope.world.width() &&
-                        0 <= y && y < biotope.world.height()) {
+                    if (0 <= x && x < biotope.width() &&
+                        0 <= y && y < biotope.height()) {
                         if (insertFinchDown(e)) {
                             if (selectedBehavior != null)
                                 controller.putFinches(x, y, selectedBehavior);
@@ -180,7 +180,7 @@ public class GalapagosFrame extends JFrame {
 
         selectedBehavior = null;
         controller.setBiotope(biotope);
-        area.reset(biotope.world.width(), biotope.world.height());
+        area.reset(biotope.width(), biotope.height());
         
         biotope.addObserver(statistics);
         if (isLogging)

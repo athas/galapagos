@@ -2,9 +2,7 @@ package galapagos;
 
 import java.awt.*;
 import java.awt.image.*;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Map;
+import java.util.*;
 
 import javax.swing.*;
 
@@ -104,7 +102,7 @@ public class AreaPanel extends JPanel implements Observer {
      * @param biotope The Biotope to draw.
      */
     public void drawBiotope(Biotope biotope) {
-        for(World<GalapagosFinch>.Place place : biotope.world) {
+        for (World<GalapagosFinch>.Place place : biotope) {
             GalapagosFinch element = place.getElement();
             if(element != null)
                 pixel(place.xPosition(), place.yPosition(), colorByBehavior(element.behavior()));

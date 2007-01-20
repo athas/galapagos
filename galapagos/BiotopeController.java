@@ -161,8 +161,8 @@ public class BiotopeController implements ActionListener, ChangeListener {
      * @require 0 <= y <= biotope-world-height
      */
     public void putFinches(int centerX, int centerY, final Behavior b) {
-        assert (0 <= centerX && centerX <= biotope.world.width() &&
-                0 <= centerY && centerY <= biotope.world.height())
+        assert (0 <= centerX && centerX <= biotope.width() &&
+                0 <= centerY && centerY <= biotope.height())
             : "Provided coordinate (" + centerX + ", " + centerY + ") lies outside the world.";
             
         final List<Biotope.FinchDescriptor> list = new LinkedList<Biotope.FinchDescriptor>();
@@ -170,8 +170,8 @@ public class BiotopeController implements ActionListener, ChangeListener {
         forPointsInCircle(centerX, centerY, new pointFrobber() {
                 public void call(int x, int y) {
                     list.add(biotope.new 
-                             AddFinchDescriptor(biotope.world.wrappedX(x),
-                                                biotope.world.wrappedY(y), 
+                             AddFinchDescriptor(World.wrap(biotope.width(), x),
+                                                World.wrap(biotope.height(), y),
                                                 b));
                 }
             });
@@ -191,8 +191,8 @@ public class BiotopeController implements ActionListener, ChangeListener {
      * @require 0 <= y <= biotope-world-height
      */
     public void takeFinches(int centerX, int centerY) {
-        assert (0 <= centerX && centerX <= biotope.world.width() &&
-                0 <= centerY && centerY <= biotope.world.height())
+        assert (0 <= centerX && centerX <= biotope.width() &&
+                0 <= centerY && centerY <= biotope.height())
             : "Provided coordinate (" + centerX + ", " + centerY + ") lies outside the world.";
         
         final List<Biotope.FinchDescriptor> list = new LinkedList<Biotope.FinchDescriptor>();
@@ -200,8 +200,8 @@ public class BiotopeController implements ActionListener, ChangeListener {
         forPointsInCircle(centerX, centerY, new pointFrobber() {
                 public void call(int x, int y) {
                     list.add(biotope.new 
-                             RemoveFinchDescriptor(biotope.world.wrappedX(x), 
-                                                   biotope.world.wrappedY(y)));
+                             RemoveFinchDescriptor(World.wrap(biotope.width(), x),
+                                                   World.wrap(biotope.height(), y)));
                 }
             });
 
