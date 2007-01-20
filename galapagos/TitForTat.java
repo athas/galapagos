@@ -16,13 +16,16 @@ public class TitForTat extends ActionMemoryBehavior {
         return DESCRIPTION;
     }
     
+    /**
+     * @inheritDoc
+     */
     protected Action defaultAction() {
         return Action.CLEANING;
     }
     
     /**
      * Remembers what this finch did as the action
-     * we wan't to use next time we meet it.
+     * we want to use next time we meet it.
      */
     public void response (Finch finch, Action action) {
         remember(finch,action);

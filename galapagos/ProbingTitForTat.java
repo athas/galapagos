@@ -53,7 +53,8 @@ public class ProbingTitForTat extends ActionMemoryBehavior {
     }
 
     /**
-     * Remember what the finch did.
+     * Remember what the finch did as the Action we might do to 
+     * that finch the next time we meet it.
      */
     public void response(Finch finch, Action action) {
         remember(finch, action);

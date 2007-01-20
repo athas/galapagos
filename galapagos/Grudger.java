@@ -1,5 +1,10 @@
 package galapagos;
 
+/**
+ * The Grudger cleans a specific finch as long as that finch cleans the Grudger.
+ * Once a finch ignores the Grudger a single time, it is never cleaned by
+ * that Grudger again. 
+ */
 public class Grudger extends ActionMemoryBehavior {
     private static final String DESCRIPTION = 
         "<HTML>Cleans a specific finch as long as the<br>" + 
@@ -13,7 +18,8 @@ public class Grudger extends ActionMemoryBehavior {
     }
 
     /**
-     * If a finch just met ignores this finch it should be remembered.
+     * If a finch just met ignores this finch it should be remembered
+     * so that it can be ignored in future meetings.
      */
     public void response(Finch finch, Action action) {
         if (action == Action.IGNORING)
