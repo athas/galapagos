@@ -49,7 +49,8 @@ public class StatisticsPanel extends JPanel implements Observer {
     
     /**
      * Create a new StatisticsPanel for monitoring a Biotope.
-     * @param frame The StatisticsPanel uses the colors specified in frame.
+     * @param colorMap The StatisticsPanel uses colorMap to color the statistics
+     *  for a Behavior in the corresponding color.
      */
     public StatisticsPanel(Map<Behavior, Color> colorMap) {
         roundsLabel = new JLabel();
@@ -98,7 +99,6 @@ public class StatisticsPanel extends JPanel implements Observer {
      * A set of GridBagConstraints for use with the GridBagLayout.
      * @param x the horisontal position of the component.
      * @param y the vertical position of the component.
-     * @param anchor the alignment of the component inside its display area.
      */
     private GridBagConstraints getConstraints (int x, int y) {
         return new GridBagConstraints(x,y,1,1,1.0,1.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(0,0,0,0),0,0);
