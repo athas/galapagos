@@ -101,6 +101,24 @@ public class WorldTest extends TestCase {
                 containsTheSame(neighbourList, list);
             }
     }
+
+    public void testWrapping()
+    {
+        assertEquals(0, world.wrappedX(0));
+        assertEquals(0, world.wrappedY(0));
+        assertEquals(1, world.wrappedX(1));
+        assertEquals(1, world.wrappedY(1));
+        assertEquals(2, world.wrappedX(2));
+        assertEquals(2, world.wrappedY(2));
+        assertEquals(0, world.wrappedX(3));
+        assertEquals(0, world.wrappedY(3));
+        assertEquals(1, world.wrappedX(4));
+        assertEquals(1, world.wrappedY(4));
+        assertEquals(2, world.wrappedX(5));
+        assertEquals(2, world.wrappedY(5));
+        assertEquals(0, world.wrappedX(6));
+        assertEquals(0, world.wrappedY(6));
+    }
     
     /**
      * Test that RandomIterator goes through all elements
