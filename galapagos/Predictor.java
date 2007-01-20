@@ -4,6 +4,17 @@ package galapagos;
  * A behavior implementing two-bit prediction.
  */
 public class Predictor extends MemoryBehavior<Predictor.Prediction> {
+    private static final String DESCRIPTION = 
+        "<HTML>Tries to predict the other finch's next<br>" +
+        "move using two-bit prediction.</HTML>";
+    
+    /**
+     * @inheritDoc
+     */
+    public String description() {
+        return DESCRIPTION;
+    }
+    
     /**
      * The prediction for the behavior of a finch.
      */
