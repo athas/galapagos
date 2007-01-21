@@ -144,12 +144,13 @@ ikke er tilsigtet at man skal kunne få ekstra oplysninger om finken
 eller ændre den på nogen måde (det vil naturligvis
 stadig være muligt at "type-caste" en {\tt Finch} til {\tt
   GalapagosFinch} og herefter ændre på den eller få yderligere
-oplysninger om fx dens alder).
+oplysninger om fx dens alder - det er dog hensigten at dette ikke er
+tilladt).
 
-En finke har én {\tt Behavior} (fremover kaldet finkens adfærd).
-Det er adfærdens ansvar at afgøre om finken vil hjælpe
-en given finke eller ej, ligesom adfærden underrettes om
-hvorledes andre finker har handlet overfor finken.
+En finke har én {\tt Behavior} (fremover kaldet finkens adfærd). Det
+er adfærdens ansvar at afgøre om finken vil hjælpe en given anden
+finke eller ej, ligesom adfærden underrettes om hvorledes andre
+finker har handlet overfor finken.
 
 Finkens metoden {\tt decide} bruges når man har brug
 for at få at vide, om finken vil hjælpe en anden finke
@@ -193,10 +194,11 @@ instans af.
 Til dette formål har vi dog også krævet at enhver konkret {\tt
   Behavior}-klasse skal overskrive {\tt equals} således at {\tt
   a.equals(b)} er sand for to {\tt Behavior}-objekter hvis og kun
-hvis {\tt a} og {\tt b} er instanser af den samme {\tt Behavior}.
+hvis {\tt a} og {\tt b} er instanser af den samme {\tt
+Behavior}-type.
 
 {\tt Behavior}-interfacet kræver derfor også at {\tt hashCode}
-overskrives så alle {\tt Behavior}s af samme klasse giver samme {\tt
+overskrives så alle {\tt Behavior}s af samme type giver samme {\tt
   hashCode} (hvorved specifikationen af {\tt hashCode} i {\tt Object}
 er overholdt).
 
@@ -416,9 +418,9 @@ Kontrollen bruger en {\tt Timer} til at køre runderne, den gør det
 enkelt at ændre hvor lang tid der skal gå i mellem runde eller om
 programmet bare skal køre så hurtigt som maskinen tillader.
 
-Vi har gjort det muligt selv at indsætte og fjerne finker fra biotopen
-vha. musen, det er også kontrollen der ændrer biotopen når dette er
-sket.
+Vi har gjort det muligt selv at indsætte og fjerne finker fra
+biotopen vha. musen, det er også kontrollen der ændrer biotopen når
+dette skal ske.
 
 \subsubsection{\tt BiotopeLogger}
 {\tt BiotopeLogger} er som beskrevet ovenfor en {\tt Observer}
@@ -446,7 +448,7 @@ meget tekst der skal stå i de enkelte celler.
 
 Den nederste række i tabellen er en total for hver af de enkelte
 kolonner - den bliver udregnet undervejs og tilsidst tilføjet som
-sidste række i det todimensionale array. 
+sidste række i det todimensionale array.
 
 For at gøre det nemmere at se hvornår en race uddør har vi lavet et
 specialtilfælde for hvordan antallet af finker med en given adfærd
@@ -457,10 +459,10 @@ total-rækken opmærksom på når der ikke er nogen levende finker
 tilbage.
 
 \subsubsection{\tt StatisticsPanel}
-{\tt StatisticsPanel}
-fungere på stort set samme måde som {\tt BiotopeLogger}, men da det
-her skal vises i et Java-vindue bliver vi nødt til at bruge nogle
-Java-komponenter til at vise teksten. Den fundamentale forskel på {\tt
+{\tt StatisticsPanel} fungerer på stort set samme måde som {\tt
+BiotopeLogger}, men da det her skal vises i et Java-vindue bliver vi
+nødt til at bruge nogle Java-komponenter til at vise teksten. Den
+fundamentale forskel på {\tt
   BiotopeLogger} og {\tt StatisticsPanel} er at panelet har et
 todimensionalt array af {\tt JLabel}s, som den ændrer teksten på hver gang
 der er sket en opdatering, mens {\tt BiotopeLogger}en hver runde
@@ -470,7 +472,7 @@ todimensionalt array af tekstværdier som den så udskriver.
 \section{Konklusion}
 Vores program virker (så vidt vi kan se) efter hensigten. Vi mener at
 vores program i\-mø\-de\-kom\-mer alle opgavens krav, modulo de
-fravigelser som er nævnt andetsteds i rapporten.
+afvigelser som er nævnt andetsteds i rapporten.
 
 Selvom det ikke var formålet med opgaven at lave et spilteoretisk
 korrekt program har vi, når vi har vurderet hvilke faciliteter der var
