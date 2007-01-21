@@ -11,7 +11,6 @@ public class Schizophrenic implements Behavior {
     private final String name;
     private final String description;
     private final List<Behavior> personalities;
-    private final boolean sharedMemory;
     private int personalityChoice;
     
     /**
@@ -20,19 +19,14 @@ public class Schizophrenic implements Behavior {
      * of Behaviors must be given different names (since {@code equals} depends
      * on the names to compare two Schizophrenic.
      * @param personalities the Behaviors that this Schizophrenic, chooses randomly
-     * between each round.
-     * @param sharedMemory If {@code sharedMemory} is true, the all Behaviors of this 
-     * Schizophrenic gets informed of the opponent's action in a given round.
-     * If {@code sharedMemory} is false, only the Behavior that decided the action in a
-     * specific meeting, gets informed of the opponent's action in that meeting.
+     * between each round. The personalities don't share any
+     * memory of meetings.
      * @require {@code personalities.size() > 0}
      * @ensure {@code this.toString().equals(name)}
      */
-    public Schizophrenic (String name, List<Behavior> personalities,
-                          boolean sharedMemory) {
+    public Schizophrenic (String name, List<Behavior> personalities) {
         this.name = name;
         this.personalities = personalities;
-        this.sharedMemory = sharedMemory;
         
         String description = 
             "<HTML>A schizophrenic finch with the following personalities:";
@@ -62,11 +56,7 @@ public class Schizophrenic implements Behavior {
      * contructor), of the opponent's action this round.
      */
     public void response(Finch finch, Action action) {
-        if (sharedMemory) {
-            for (Behavior personality : personalities)
-                personality.response(finch, action);
-        } else
-            personalities.get(personalityChoice).response(finch, action);
+        personalities.get(personalityChoice).response(finch, action);
     }
     
     /**
@@ -99,6 +89,6 @@ public class Schizophrenic implements Behavior {
         List<Behavior> clone = new ArrayList<Behavior>(personalities.size());
         for (Behavior personality : personalities)
             clone.add(personality.clone());
-        return new Schizophrenic(name, clone, sharedMemory);
+        return new Schizophrenic(name, clone);
     }
 }

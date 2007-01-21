@@ -20,7 +20,7 @@ public class SchizophrenicTitForTatTest extends TitForTatTest {
     public Behavior getBehavior() {
         List<Behavior> titForTat = new ArrayList<Behavior>(1);
         titForTat.add(new TitForTat());
-        return new Schizophrenic("Schizophrenic Tit for Tat", titForTat, false);
+        return new Schizophrenic("Schizophrenic Tit for Tat", titForTat);
     }
     
     public String behaviorName () {

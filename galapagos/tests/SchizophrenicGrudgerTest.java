@@ -20,7 +20,7 @@ public class SchizophrenicGrudgerTest extends GrudgerTest {
     public Behavior getBehavior() {
         List<Behavior> grudger = new ArrayList<Behavior>(1);
         grudger.add(new Grudger());
-        return new Schizophrenic("Schizophrenic Grudger", grudger, false);
+        return new Schizophrenic("Schizophrenic Grudger", grudger);
     }
     
     public String behaviorName () {

@@ -40,12 +40,12 @@ public class Galapagos {
         List<Behavior> Schizo1 = new ArrayList<Behavior>(2);
         Schizo1.add(new Cheater());
         Schizo1.add(new TitForTat());
-        behaviors.put(new Schizophrenic("Cheating Tit for Tat", Schizo1, false), value);
+        behaviors.put(new Schizophrenic("Cheating Tit for Tat", Schizo1), new Color(230, 220, 20));
         List<Behavior> Schizo2 = new ArrayList<Behavior>(3);
         Schizo2.add(new Predictor());
         Schizo2.add(new Analyzer());
         Schizo2.add(new Statistical());
-        behaviors.put(new Schizophrenic("Analyzing Combo", Schizo2, true), value);
+        behaviors.put(new Schizophrenic("Analyzing Combo", Schizo2), new Color(67, 136, 201));
         
         
         
