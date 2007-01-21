@@ -30,7 +30,7 @@ public class FriendlySelfCentric extends MemoryBehavior<FriendlySelfCentric.Memo
     }
     
     private static final String DESCRIPTION = 
-        "<HTML>Tries to only help other FriendlySelfCentric.<br>" +
+        "<HTML>Tries to only help other Friendly Self-Centrics.<br>" +
         "Initially cleans other finches.</HTML>";
     private Action lastAction;
     
