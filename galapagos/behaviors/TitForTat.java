@@ -3,8 +3,8 @@ package galapagos.behaviors;
 import galapagos.biotope.*;
 
 /**
- * A behavior that always does what the opponent did last time!
- * The finch always cleans when faced with an unknown opponent.
+ * A behavior that always does what the opponent did last time!  The
+ * finch always cleans when faced with an unknown opponent.
  */
 public class TitForTat extends ActionMemoryBehavior {
     private static final String DESCRIPTION = 
@@ -26,8 +26,8 @@ public class TitForTat extends ActionMemoryBehavior {
     }
     
     /**
-     * Remembers what this finch did as the action
-     * we want to use next time we meet it.
+     * Remembers what this finch did as the action we want to use next
+     * time we meet it.
      */
     public void response (Finch finch, Action action) {
         remember(finch,action);
