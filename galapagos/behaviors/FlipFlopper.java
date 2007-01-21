@@ -9,7 +9,7 @@ import galapagos.biotope.*;
 public class FlipFlopper implements Behavior {
     private static final String DESCRIPTION = "Switches between cleaning and ignoring.";
     
-    Action last = Action.IGNORING;
+    private Action last = Action.IGNORING;
 
     /**
      * @inheritDoc

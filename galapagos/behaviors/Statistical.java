@@ -13,18 +13,20 @@ public class Statistical extends MemoryBehavior<Statistical.Memory> {
      * finches that this Statistical meets.
      */
     protected class Memory {
-        public int helpedGotHelp;
-        public int helpedTotal;
-        public int didntHelpGotHelp;
-        public int didntHelpTotal;
+        public int cleanedAndGotCleaned;
+        public int cleanedTotal;
+        public int ignoredAndGotCleaned;
+        public int ignoredTotal;
         public Action lastAction;
         public Action secondToLastAction;
+        public boolean mightBeStatistical;
         
         public Memory () {
-            helpedGotHelp = 0;
-            helpedTotal = 0;
-            didntHelpGotHelp = 0;
-            didntHelpTotal = 0;
+            cleanedAndGotCleaned = 0;
+            cleanedTotal = 0;
+            ignoredAndGotCleaned = 0;
+            ignoredTotal = 0;
+            mightBeStatistical = true;
         }
     }
     
@@ -33,6 +35,8 @@ public class Statistical extends MemoryBehavior<Statistical.Memory> {
         "finch based on estimates of the conditional<br>" +
         "probabilities of beeing helped when the<br>" +
         "Statistical helps og ignores the other finch.</HTML>";
+    
+    private static final double weightOfGettingCleanedNextTurn = 2.0;
     
     /**
      * @inheritDoc
@@ -50,25 +54,68 @@ public class Statistical extends MemoryBehavior<Statistical.Memory> {
      */
     public Action decide(Finch finch) {
         Memory stat = recall(finch);
+        
         if (stat == null) {
+            // We have never met this finch before.
             stat = new Memory();
             remember(finch, stat);
             stat.lastAction = Action.CLEANING;
             return Action.CLEANING;
-        } else if (stat.helpedTotal + stat.didntHelpTotal == 0) {
+        } else if (stat.secondToLastAction == null) {
+            // The second meeting with this finch.
+            stat.secondToLastAction = stat.lastAction;
             stat.lastAction = Action.IGNORING;
             return Action.IGNORING;
-        }
+        } else if (stat.cleanedTotal == 0 || stat.ignoredTotal == 0) {
+            // We don't have enough data to calculate the conditional probabilities.
+            stat.secondToLastAction = stat.lastAction;
+            stat.lastAction = Action.IGNORING;
+            return Action.IGNORING;
+        } // Now we have enough data to start analyzing them.
         
-        double pointsForCleaning = ((double)stat.helpedGotHelp)/stat.helpedTotal * 3.0;
-        double pointsForIgnoring = ((double)stat.didntHelpGotHelp)/stat.didntHelpTotal * 4.0 + 1;
-        if (pointsForCleaning >= pointsForIgnoring) {
+        
+        //      If the other finch might be another Statistical, we help it.
+        if (stat.mightBeStatistical) {
+            stat.secondToLastAction = stat.lastAction;
             stat.lastAction = Action.CLEANING;
             return Action.CLEANING;
-        } else {
-            stat.lastAction = Action.IGNORING;
-            return Action.IGNORING;
         }
+        
+        // We estimate the probability of other finch cleaning us 
+        // if we clean it, and if we ignore it.  
+        double probGettingCleanedWhenCleaning = ((double) stat.cleanedAndGotCleaned) / stat.cleanedTotal;
+        double probGettingCleanedWhenIgnoring = ((double) stat.ignoredAndGotCleaned) / stat.ignoredTotal;
+        
+        // Based on our action last round, we estimate the probability of getting cleaned this round.
+        double probGettingCleanedThisRound;
+        if (stat.lastAction == Action.CLEANING)
+            probGettingCleanedThisRound = probGettingCleanedWhenCleaning;
+        else
+            probGettingCleanedThisRound = probGettingCleanedWhenIgnoring;
+        
+        // We compute the estimated number of points we can get this round
+        // when cleaning, and when ignoring the other finch.
+        double pointsThisRoundIfCleaning = probGettingCleanedThisRound * 3.0;
+        double pointsThisRoundIfIgnoring = probGettingCleanedThisRound * 4.0 + 1.0;
+        
+        // We take into account that we would like to get cleaned next round;
+        double cleaningGoodness = pointsThisRoundIfCleaning + 
+                probGettingCleanedWhenCleaning * weightOfGettingCleanedNextTurn;
+        double ignoringGoodness = pointsThisRoundIfIgnoring + 
+                probGettingCleanedWhenIgnoring * weightOfGettingCleanedNextTurn;
+        
+        // We make our choice.
+        Action choice;
+        if (cleaningGoodness >= ignoringGoodness)
+            choice = Action.CLEANING;
+        else
+            choice = Action.IGNORING;
+        
+        // We save our choice in the memory.
+        stat.secondToLastAction = stat.lastAction;
+        stat.lastAction = choice;
+        
+        return choice;
     }
 
     /**
@@ -78,19 +125,22 @@ public class Statistical extends MemoryBehavior<Statistical.Memory> {
      */
     public void response(Finch finch, Action action) {
         Memory stat = recall(finch);
+        
+        // If the other finch keeps making the same decisions as us,
+        // it might be another Statistical.
+        stat.mightBeStatistical = stat.mightBeStatistical && (action == stat.lastAction);
+        
         if (stat.secondToLastAction == Action.IGNORING) {
-            stat.didntHelpTotal++;
+            stat.ignoredTotal++;
             if (action == Action.CLEANING) {
-                stat.didntHelpGotHelp++;
+                stat.ignoredAndGotCleaned++;
             }
         } else if (stat.secondToLastAction == Action.CLEANING){
-            stat.helpedTotal++;
+            stat.cleanedTotal++;
             if (action == Action.CLEANING) {
-                stat.helpedGotHelp++;
+                stat.cleanedAndGotCleaned++;
             }
         }
-        
-        stat.secondToLastAction = stat.lastAction;
     }
     
     /**
