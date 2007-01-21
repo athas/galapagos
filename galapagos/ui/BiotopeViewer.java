@@ -153,7 +153,8 @@ public class BiotopeViewer extends JFrame {
     }
     
     /**
-     * Change the biotope currently displayed by this BiotopeViewer and its Components.
+     * Change the biotope currently displayed by this BiotopeViewer
+     * and its Components.
      * @param biotope The new biotope.
      */
     public void setBiotope(Biotope biotope) {
@@ -203,7 +204,7 @@ public class BiotopeViewer extends JFrame {
     }
     
     /**
-     * Create and position the controls of the main interface. 
+     * Create and position the controls of the main interface.
      */
     private void initializeControls() {
         //create top controls
@@ -356,7 +357,8 @@ public class BiotopeViewer extends JFrame {
     }
 
     /**
-     * A set of GridBagConstraints for use with the GridBagLayout. Recommended for single components.
+     * A set of GridBagConstraints for use with the
+     * GridBagLayout. Recommended for single components.
      * @param x the horisontal position of the component.
      * @param y the vertical position of the component.
      * @param alignment the alignment of the component in its display area.
@@ -370,7 +372,8 @@ public class BiotopeViewer extends JFrame {
     }
 
     /**
-     * Maps each color in the behaviors-map to the associated behaviors name (Behavior.toString()).
+     * Maps each color in the behaviors-map to the associated
+     * behaviors name (Behavior.toString()).
      * 
      * @require For every two distrinct behavior objects b1, b2 in
      * behaviors, b1.toString() != b2.toString() must hold.
@@ -411,8 +414,8 @@ public class BiotopeViewer extends JFrame {
     }
     
     /**
-     * Get the combined size of all components preferred sizes plus 100
-     * extra pixels in width and height.
+     * Get the combined size of all components preferred sizes plus
+     * 100 extra pixels in width and height.
      */
     public Dimension combinedSize() {
         BorderLayout layout = (BorderLayout) this.getContentPane().getLayout();
