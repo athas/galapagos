@@ -3,7 +3,8 @@ package galapagos.behaviors;
 import galapagos.biotope.*;
 
 /**
- * A Tit-for-tat variant with the default action being the only difference. 
+ * A Tit-for-tat variant with the default action being the only
+ * difference.
  */
 public class SuspiciousTitForTat extends ActionMemoryBehavior {
     private static final String DESCRIPTION = 
@@ -25,8 +26,8 @@ public class SuspiciousTitForTat extends ActionMemoryBehavior {
     }
     
     /**
-     * Remembers what this finch did as the action
-     * we want to use next time we meet it.
+     * Remembers what this finch did as the action we want to use next
+     * time we meet it.
      */
     public void response (Finch finch, Action action) {
         remember(finch,action);
