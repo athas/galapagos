@@ -26,12 +26,11 @@ import java.awt.event.*;
 public class BiotopeViewer extends JFrame {
 
     private AreaPanel area;
-    public Map<Behavior, Color> colorMap;
-    public int pixelSize;
+    private Map<Behavior, Color> colorMap;
     private StatisticsPanel statistics;
     private BiotopeLogger logger;
     private BiotopeController controller;
-    public final BiotopeCreator biotopeCreator;
+    private final BiotopeCreator biotopeCreator;
     private Biotope biotope;
     
     private JButton newBiotope;
