@@ -55,7 +55,7 @@ public class SelfCentric extends MemoryBehavior<SelfCentric.IdentificationLevel>
 	/**
 	 * How another finch is identified.
 	 */
-	private enum IdentificationLevel {
+	protected enum IdentificationLevel {
 		MET_ONCE,
 		SELF_CENTRIC,
 		OTHER_SPECIES
