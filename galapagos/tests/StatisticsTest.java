@@ -3,6 +3,9 @@ package galapagos.tests;
 import junit.framework.TestCase;
 import galapagos.biotope.Statistics;
 
+/**
+ * Test of the Statistics class.
+ */
 public class StatisticsTest extends TestCase {
 
 	private Statistics statistics;

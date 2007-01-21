@@ -7,6 +7,12 @@ import galapagos.behaviors.*;
  * Test of the Probing Tit For Tat behavior.
  */
 public class ProbingTitForTatTest extends BehaviorTest {
+	
+	/**
+	 * Test that the Probing tit for tat does as expected the first
+	 * few rounds, after the third response of each behavior
+	 * it gets unpredictable. And we can't test that.
+	 */
 	public void testDecide() {
 		// should clean unknown finches
     	assertEquals(behavior.decide(opponent), Action.CLEANING);

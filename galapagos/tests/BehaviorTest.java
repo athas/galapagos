@@ -12,6 +12,9 @@ public abstract class BehaviorTest extends TestCase {
     Behavior behavior;
     Finch opponent, opponent2;
     
+    /**
+     * Create a behavior and some opponents for the concrete tests to use.
+     */
     protected void setUp() {
         behavior = getBehavior();
         //create a GalapagosFinch the testDecide can use as opponent.

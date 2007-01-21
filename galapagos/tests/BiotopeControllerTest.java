@@ -16,7 +16,10 @@ public class BiotopeControllerTest extends TestCase {
     List<Behavior> behaviors;
     BiotopeController controller;
     Biotope biotope; 
-        
+    
+    /**
+     * Create a BiotopeController and a Biotope for the tests.
+     */
     protected void setUp() {
         behaviors = new LinkedList<Behavior>();
         behaviors.add(new Samaritan());

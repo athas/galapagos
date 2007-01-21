@@ -3,6 +3,9 @@ package galapagos.tests;
 import galapagos.behaviors.*;
 import galapagos.biotope.*;
 
+/**
+ * Test of the InverseTitForTat behavior.
+ */
 public class InverseTitForTatTest extends BehaviorTest {
 
 	/**

@@ -3,6 +3,9 @@ package galapagos.tests;
 import galapagos.biotope.*;
 import galapagos.behaviors.FriendlySelfCentric;
 
+/**
+ * Test of the FriendlySelfCentric behavior.
+ */
 public class FriendlySelfCentricTest extends BehaviorTest {
 
     /**

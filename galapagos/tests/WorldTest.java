@@ -67,6 +67,9 @@ public class WorldTest extends TestCase {
                 world.setAt(x, y, x * world.width() + y);
     }
 
+    /**
+     * Test that the world is filled in the way we wan't it.
+     */
     public void testWorldContents() {
         fillWorld();
         
@@ -102,14 +105,20 @@ public class WorldTest extends TestCase {
             }
     }
 
+    /**
+     * Test that the wrapper-methods works ok both with positive
+     * and negative input.
+     */
     public void testWrapping()
     {
+    	// Coordinates inside the world.
         assertEquals(0, world.wrappedX(0));
         assertEquals(0, world.wrappedY(0));
         assertEquals(1, world.wrappedX(1));
         assertEquals(1, world.wrappedY(1));
         assertEquals(2, world.wrappedX(2));
         assertEquals(2, world.wrappedY(2));
+        // Coordinates crossing the bottom and right edges.
         assertEquals(0, world.wrappedX(3));
         assertEquals(0, world.wrappedY(3));
         assertEquals(1, world.wrappedX(4));
@@ -118,6 +127,16 @@ public class WorldTest extends TestCase {
         assertEquals(2, world.wrappedY(5));
         assertEquals(0, world.wrappedX(6));
         assertEquals(0, world.wrappedY(6));
+        
+        // Coordinates crossing the top and left edges.
+        assertEquals(2, world.wrappedX(-1));
+        assertEquals(2, world.wrappedY(-1));
+        assertEquals(1, world.wrappedX(-2));
+        assertEquals(1, world.wrappedY(-2));
+        assertEquals(0, world.wrappedX(-3));
+        assertEquals(0, world.wrappedY(-3));
+        assertEquals(2, world.wrappedX(-4));
+        assertEquals(2, world.wrappedY(-4));
     }
     
     /**
@@ -145,7 +164,6 @@ public class WorldTest extends TestCase {
         
         containsTheSame(found, list);
     }
-    
     
     /**
      * When there are no elements in the world, no neighbours should

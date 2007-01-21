@@ -195,10 +195,9 @@ public class BiotopeTest extends TestCase {
 	 * (they start with 1 hitpoint each).
      *
      */
-    	
     private Biotope meetingTestSetUp (Behavior b1, Behavior b2) {
     	Biotope b = new
-    	Biotope(4, 4, 0.00, 10, 1, 0, 100, 100, 0, behaviors);
+    		Biotope(4, 4, 0.00, 10, 1, 0, 100, 100, 0, behaviors);
     	
     	// We make two neighboring finches at (2,2) and at (2,3).
     	b.putFinch(2,2, b1);

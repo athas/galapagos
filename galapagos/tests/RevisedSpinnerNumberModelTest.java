@@ -5,6 +5,9 @@ import galapagos.ui.RevisedSpinnerNumberModel;
 import javax.swing.SpinnerNumberModel;
 import junit.framework.TestCase;
 
+/**
+ * Test that our RevisedSpinnerNumberModel works as expected.
+ */
 public class RevisedSpinnerNumberModelTest extends TestCase {
     private SpinnerNumberModel standardModel;
     private SpinnerNumberModel doubleModel;

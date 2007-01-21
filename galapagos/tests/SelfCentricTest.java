@@ -3,8 +3,18 @@ package galapagos.tests;
 import galapagos.biotope.*;
 import galapagos.behaviors.SelfCentric;
 
+/**
+ * Test of the SelfCentric behavior.
+ */
 public class SelfCentricTest extends BehaviorTest {
 
+	/**
+	 * Tests that the SelfCentric behavior uses the start pattern:
+	 * first ignore then clean.
+	 * And tests that opponents that doesn't use this pattern is ignored.
+	 * Also tests that the SelfCentric behavior makes a distinction
+	 * between two different finches.
+	 */
 	public void testDecide() {
 		assertEquals(Action.IGNORING, behavior.decide(opponent));
 		
