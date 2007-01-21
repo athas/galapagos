@@ -29,6 +29,9 @@ public class Galapagos {
         behaviors.put(new Predictor(), Color.GREEN.darker());
         behaviors.put(new Analyzer(), Color.BLUE.darker());
         behaviors.put(new Statistical(), Color.getHSBColor(0.5F,0.7F,0.7F));
+        behaviors.put(new SelfCentric(), new Color(100, 60, 150));
+        
+        
         
         BiotopeViewer frame = new BiotopeViewer(behaviors);
         frame.setVisible(true);
