@@ -214,30 +214,35 @@ public class BiotopeViewer extends JFrame {
         newBiotope.setActionCommand("newBiotope");
         newBiotope.addActionListener(new ActionListener () {
         	public void actionPerformed(ActionEvent e) {
-        		//disable buttons
-        		switchButtonsState(false);
-        		controller.stopSimulation();
-        		
-        		// Showing the biotopeCreator will stop the current execution until it is closed
-        		// this is because the biotopeCreator is a modal dialog. 
-                biotopeCreator.setVisible(true);
+                    //disable buttons
+                    switchButtonsState(false);
+                    controller.stopSimulation();
+                    // Showing the biotopeCreator will stop the
+                    // current execution until it is closed this
+                    // is because the biotopeCreator is a modal
+                    // dialog.
+                    biotopeCreator.setVisible(true);
                 
-                //the biotopeCreator is closed we can now read the new biotope.
-                Biotope biotope = biotopeCreator.biotope();
+                    //the biotopeCreator is closed we can now read the new biotope.
+                    Biotope biotope = biotopeCreator.biotope();
                 
-                //change the Biotope if it was changed
-                if(biotope != BiotopeViewer.this.biotope && biotope != null)           	
+                    //change the Biotope if it was changed
+                    if(biotope != BiotopeViewer.this.biotope && biotope != null)           	
                 	setBiotope(biotope);
 
-                //enable buttons
-                switchButtonsState(true);
-            }
+                    //enable buttons
+                    switchButtonsState(true);
+                }
         });
         
-        nextRound = newButton("Next Round", "nextRound", "Run a single round of simulation.");
-        severalRounds = newButton("Compute Several Rounds", "severalRounds", "Run the specified number of rounds.");
-        unlimitedRounds = newButton("Go!", "unlimitedRounds", "Run an unlimited number of rounds.");
-        stopRounds = newButton("Stop Simulation", "stopRounds", "Stop currently running series of simulation rounds.");
+        nextRound = newButton("Next Round", "nextRound", 
+                              "Run a single round of simulation.");
+        severalRounds = newButton("Compute Several Rounds", "severalRounds"
+                                  , "Run the specified number of rounds.");
+        unlimitedRounds = newButton("Go!", "unlimitedRounds", 
+                                    "Run an unlimited number of rounds.");
+        stopRounds = newButton("Stop Simulation", "stopRounds", 
+                               "Stop currently running series of simulation rounds.");
         
         numberOfRounds = new JSpinner(new RevisedSpinnerNumberModel(0,0,Integer.MAX_VALUE,10));
         numberOfRounds.setToolTipText("Set number of simulation rounds to run");
@@ -247,7 +252,8 @@ public class BiotopeViewer extends JFrame {
         numberOfRounds.setMinimumSize(minimumButtonDimension);
         numberOfRounds.addChangeListener(controller);
         
-        // The initial value needs to be set seperatly to notify the controller of the value.
+        // The initial value needs to be set seperatly to notify the
+        // controller of the value.
         numberOfRounds.setValue(100);
         
         toggleLogging = new JCheckBox("Perform logging", isLogging);
@@ -282,7 +288,8 @@ public class BiotopeViewer extends JFrame {
         timerInterval.setMinimumSize(minimumButtonDimension);
         timerInterval.addChangeListener(controller);
         
-        // The initial value needs to be set seperatly to notify the controller of the value.
+        // The initial value needs to be set seperatly to notify the
+        // controller of the value.
         timerInterval.setValue(100); 
         
         Container topContainer = Box.createHorizontalBox();
@@ -329,7 +336,8 @@ public class BiotopeViewer extends JFrame {
                 }
             });
         
-        // The initial value needs to be set seperatly to notify the controller of the value.
+        // The initial value needs to be set seperatly to notify the
+        // controller of the value.
         manipulationRadius.setValue(1);
 
         add(topContainer, BorderLayout.NORTH);
@@ -341,6 +349,7 @@ public class BiotopeViewer extends JFrame {
     
     /**
      * Create a new JButton with the specified text and actionCommand.
+     *
      * @param text The button's text
      * @param command The button's actionCommand
      * @param toolTip A tool tip for the button.
@@ -359,6 +368,7 @@ public class BiotopeViewer extends JFrame {
     /**
      * A set of GridBagConstraints for use with the
      * GridBagLayout. Recommended for single components.
+     *
      * @param x the horisontal position of the component.
      * @param y the vertical position of the component.
      * @param alignment the alignment of the component in its display area.
@@ -378,7 +388,8 @@ public class BiotopeViewer extends JFrame {
      * @require For every two distrinct behavior objects b1, b2 in
      * behaviors, b1.toString() != b2.toString() must hold.
      * 
-     * @ensure this.colorByBehavior(b).equals(behaviors.get(b)) for all Behavior objects b in behaviors.
+     * @ensure this.colorByBehavior(b).equals(behaviors.get(b)) for
+     * all Behavior objects b in behaviors.
      */
     private void makeBehaviorListAndColorMap(Map<Behavior, Color> behaviors) {
         this.behaviors = new ArrayList<Behavior>();
@@ -402,7 +413,9 @@ public class BiotopeViewer extends JFrame {
     
     /**
      * Enables or disables buttons on the frame.
-     * @param enable Indicates wheter the buttons be enabled or disabled (true for enabling).
+     *
+     * @param enable Indicates wheter the buttons be enabled or
+     * disabled (true for enabling).
      */
     public void switchButtonsState(boolean enable) {
         newBiotope.setEnabled(enable);
@@ -425,11 +438,13 @@ public class BiotopeViewer extends JFrame {
         Dimension rightDim = layout.getLayoutComponent(BorderLayout.EAST).getPreferredSize();
         Dimension bottomDim = layout.getLayoutComponent(BorderLayout.SOUTH).getPreferredSize();
         
-        /* Remark: With a BorderLayout the top and bottom areas cover the entire width of
-         * of the frame, while the right and left areas only cover the part of the 
-         * right and left frame borders not covered by the top and bottom areas.
-         * This is reflected in a structural difference in the computation of the
-         * combined Dimension of the five areas of the BorderLayout.
+        /* Remark: With a BorderLayout the top and bottom areas cover
+         * the entire width of of the frame, while the right and left
+         * areas only cover the part of the right and left frame
+         * borders not covered by the top and bottom areas.  This is
+         * reflected in a structural difference in the computation of
+         * the combined Dimension of the five areas of the
+         * BorderLayout.
          */  
         int width = 100 + Math.max(leftDim.width + centerDim.width + rightDim.width, Math.max(topDim.width, bottomDim.width));
         int height = 100 + topDim.height + bottomDim.height + Math.max(centerDim.height, Math.max(leftDim.height, rightDim.height));
