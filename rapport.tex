@@ -300,7 +300,11 @@ specifikt at håndtere alle underklasser af {\tt FinchDescriptor} i
 {\tt applyDescriptors}, men i stedet uddelegere dette til det konkrete
 objekt, som så er i stand til at benytte private metoder i {\tt
   Biotope} til at udføre sin beskrevne ændring uden at {\tt
-  notifyObservers} bliver kaldt.
+  notifyObservers} bliver kaldt. Brugen af {\em Vistor}-mønstret
+betyder ikke udpræget meget i vores konkrete implementation, men hvis
+det i fremtiden skulle være nødvendigt at tilføje flere underklasser
+af {\tt FinchDescriptor} ville det kunne gøres uden at modificere
+resten af Biotope.
 
 \subsection{Brugerinterface}
 Vores brugerinterface bruges til at styre og vise biotopobjekter.
