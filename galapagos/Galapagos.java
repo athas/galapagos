@@ -4,7 +4,7 @@ import galapagos.behaviors.*;
 import galapagos.biotope.Behavior;
 import galapagos.ui.BiotopeViewer;
 
-import java.util.HashMap;
+import java.util.*;
 import java.awt.Color;
 
 /**
@@ -37,6 +37,15 @@ public class Galapagos {
         behaviors.put(new Statistical(), Color.getHSBColor(0.5F,0.7F,0.7F));
         behaviors.put(new SelfCentric(), new Color(100, 60, 150));
         behaviors.put(new FriendlySelfCentric(), new Color(10, 100, 30));
+        List<Behavior> Schizo1 = new ArrayList<Behavior>(2);
+        Schizo1.add(new Cheater());
+        Schizo1.add(new TitForTat());
+        behaviors.put(new Schizophrenic("Cheating Tit for Tat", Schizo1, false), value);
+        List<Behavior> Schizo2 = new ArrayList<Behavior>(3);
+        Schizo2.add(new Predictor());
+        Schizo2.add(new Analyzer());
+        Schizo2.add(new Statistical());
+        behaviors.put(new Schizophrenic("Analyzing Combo", Schizo2, true), value);
         
         
         
