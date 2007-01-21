@@ -77,7 +77,6 @@ public class BiotopeViewer extends JFrame {
      * @require For every two distrinct behavior objects b1, b2 in
      * behaviors, b1.toString() != b2.toString() must hold.
      */
-    
     public BiotopeViewer(Map<Behavior, Color> behaviors) {
         makeBehaviorListAndColorMap(behaviors);
         
@@ -387,6 +386,12 @@ public class BiotopeViewer extends JFrame {
             this.behaviors.add(currentBehavior);
             colorMap.put(currentBehavior, entry.getValue());
         }
+        // Now, sort the list.
+        Collections.sort(this.behaviors, new Comparator<Behavior>() {
+                public int compare(Behavior b1, Behavior b2) {
+                    return b1.toString().compareTo(b2.toString());
+                }
+            });
     }
     
     /**
