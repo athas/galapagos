@@ -2,11 +2,11 @@ package galapagos.biotope;
 
 /**
  * The Finch-interface is used for referencing a Finch in places where
- * the Finch itself is not suposed to be manipulated in any way.
+ * the Finch itself is not supposed to be manipulated in any way.
  *
  * <hr>
  *
- * Finches are passerine birds, often seed-eating, found chiefly in
+ * <p>Finches are passerine birds, often seed-eating, found chiefly in
  * the northern hemisphere and Africa. One subfamily is endemic to the
  * Neotropics. The taxonomic structure of the true finch family,
  * Fringillidae, is somewhat disputed, with some including the
@@ -19,23 +19,23 @@ package galapagos.biotope;
  * formerly considered another subfamily (Emberizinae). Przewalski's
  * "Rosefinch" (Urocynchramus pylzowi) is now classified as a
  * distinct, monotypic family with no particularly close
- * relatives.
+ * relatives.</p>
 
- * "Classic" or true finches are small to moderately large and have a
+ * <p>"Classic" or true finches are small to moderately large and have a
  * strong, stubby beaks, which in some species can be quite large. All
  * have tail feathers and 9 primaries. They have a bouncing flight,
  * alternating bouts of flapping with gliding on closed wings, and
- * most sing well. Their nests are basket-shaped and built in trees.
+ * most sing well. Their nests are basket-shaped and built in trees.</p>
 
- * There are many birds in other families which are often called
+ * <p>There are many birds in other families which are often called
  * finches. These include many species in the very similar-looking
  * Estrildids or waxbill family, which occur in the Old World tropics
  * and Australia. Several groups of the Emberizidae family (buntings
  * and American sparrows) are also named as finches, including the
  * Darwin's finches of the Galapagos islands, which provided evidence
- * of Darwin's theory of evolution.
+ * of Darwin's theory of evolution.</p>
  *
- * (Source: Wikipedia)
+ * <p>(Source: <a href="http://en.wikipedia.org/wiki/Finch">Wikipedia</a>)</p>
  */
 public interface Finch {
 }
