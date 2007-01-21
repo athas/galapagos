@@ -31,14 +31,24 @@ public class RevisedSpinnerNumberModelTest extends TestCase {
         assertNull(standardModel.getMinimum());
         assertNull(standardModel.getMaximum());
         assertEquals(standardModel.getStepSize(), 1);
-        assertTrue(modelHasState(doubleModel, 0.5, 0.0, 1.0, 0.4));
-        assertTrue(modelHasState(intModel, 5, 0, 10, 4));
-        assertTrue(modelHasState(numberModel, 5.0, 0.0, 10.0, 4.0));
+        modelStateTester(doubleModel, 0.5, 0.0, 1.0, 0.4);
+        modelStateTester(intModel, 5, 0, 10, 4);
+        modelStateTester(numberModel, 5.0, 0.0, 10.0, 4.0);
     }
     
-    public boolean modelHasState(SpinnerNumberModel model, Number value, Comparable minValue, Comparable maxValue, Number stepSize) {
-        return model.getNumber().equals(value) && model.getMinimum().equals(minValue) 
-                && model.getMaximum().equals(maxValue) && model.getStepSize().equals(stepSize);
+    /**
+     * Test whether the specified RevisedSpinnerNumberModel has the specified state.
+     * @param model the RevisedSpinnerNumberModel whose state we would like to check.
+     * @param value the expected value of the model.
+     * @param minValue the expected minimum value of the model.
+     * @param maxValue the expected maximum value of the model.
+     * @param stepSize the expected step size of the model.
+     */
+    public void modelStateTester(SpinnerNumberModel model, Number value, Comparable minValue, Comparable maxValue, Number stepSize) {
+        assertEquals(model.getNumber(), value);
+        assertEquals(model.getMinimum(), minValue); 
+        assertEquals(model.getMaximum(), maxValue);
+        assertEquals(model.getStepSize(), stepSize);
     }
 
     /**
