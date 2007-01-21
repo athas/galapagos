@@ -11,8 +11,8 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicSeparatorUI;
 
 /**
- * A Dialog
- *
+ * A dialog permitting the user to configure the parameters for the
+ * creation of a Biotope
  */
 public class BiotopeCreator extends JDialog {
     private final JSpinner widthSpinner, heightSpinner;
@@ -29,6 +29,12 @@ public class BiotopeCreator extends JDialog {
 
     private static final Dimension standardSpinnerSize = new Dimension(100,22);
     
+    /**
+     * Create a BiotopeCreator dialog.
+     *
+     * @param behaviors A list of the possible behaviors that the user
+     * may select or deselect for inclusion into the Biotope.
+     */
     public BiotopeCreator(List<Behavior> behaviors) {
     	this.behaviors = behaviors;
     	this.setModal(true);
@@ -289,10 +295,17 @@ public class BiotopeCreator extends JDialog {
         return spinner;
     }
     
+    /**
+     * Get the Biotope configured by the user with the dialog.
+     */
     public Biotope biotope() {
     	return biotope;
     }
 
+    /**
+     * Create and return a newly created Biotope object based on the
+     * selections made in this dialog.
+     */
     public Biotope createBiotope() {
         //Get the user input from the spinners.
         int width = (Integer) this.widthSpinner.getValue();
