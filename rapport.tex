@@ -169,10 +169,12 @@ levende, død af utøj eller død af alderdom, sådan at man kan fjerne
 den fra simulationen hvis den ikke længere bør være der.
 
 \subsubsection{\tt Behavior}
-% måske bør vi nævne at vi bruger Strategy-pattern
-% bare for at vise at vi er bevidste om det.
-Interfacet {\tt Behavior} er en specifikation af en finkes adfærd i
-forbindelse med møder med andre finker.
+Finkerne i simulationen styres via et objekt baseret på {\em
+  Strategy}-designmønstret. Interfacet {\tt Behavior} er en
+specifikation af en finkes adfærd i forbindelse med møder med andre
+finker, og hvert finke-objekt har en instans af en underklasse af {\tt
+  Behavior}, som benyttes til at træffe beslutninger om finken skal
+gøre i et møde.
 
 Resultatet af {\tt decide} beskriver om en anden finke skal hjælpes
 eller ej.
