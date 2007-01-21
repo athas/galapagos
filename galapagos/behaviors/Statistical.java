@@ -34,7 +34,7 @@ public class Statistical extends MemoryBehavior<Statistical.Memory> {
         "<HTML>Tries to analyse the best action against a given<br>" +
         "finch based on estimates of the conditional<br>" +
         "probabilities of beeing helped when the<br>" +
-        "Statistical helps og ignores the other finch.</HTML>";
+        "Statistical helps or ignores the other finch.</HTML>";
     
     private static final double weightOfGettingCleanedNextTurn = 2.0;
     
