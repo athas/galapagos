@@ -133,26 +133,29 @@ public class AreaPanel extends JPanel implements Observer {
      * @param worldWidth the new width of the source
      * @param worldHeight the new height of the source
      */
-    public void reset( int worldWidth, int worldHeight ) {
+    public void changeWorld( int worldWidth, int worldHeight ) {
+    	boolean worldSizeChanged = (this.worldWidth != worldWidth)
+    						    || (this.worldHeight != worldHeight);
         this.worldWidth = worldWidth;
         this.worldHeight = worldHeight;
         pixels = new int[worldWidth * worldHeight];
-        
-        reset();
+
+        reset(worldSizeChanged);
     }
     
     /**
      * Is called when the Panel-size or worldSize has changed.
      * Updates the pixelSize according to the two values and creates a new pixels-array.
+     * @param worldSizeChanged Indicate whether the world has changed or not.
      */
-    private void reset() {
+    private void reset(boolean worldSizeChanged) {
         int pixelSizeWidth = (int)Math.floor(getWidth() / worldWidth);
         int pixelSizeHeight = (int)Math.floor(getHeight() / worldHeight);
         
         int newPixelSize = Math.max(1, Math.min(pixelSizeWidth, pixelSizeHeight));
         
         
-        if(newPixelSize != pixelSize || source == null) {
+        if(worldSizeChanged || newPixelSize != pixelSize || source == null) {
         	pixelSize = newPixelSize;
         	
         	//calculate the new size of the image
@@ -201,7 +204,7 @@ public class AreaPanel extends JPanel implements Observer {
         				    , Math.max(height, worldHeight));
         
         //recalculate the pixelSize
-        reset();
+        reset(false);
     }
 
     /**

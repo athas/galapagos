@@ -182,7 +182,7 @@ public class BiotopeViewer extends JFrame {
 
         selectedBehavior = null;
         controller.setBiotope(biotope);
-        area.reset(biotope.width(), biotope.height());
+        area.changeWorld(biotope.width(), biotope.height());
         
         biotope.addObserver(statistics);
         if (isLogging)
