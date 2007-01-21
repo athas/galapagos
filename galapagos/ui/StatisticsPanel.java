@@ -8,6 +8,10 @@ import java.util.List;
 
 import javax.swing.*;
 
+/**
+ * A Swing component that observes a Biotope object and prints
+ * statistical information about it.
+ */
 public class StatisticsPanel extends JPanel implements Observer {
     //The number of columns in the output-table, computed by the number of StatisticElements
     private static final int COLUMNS;
@@ -106,6 +110,9 @@ public class StatisticsPanel extends JPanel implements Observer {
         return new GridBagConstraints(x,y,1,1,1.0,1.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(0,0,0,0),0,0);
     }
     
+    /**
+     * @inheritDoc
+     */
     public void update(Observable observableBiotope, Object arg) {
         Biotope biotope = (Biotope) observableBiotope;
         roundsLabel.setText(((Integer) biotope.round()).toString());
