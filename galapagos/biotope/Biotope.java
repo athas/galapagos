@@ -115,22 +115,17 @@ public class Biotope extends Observable
      * Add the initial finches using the values for finchesPerBehavior
      * and the list of behaviors.
      */
-    private void addStartFinches()
-    {
+    private void addStartFinches() {
         Iterator<World<GalapagosFinch>.Place> worldIterator = world.randomIterator();
         for (Iterator<Behavior> bIterator = finchBehaviors.iterator();
-             bIterator.hasNext();)
-            {
-                Behavior b = bIterator.next();
-                statistics.put(b, new Statistics());
-            
-            
-                for (int i = 0;i < finchesPerBehavior && worldIterator.hasNext();i++)
-                    {   
-                        World<GalapagosFinch>.Place p = worldIterator.next();
-                        placeFinch(p,b,false);
-                    }
+             bIterator.hasNext();) {
+            Behavior b = bIterator.next();
+            statistics.put(b, new Statistics());
+            for (int i = 0;i < finchesPerBehavior && worldIterator.hasNext();i++) {   
+                World<GalapagosFinch>.Place p = worldIterator.next();
+                placeFinch(p,b,false);
             }
+        }
     }
     
     /**
@@ -145,7 +140,8 @@ public class Biotope extends Observable
      *
      * @ensure p.getElement() == null
      */
-    private void placeFinch (World<GalapagosFinch>.Place p, Behavior b, Boolean born) {
+    private void placeFinch (World<GalapagosFinch>.Place p, 
+                             Behavior b, Boolean born) {
     	//System.out.println(b.getClass().getName());
         Statistics stat = statistics.get(b);
         stat.incPopulation();
@@ -163,8 +159,8 @@ public class Biotope extends Observable
 
     /**
      * Remove the finch at be specified Place. If there is no finch at
-     * the provided Place, calling this method is a no-op. If a
-     * finch is removed, it will be subtracted from the appropriate
+     * the provided Place, calling this method is a no-op. If a finch
+     * is removed, it will be subtracted from the appropriate
      * population count in the statistics.
      *
      * @param p The place in the world we wish to remove a finch from.
@@ -193,7 +189,8 @@ public class Biotope extends Observable
     public void putFinch (int x, int y, Behavior b) {
         assert (0 <= x && x < world.width() &&
                 0 <= y && y < world.height())
-            : "Cannot put finch at " + x + "," + y + ", it is beyond the borders of the world";
+            : "Cannot put finch at (" + x + "," + y + 
+            "), it is beyond the borders of the world";
         
         World<GalapagosFinch>.Place p = world.getAt(x, y);
         removeFinch(p);
@@ -213,7 +210,8 @@ public class Biotope extends Observable
     public void takeFinch(int x, int y) {
         assert (0 <= x && x < world.width() &&
                 0 <= y && y < world.height())
-            : "Cannot remove finch from (" + x + "," + y + "), it is beyond the borders of the world";
+            : "Cannot remove finch from (" + x + "," + y + 
+            "), it is beyond the borders of the world";
         
         removeFinch(world.getAt(x, y));
         notifyObservers();
@@ -270,10 +268,12 @@ public class Biotope extends Observable
      * empty neighbour place to breed).
      */
     private void breed () {
-        for (Iterator<World<GalapagosFinch>.Place> i = world.randomIterator(); i.hasNext();) {
+        for (Iterator<World<GalapagosFinch>.Place> i = world.randomIterator();
+             i.hasNext();) {
             World<GalapagosFinch>.Place place = i.next();
             GalapagosFinch finch = place.getElement();
-            if (finch != null && finch.age() > 0 && Math.random() <= breedingProbability) {
+            if (finch != null && finch.age() > 0 && 
+                Math.random() <= breedingProbability) {
                 List<World<GalapagosFinch>.Place> neighbours = place.emptyNeighbours(); 
                 if (!neighbours.isEmpty())
                     placeFinch(neighbours.get(0), finch.behavior().clone(), true);
@@ -286,7 +286,8 @@ public class Biotope extends Observable
      */
     private void makeMeetings() {
         clearEngagementKnowledge();
-        for (Iterator<World<GalapagosFinch>.Place> i = world.randomIterator(); i.hasNext(); ) {
+        for (Iterator<World<GalapagosFinch>.Place> i = world.randomIterator();
+             i.hasNext();) {
             World<GalapagosFinch>.Place place = i.next();
             if (place.getElement() != null && !isEngaged(place))
                 makeMeeting(place);
@@ -294,9 +295,11 @@ public class Biotope extends Observable
     }
 
     /**
-     * Engages the finch at the specified place with one of its neighbours (if any). 
-     * And makes them meet each other. If a finch doens't meet a neighbour, it gains a hitpoint 
-     * due to not using time on cleaning another finch (as when to finches meet and neither cleans the other).
+     * Engages the finch at the specified place with one of its
+     * neighbours (if any).  And makes them meet each other. If a
+     * finch doens't meet a neighbour, it gains a hitpoint due to not
+     * using time on cleaning another finch (as when to finches meet
+     * and neither cleans the other).
      *
      * @require place.getElement() != null && !isEngaged(place)
      * @ensure isEngaged(place)
@@ -338,7 +341,8 @@ public class Biotope extends Observable
     private void engage(World.Place place) {
         assert place.getElement() != null
             : "Cannot register an empty place as having participated in a meeting.";
-        engagedFinches.set(place.xPosition() * world.height() + place.yPosition(), true);
+        engagedFinches.set(place.xPosition() * world.height() +
+                           place.yPosition(), true);
     }
 
     /**
@@ -545,8 +549,8 @@ public class Biotope extends Observable
         }
     
         /**
-         * Create a descriptor that describes the creation of a finch with
-         * the specified behavior at the specified location.
+         * Create a descriptor that describes the creation of a finch
+         * with the specified behavior at the specified location.
          */
         public AddFinchDescriptor(int x, int y, Behavior behavior) {
             super(x,y);
