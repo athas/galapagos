@@ -59,12 +59,12 @@ den 15. og onsdag den 17. januar.
 
 Programmet er opdelt efter klare ansvarsgrænser med veldefinerede
 interfaces der adskiller programmets logik i logiske enheder. En
-overordnet ramme (en instans af {\tt GalapagosFrame})
-fungerer som kontrolpanel for simulationen, der er
-repræsenteret som en instans af klassen {\tt Biotope}. Rammen
-interagerer ikke med de klasser der opbygger simulationen (såsom
-den datastruktur verdens tilstand gemmes i, eller den konkrete klasse
-der repræsenterer finker), men uddelegerer i stedet dette til
+overordnet ramme (en instans af {\tt BiotopeViewer}) fungerer som
+kontrolpanel for simulationen, der er repræsenteret som en instans af
+klassen {\tt Biotope}. Rammen interagerer ikke med de klasser der
+opbygger simulationen (såsom den datastruktur verdens tilstand gemmes
+i, eller den konkrete klasse der repræsenterer finker), men
+uddelegerer i stedet dette til
 biotopobjektet. %Det er dog nødvendigt at lade rammen kende til
 %visse specifikke simulationsklasser, for at f.eks. statistik kan
 %præsenteres på en brugbar måde.
@@ -307,38 +307,38 @@ af {\tt FinchDescriptor} ville det kunne gøres uden at modificere
 resten af Biotope.
 
 \subsection{Brugerinterface}
-Vores brugerinterface bruges til at styre og vise biotopobjekter.
-Det består som udgangspunkt af en instans af {\tt GalapagosFrame}. Dette
+Vores brugerinterface bruges til at styre og vise biotopobjekter.  Det
+består som udgangspunkt af en instans af {\tt BiotopeViewer}. Dette
 vindue giver brugeren mulighed for gennem knapper at kontrollere den
 nuværende biotop. Dette sker gennem en instans af {\tt
   BiotopeController} der modtager "events" fra knapperne på vinduet,
 og ud fra dette får biotopen til at udføre det tilsvarende antal
-runder af simulationen. {\tt GalapagosFrame} giver desuden brugeren
+runder af simulationen. {\tt BiotopeViewer} giver desuden brugeren
 mulighed for at iagttage biotopen såvel visuelt (gennem en instans af
-{\tt AreaPanel}) som gennem en tabel over den nuværende tilstand af
-de forskellige adfærdsmønstre i biotopen. Der er endda mulighed for
-at aktivere en ekstra funktionalitet der udskriver tabellens data til
+{\tt AreaPanel}) som gennem en tabel over den nuværende tilstand af de
+forskellige adfærdsmønstre i biotopen. Der er endda mulighed for at
+aktivere en ekstra funktionalitet der udskriver tabellens data til
 {\tt System.out} ved hjælp af klassen {\tt BiotopeLogger}. Sidste
 overordnede komponent i bruger-interfacet er det selvstændige vindue
 {\tt BiotopeCreator} som man kan få adgang til fra {\tt
-  GalapagosFrame}. {\tt BiotopeCreator} giver mulighed for at
+  BiotopeViewer}. {\tt BiotopeCreator} giver mulighed for at
 specificere parametrene for en ny {\tt Biotope} der derefter kan
-iagttages og manipuleres gennem {\tt GalapagosFrame}.
+iagttages og manipuleres gennem {\tt BiotopeViewer}.
 
-\subsubsection{\tt GalapagosFrame}
-En {\tt GalapagosFrame} er den komponent der står for at oprette alle
-de andre hovedkomponenter i programmet (dvs. selve biotopobjektet,
-en {\tt BiotopeController} og de andre dele af
-bruger-interfacet). {\tt GalapagosFrame} tager en {\tt Map<Behavior,
-  Color>} som argument i sin konstruktør. Denne {\tt Map} specificerer
-hvilke adfærdsmønstre der mulige at have med i
-biotoper i programmet, samt hvilke farver der repræsenterer de
-forskellige adfærdsmønstre i den visuelle visning af biotoperne. Det
-er på denne måde let at introducere nye adfærdsmønstre til programmet
-da dette kun skal gøres et enkelt sted hvorefter resten af programmet
-skalerer sig selv til at passe med antallet af adfærdsmønstre.
+\subsubsection{\tt BiotopeViewer}
+En {\tt BiotopeViewer} er den komponent der står for at oprette alle
+de andre hovedkomponenter i programmet (dvs. selve biotopobjektet, en
+{\tt BiotopeController} og de andre dele af bruger-interfacet). {\tt
+  BiotopeViewer} tager en {\tt Map<Behavior, Color>} som argument i
+sin konstruktør. Denne {\tt Map} specificerer hvilke adfærdsmønstre
+der mulige at have med i biotoper i programmet, samt hvilke farver der
+repræsenterer de forskellige adfærdsmønstre i den visuelle visning af
+biotoperne. Det er på denne måde let at introducere nye adfærdsmønstre
+til programmet da dette kun skal gøres et enkelt sted hvorefter resten
+af programmet skalerer sig selv til at passe med antallet af
+adfærdsmønstre.
 
-Den visuelle repræsentation af {\tt GalapagosFrame} er delt op i fem
+Den visuelle repræsentation af {\tt BiotopeViewer} er delt op i fem
 områder (paneler).
 
 Det øverste panel indeholder de primære kontrolmuligheder for
@@ -354,14 +354,14 @@ parametre fra brugeren til en ny biotop, og undervejs er det
 ikke muligt at manipulere med den nuværende biotop - idet {\tt
   BiotopeCreator}'en bliver vist som en modal dialog.
 
-Det midterste panel på {\tt GalapagosFrame} indeholder den visuelle
+Det midterste panel på {\tt BiotopeViewer} indeholder den visuelle
 visning af biotopen i form af en instans af {\tt AreaPanel}. {\tt
   AreaPanel} er tilføjet som {\tt Observer} til den nuværende {\tt
-  Biotope}, og opdaterer sig selv når den aktuelle biotop
-ændrer sig. {\tt AreaPanel} ændrer desuden pixel-størrelsen for de
-enkelte felter i visningen af biotopen således at hele biotopen vises
-så stort som muligt på vinduet (forudsat at vinduet ikke gøres så småt
-at biotopen ikke kan vises selv med en feltstørrelse på 1x1 pixels).
+  Biotope}, og opdaterer sig selv når den aktuelle biotop ændrer sig.
+{\tt AreaPanel} ændrer desuden pixel-størrelsen for de enkelte felter
+i visningen af biotopen således at hele biotopen vises så stort som
+muligt på vinduet (forudsat at vinduet ikke gøres så småt at biotopen
+ikke kan vises selv med en feltstørrelse på 1x1 pixels).
 
 Panelet til højre på vinduet indholder en {\tt OptionButton} for hver
 adfærd i biotopen (dvs. kun dem der var i biotopen da denne
@@ -383,16 +383,16 @@ statistik over de enkelte adfærdsmønstre til {\tt System.out} hver
 runde. {\tt BiotopeLogger} bliver tilføjet som {\tt Observer} til den
 aktuelle biotop, men er desuden beskrevet yderligere nedenfor.
 
-Det nederste panel indeholder et {\tt StatisticsPanel} der hver
-runde opdateres med en generel status for hver af de adfærdsmønstre
-der er i biotopen. Dette foregår også ved at {\tt
-  StatisticsPanel} bliver tilføjet som {\tt Observer} til den
-nuværende biotop. Da {\tt StatisticsPanel} får den
-anvendte {\tt Map<Behavior, Color>} med i sin konstruktør, er det
-derefter uafhængigt af {\tt GalapagosFrame}, og kan med meget få
-kodemæssige ændringer erstattes af et andet (og måske) bedre panel til
-udskrivning af information om biotop-tilstanden til brugeren.  {\tt
-  StatisticsPanel} er beskrevet yderligere nedenfor.
+Det nederste panel indeholder et {\tt StatisticsPanel} der hver runde
+opdateres med en generel status for hver af de adfærdsmønstre der er i
+biotopen. Dette foregår også ved at {\tt StatisticsPanel} bliver
+tilføjet som {\tt Observer} til den nuværende biotop. Da {\tt
+  StatisticsPanel} får den anvendte {\tt Map<Behavior, Color>} med i
+sin konstruktør, er det derefter uafhængigt af {\tt BiotopeVi
+ewer}, og
+kan med meget få kodemæssige ændringer erstattes af et andet (og
+måske) bedre panel til udskrivning af information om biotop-tilstanden
+til brugeren.  {\tt StatisticsPanel} er beskrevet yderligere nedenfor.
 
 \subsubsection{\tt BiotopeController}
 

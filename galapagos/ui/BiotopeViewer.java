@@ -23,7 +23,7 @@ import java.awt.event.*;
  * its also here you change the updaterate.
  * 
  */
-public class GalapagosFrame extends JFrame {
+public class BiotopeViewer extends JFrame {
 
     private AreaPanel area;
     public Map<Behavior, Color> colorMap;
@@ -63,7 +63,7 @@ public class GalapagosFrame extends JFrame {
     private List<Behavior> behaviors;
 
     /**
-     * Create a GalapagosFrame simulating finches with the provided
+     * Create a BiotopeViewer simulating finches with the provided
      * behaviors and using the provided colors to visually represent
      * the simulation state.
      *
@@ -78,7 +78,7 @@ public class GalapagosFrame extends JFrame {
      * behaviors, b1.toString() != b2.toString() must hold.
      */
     
-    public GalapagosFrame(Map<Behavior, Color> behaviors) {
+    public BiotopeViewer(Map<Behavior, Color> behaviors) {
         makeBehaviorListAndColorMap(behaviors);
         
         isRefreshing = true;
@@ -156,7 +156,7 @@ public class GalapagosFrame extends JFrame {
     public void setBiotope(Biotope biotope) {
     	this.biotope = biotope;
     	
-        // Create RadioButtons and other widgets on the GalapagosFrame
+        // Create RadioButtons and other widgets on the BiotopeViewer
         // for the spawning-tool
         behaviorButtons = new ButtonGroup();
         behaviorButtonsBox.removeAll();
@@ -222,7 +222,7 @@ public class GalapagosFrame extends JFrame {
                 Biotope biotope = biotopeCreator.biotope();
                 
                 //change the Biotope if it was changed
-                if(biotope != GalapagosFrame.this.biotope && biotope != null)           	
+                if(biotope != BiotopeViewer.this.biotope && biotope != null)           	
                 	setBiotope(biotope);
 
                 //enable buttons
@@ -263,9 +263,9 @@ public class GalapagosFrame extends JFrame {
         toggleDisplayRefresh.addActionListener(new ActionListener () {
                 public void actionPerformed(ActionEvent e) {
                     if (isRefreshing)
-                        biotope.deleteObserver(GalapagosFrame.this.area);
+                        biotope.deleteObserver(BiotopeViewer.this.area);
                     else
-                        biotope.addObserver(GalapagosFrame.this.area);
+                        biotope.addObserver(BiotopeViewer.this.area);
                     isRefreshing = !isRefreshing;
                 }
             });
@@ -422,14 +422,14 @@ public class GalapagosFrame extends JFrame {
     }
     
     /**
-     * Get the BiotopeController used in this GalapagosFrame.
+     * Get the BiotopeController used in this BiotopeViewer.
      */
     public BiotopeController controller() {
         return controller;
     }
 
     /**
-     * Get the Biotope simulated in this GalapagosFrame.
+     * Get the Biotope simulated in this BiotopeViewer.
      */
     public Biotope biotope() {
         return biotope;
