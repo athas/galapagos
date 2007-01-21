@@ -3,9 +3,9 @@ package galapagos.behaviors;
 import galapagos.biotope.*;
 
 /**
- * A Behavior that estimates the conditional probabilities of being helped 
- * when either helping or ignoring a given other finch, and uses this
- * information to decide what to do.
+ * A Behavior that estimates the conditional probabilities of being
+ * helped when either helping or ignoring a given other finch, and
+ * uses this information to decide what to do.
  */
 public class Statistical extends MemoryBehavior<Statistical.Memory> {
     /**
@@ -46,11 +46,11 @@ public class Statistical extends MemoryBehavior<Statistical.Memory> {
     }
     
     /**
-     * The Statistical behavior tries to calculate the conditional probabilities
-     * of being helped by the specified finch next turn in the cases that this 
-     * behavior decides to clean, or decides to ignore the specified finch.
-     * The probabilities are estimated using memory of earlier encounters with the 
-     * same finch.
+     * The Statistical behavior tries to calculate the conditional
+     * probabilities of being helped by the specified finch next turn
+     * in the cases that this behavior decides to clean, or decides to
+     * ignore the specified finch.  The probabilities are estimated
+     * using memory of earlier encounters with the same finch.
      */
     public Action decide(Finch finch) {
         Memory stat = recall(finch);
@@ -67,42 +67,49 @@ public class Statistical extends MemoryBehavior<Statistical.Memory> {
             stat.lastAction = Action.IGNORING;
             return Action.IGNORING;
         } else if (stat.cleanedTotal == 0 || stat.ignoredTotal == 0) {
-            // We don't have enough data to calculate the conditional probabilities.
+            // We don't have enough data to calculate the conditional
+            // probabilities.
             stat.secondToLastAction = stat.lastAction;
             stat.lastAction = Action.IGNORING;
             return Action.IGNORING;
-        } // Now we have enough data to start analyzing them.
+        } 
+
+        // Now we have enough data to start analyzing them.
         
-        
-        //      If the other finch might be another Statistical, we help it.
+        // If the other finch might be another Statistical, we help
+        // it.
         if (stat.mightBeStatistical) {
             stat.secondToLastAction = stat.lastAction;
             stat.lastAction = Action.CLEANING;
             return Action.CLEANING;
         }
         
-        // We estimate the probability of other finch cleaning us 
-        // if we clean it, and if we ignore it.  
-        double probGettingCleanedWhenCleaning = ((double) stat.cleanedAndGotCleaned) / stat.cleanedTotal;
-        double probGettingCleanedWhenIgnoring = ((double) stat.ignoredAndGotCleaned) / stat.ignoredTotal;
+        // We estimate the probability of other finch cleaning us if
+        // we clean it, and if we ignore it.
+        double probGettingCleanedWhenCleaning = 
+            ((double) stat.cleanedAndGotCleaned) / stat.cleanedTotal;
+        double probGettingCleanedWhenIgnoring = 
+            ((double) stat.ignoredAndGotCleaned) / stat.ignoredTotal;
         
-        // Based on our action last round, we estimate the probability of getting cleaned this round.
+        // Based on our action last round, we estimate the probability
+        // of getting cleaned this round.
         double probGettingCleanedThisRound;
         if (stat.lastAction == Action.CLEANING)
             probGettingCleanedThisRound = probGettingCleanedWhenCleaning;
         else
             probGettingCleanedThisRound = probGettingCleanedWhenIgnoring;
         
-        // We compute the estimated number of points we can get this round
-        // when cleaning, and when ignoring the other finch.
+        // We compute the estimated number of points we can get this
+        // round when cleaning, and when ignoring the other finch.
         double pointsThisRoundIfCleaning = probGettingCleanedThisRound * 3.0;
         double pointsThisRoundIfIgnoring = probGettingCleanedThisRound * 4.0 + 1.0;
         
-        // We take into account that we would like to get cleaned next round;
+        // We take into account that we would like to get cleaned next
+        // round;
         double cleaningGoodness = pointsThisRoundIfCleaning + 
-                probGettingCleanedWhenCleaning * weightOfGettingCleanedNextTurn;
+            probGettingCleanedWhenCleaning * weightOfGettingCleanedNextTurn;
         double ignoringGoodness = pointsThisRoundIfIgnoring + 
-                probGettingCleanedWhenIgnoring * weightOfGettingCleanedNextTurn;
+            probGettingCleanedWhenIgnoring * weightOfGettingCleanedNextTurn;
         
         // We make our choice.
         Action choice;
@@ -119,16 +126,19 @@ public class Statistical extends MemoryBehavior<Statistical.Memory> {
     }
 
     /**
-     * Takes the Action made by the specified finch, and pair it with this behaviors 
-     * action from the last round. This pair of an action and a reaction is used with earlier 
-     * memory to determine which action to take at the next meeting with the specified finch.
+     * Takes the Action made by the specified finch, and pair it with
+     * this behaviors action from the last round. This pair of an
+     * action and a reaction is used with earlier memory to determine
+     * which action to take at the next meeting with the specified
+     * finch.
      */
     public void response(Finch finch, Action action) {
         Memory stat = recall(finch);
         
         // If the other finch keeps making the same decisions as us,
         // it might be another Statistical.
-        stat.mightBeStatistical = stat.mightBeStatistical && (action == stat.lastAction);
+        stat.mightBeStatistical = 
+            stat.mightBeStatistical && (action == stat.lastAction);
         
         if (stat.secondToLastAction == Action.IGNORING) {
             stat.ignoredTotal++;
@@ -164,7 +174,7 @@ public class Statistical extends MemoryBehavior<Statistical.Memory> {
         return toString().hashCode();
     }
     
-    /**
+    /**e
      * @inheritDoc
      */
     public Behavior clone() {
