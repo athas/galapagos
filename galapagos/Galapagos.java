@@ -2,7 +2,7 @@ package galapagos;
 
 import galapagos.behaviors.*;
 import galapagos.biotope.Behavior;
-import galapagos.ui.GalapagosFrame;
+import galapagos.ui.BiotopeViewer;
 
 import java.util.HashMap;
 import java.awt.Color;
@@ -30,7 +30,7 @@ public class Galapagos {
         behaviors.put(new Analyzer(), Color.BLUE.darker());
         behaviors.put(new Statistical(), Color.getHSBColor(0.5F,0.7F,0.7F));
         
-        GalapagosFrame frame = new GalapagosFrame(behaviors);
+        BiotopeViewer frame = new BiotopeViewer(behaviors);
         frame.setVisible(true);
     }
 
