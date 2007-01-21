@@ -14,6 +14,20 @@ public class Schizophrenic implements Behavior {
     private final boolean sharedMemory;
     private int personalityChoice;
     
+    /**
+     * Create a new Schizophrenic Behavior.
+     * @param name the name of the specific personality combination. Each combination
+     * of Behaviors must be given different names (since {@code equals} depends
+     * on the names to compare two Schizophrenic.
+     * @param personalities the Behaviors that this Schizophrenic, chooses randomly
+     * between each round.
+     * @param sharedMemory If {@code sharedMemory} is true, the all Behaviors of this 
+     * Schizophrenic gets informed of the opponent's action in a given round.
+     * If {@code sharedMemory} is false, only the Behavior that decided the action in a
+     * specific meeting, gets informed of the opponent's action in that meeting.
+     * @require {@code personalities.size() > 0}
+     * @ensure {@code this.toString().equals(name)}
+     */
     public Schizophrenic (String name, List<Behavior> personalities,
                           boolean sharedMemory) {
         this.name = name;
@@ -42,6 +56,11 @@ public class Schizophrenic implements Behavior {
         return description;
     }
 
+    /**
+     * Informs either the personality that decided the action this round, 
+     * or all the personalities (depending on {@code sharedMemory} in the
+     * contructor), of the opponent's action this round.
+     */
     public void response(Finch finch, Action action) {
         if (sharedMemory) {
             for (Behavior personality : personalities)
@@ -50,18 +69,32 @@ public class Schizophrenic implements Behavior {
             personalities.get(personalityChoice).response(finch, action);
     }
     
+    /**
+     * @inheritDoc
+     */
     public String toString() {
         return name;
     }
     
+    /**
+     * Returns true if {@code obj} is a Schizophrenic with the same name.
+     */
     public boolean equals(Object obj) {
         return (obj instanceof Schizophrenic) && obj.toString().equals(name);
     }
     
+    /**
+     * @inheritDoc
+     */
     public int hashCode() {
         return name.hashCode();
     }
     
+    /**
+     * A new Schizophrenic with the same name, the same personalities 
+     * (made by cloning each of the Behaviors), shared personality memory if
+     * and only if this Schizophrenic has shared personality memory.
+     */
     public Behavior clone() {
         List<Behavior> clone = new ArrayList<Behavior>(personalities.size());
         for (Behavior personality : personalities)
