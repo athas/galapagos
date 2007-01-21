@@ -27,6 +27,7 @@ public interface Behavior extends Cloneable {
     /**
      * Creates a new instance of the same behavior.
      * @return A new behavior of this type.
+     * @ensure {@code this.equals(this.clone())}
      */
     public Behavior clone();
       
@@ -50,7 +51,7 @@ public interface Behavior extends Cloneable {
      * Returns a hashCode for this Behavior. Must ensure that all Behaviors of this
      * type gives the same hashCode to fullfill the specification of Object.hashCode().
      * A good way of implementing this is by using the hashCode of the Behaviors name.
-     * @return A hashCode that is equal for all instances of this Behavior. 
+     * @return A hashCode that is equal for all instances of this Behavior type. 
      */
     public int hashCode();
 }
