@@ -190,21 +190,21 @@ public class BiotopeTest extends TestCase {
     
     /**
      * Make a Biotope at size 4x4 with 0 Samaritans,
-	 * Grudgers and FlipFloppers. In this biotope the finches loose
-	 * 1 hitpoint per round and have 1 initial hitpoint.
-	 * Therefore, they die in the first round if they don't
-	 * make any meetings.
+	 * Grudgers and FlipFloppers. We make neighboring finches which
+	 * must meet, and check whether they get the right amount of hitpoints
+	 * (they start with 1 hitpoint each).
      *
      */
     	
     private Biotope meetingTestSetUp (Behavior b1, Behavior b2) {
     	Biotope b = new
-    	Biotope(4, 4, 0.00, 10, 1, 1, 100, 100, 0, behaviors);
+    	Biotope(4, 4, 0.00, 10, 1, 0, 100, 100, 0, behaviors);
     	
-    	// We make a new Samaritan at place (2,2) and one at place (2,3).
+    	// We make two neighboring finches at (2,2) and at (2,3).
     	b.putFinch(2,2, b1);
     	b.putFinch(2,3, b2);
     
+    	b.runRound();
     	return b;
     }
     
@@ -216,15 +216,14 @@ public class BiotopeTest extends TestCase {
      */
     public void testMeeting1 () {
     	Biotope b = meetingTestSetUp(new Samaritan(),new Samaritan());
-    	b.runRound();
     	
     	GalapagosFinch fi1 = b.getFinchAt(2, 2);
     	GalapagosFinch fi2 = b.getFinchAt(2, 3);
 
-    	// fi1 and fi2 should have 3
+    	// fi1 and fi2 should have 4
     	// hitpoints each because of the meeting.
-    	assertEquals(3, fi1.hitpoints());
-    	assertEquals(3, fi2.hitpoints());
+    	assertEquals(4, fi1.hitpoints());
+    	assertEquals(4, fi2.hitpoints());
     }
     
     /**
@@ -235,21 +234,20 @@ public class BiotopeTest extends TestCase {
      */
     public void testMeeting2 () {
     	Biotope b = meetingTestSetUp(new Cheater(),new Cheater());
-    	b.runRound();
     	
     	GalapagosFinch fi1 = b.getFinchAt(2, 2);
     	GalapagosFinch fi2 = b.getFinchAt(2, 3);
 
-    	// fi1 and fi2 should have 1
+    	// fi1 and fi2 should have 2
     	// hitpoints each because of the meeting.
-    	assertEquals(1, fi1.hitpoints());
-    	assertEquals(1, fi2.hitpoints());	
+    	assertEquals(2, fi1.hitpoints());
+    	assertEquals(2, fi2.hitpoints());	
     }
 
     /**
      * Tests that in a meeting where the one finch helps and the other doesn't,
      * the helping one gets 0 hitpoints while the one that doesn't help get 5.
-     * This is testet to the biotope. This is tested by adding a samaritan and
+     * This is tested by adding a samaritan and
      * a cheater on one of the samaritan's neighboring places.
      *
      */
@@ -257,11 +255,10 @@ public class BiotopeTest extends TestCase {
     	Biotope b = meetingTestSetUp(new Samaritan(),new Cheater());
     	GalapagosFinch fi1 = b.getFinchAt(2, 2);
     	GalapagosFinch fi2 = b.getFinchAt(2, 3);
-    	b.runRound();
     	
-    	// fi1 should have 0 hitpoints. fi2 should have 5.
-    	assertEquals(0, fi1.hitpoints());
-    	assertEquals(5, fi2.hitpoints());
+    	// fi1 should have 1 hitpoints. fi2 should have 6.
+    	assertEquals(1, fi1.hitpoints());
+    	assertEquals(6, fi2.hitpoints());
     }
     
     /**
