@@ -153,6 +153,10 @@ public class BiotopeViewer extends JFrame {
         validate();
     }
     
+    /**
+     * Change the biotope currently displayed by this BiotopeViewer and its Components.
+     * @param biotope The new biotope.
+     */
     public void setBiotope(Biotope biotope) {
     	this.biotope = biotope;
     	
@@ -419,13 +423,6 @@ public class BiotopeViewer extends JFrame {
         int width = 100 + Math.max(leftDim.width + centerDim.width + rightDim.width, Math.max(topDim.width, bottomDim.width));
         int height = 100 + topDim.height + bottomDim.height + Math.max(centerDim.height, Math.max(leftDim.height, rightDim.height));
         return new Dimension(width, height);
-    }
-    
-    /**
-     * Get the BiotopeController used in this BiotopeViewer.
-     */
-    public BiotopeController controller() {
-        return controller;
     }
 
     /**
