@@ -43,8 +43,7 @@ public class Statistics {
         DEAD_AGE_TOTAL ("Total dead by age");
         
         public final String name;
-        StatisticsElement (String name)
-        {
+        StatisticsElement (String name) {
             this.name = name;
         }
     }
@@ -155,8 +154,8 @@ public class Statistics {
     }
     
     /**
-     * Increase the number of finches born in total and the number of finches
-     * born this round by one.
+     * Increase the number of finches born in total and the number of
+     * finches born this round by one.
      */
     public void incBorn () {
         born++;
@@ -164,8 +163,8 @@ public class Statistics {
     }
     
     /**
-     * Increase the number of finches dead by age in total and the number of finches
-     * dead by age this round by 1.
+     * Increase the number of finches dead by age in total and the
+     * number of finches dead by age this round by 1.
      */
     public void incDeadByAge () {
         deadByAge++;
@@ -173,8 +172,8 @@ public class Statistics {
     }
     
     /**
-     * Increase the number of finches dead by ticks in total and the number of finches
-     * dead by ticks this round by 1.
+     * Increase the number of finches dead by ticks in total and the
+     * number of finches dead by ticks this round by 1.
      */
     public void incDeadByTicks () {
         deadByTicks++;
