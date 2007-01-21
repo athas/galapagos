@@ -7,10 +7,16 @@ import galapagos.ui.BiotopeViewer;
 import java.util.HashMap;
 import java.awt.Color;
 
+/**
+ * An application simulating the interaction of finches with different
+ * behaviors.
+ */
 public class Galapagos {
 
     /**
-     * @param args
+     * Run the Galapagos application.
+     *
+     * @param args The arguments are ignored.
      */
     public static void main(String[] args) {
         // TODO Auto-generated method stub
