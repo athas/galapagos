@@ -460,18 +460,27 @@ todimensionalt array af tekstværdier som den så udskriver.
 
 \section{Konklusion}
 Vores program virker (så vidt vi kan se) efter hensigten. Vi mener at
-vores program i\-mø\-de\-kom\-mer alle opgavens krav.
+vores program i\-mø\-de\-kom\-mer alle opgavens krav, modulo de
+undtagelser som er nævnt andetsteds i rapporten.
 
-Vi har valgt ikke at
-implementere bevægelse af finkerne. Det forringer
-finkernes mulighed for at benytte sig af deres eventuelle
-hukommelse, idet det meget sjældnere vil ske at to finker gentagne
-gange mødes, og det synes vi er en stor ulempe.
+Selvom det ikke var formålet med opgaven at lave et spilteoretisk
+korrekt program har vi, når vi har vurderet hvilke faciliteter der var
+værd at implementere, alligevel forsøgt at minimere antallet af
+tilfældige faktorer, for at gøre det så nemt som muligt at udføre
+programmets hovedformål, at teste forskellige adfærdsmønstre. At
+tilføje tilfældighed ville blot skabe resultatmæssige udsving der ikke
+nødvendigvis har bund i de konkrete adfærdsmønstre.
+
+Vi har valgt ikke at implementere bevægelse af finkerne. Det forringer
+finkernes mulighed for at benytte sig af deres eventuelle hukommelse,
+idet det meget sjældnere vil ske at to finker gentagne gange mødes, og
+det synes vi er en stor ulempe, og skaber blot muligheden for
+tilfældige udsving.
 
 Vi har også valgt ikke at implementere mutation blandt finkerne. Vi er
 interesserede i at studere hvordan bestemte adfærdsmønstre klarer sig
-i forhold til hinanden, og mutation ville
-besværliggøre dette.
+i forhold til hinanden, og mutation ville besværliggøre dette uden at
+tilføje et nyt interessant element i simulationen.
 
 Vi har heller ikke implementeret en adfærdstype hvor afkom arver
 ophavets viden om andre finker. Det vil være temmelig nemt at lave ved i
