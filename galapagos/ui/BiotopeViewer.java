@@ -315,7 +315,7 @@ public class BiotopeViewer extends JFrame {
         behaviorButtonsLabel.setFont(new Font("Dialog",Font.PLAIN,13));
         
         manipulationRadiusLabel = new JLabel("Radius of pencil");
-        manipulationRadius = new JSlider(1, 25, 1);
+        manipulationRadius = new JSlider(1, 25, 10);
         manipulationRadius.setAlignmentX(0.0F);
         manipulationRadius.setToolTipText("Set the radius of the biotope manipulation pencil");
         manipulationRadius.setName("manipulationRadiusSlider");
@@ -327,6 +327,9 @@ public class BiotopeViewer extends JFrame {
                     manipulationRadiusDisplay.setText(((Integer)newValue).toString());
                 }
             });
+        
+        // The initial value needs to be set seperatly to notify the controller of the value.
+        manipulationRadius.setValue(1);
 
         add(topContainer, BorderLayout.NORTH);
         add(area,BorderLayout.CENTER);
