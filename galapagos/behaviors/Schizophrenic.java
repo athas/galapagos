@@ -15,12 +15,13 @@ public class Schizophrenic implements Behavior {
     private int personalityChoice;
     
     public Schizophrenic (String name, List<Behavior> personalities,
-            boolean sharedMemory) {
+                          boolean sharedMemory) {
         this.name = name;
         this.personalities = personalities;
         this.sharedMemory = sharedMemory;
         
-        String description = "<HTML>A schizophrenic finch with the following personalities:";
+        String description = 
+            "<HTML>A schizophrenic finch with the following personalities:";
         for (Behavior personality : personalities)
             description += "<br>" + personality;
         description += "</HTML>";
@@ -29,8 +30,8 @@ public class Schizophrenic implements Behavior {
     }
 
     /**
-     * Returns the Action from a random Behavior among this Schizophrenic's
-     * behaviors.
+     * Returns the Action from a random Behavior among this
+     * Schizophrenic's behaviors.
      */
     public Action decide(Finch finch) {
         personalityChoice = (int) Math.random() * personalities.size();
