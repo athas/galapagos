@@ -12,7 +12,7 @@ public interface Behavior extends Cloneable {
     /**
      * Let's this Behavior decide whether it wants to clean or ignore a given finch.
      * @param finch The finch to make a decision about.
-     * @return The choosen action.
+     * @return The chosen action.
      */
     public Action decide (Finch finch);
     
