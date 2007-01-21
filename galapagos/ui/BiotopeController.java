@@ -8,6 +8,13 @@ import javax.swing.Timer;
 import javax.swing.event.*;
 import javax.swing.JSpinner;
 
+/**
+ * Class for controlling a Biotope object. The BiotopeController
+ * exposes methods that permit modification of the state of a Biotope
+ * object without calling methods on the Biotope object explicitly. It
+ * is designed to be used in conjunction with a graphical user
+ * interface or similar.
+ */
 public class BiotopeController implements ActionListener, ChangeListener {
     private Biotope biotope;
     private final Timer roundTimer;
@@ -17,25 +24,26 @@ public class BiotopeController implements ActionListener, ChangeListener {
     private int manipulationRadius;
     
     /**
-     * Create a new BiotopeController, controlling the specified Biotope according to data from frame.
+     * Create a new BiotopeController, controlling the specified
+     * Biotope according to data from frame.
      */
     public BiotopeController (Biotope biotope) {
         this.biotope = biotope;
         roundTimer = new Timer(0, new ActionListener() {
         	public void actionPerformed(ActionEvent event) {
-                if (unlimited) {
+                    if (unlimited) {
                 	BiotopeController.this.biotope.runRound();
-                } else {
-                    if (roundsToGo > 0) {
-                        roundsToGo--;
-                        BiotopeController.this.biotope.runRound();
-                    }
+                    } else {
+                        if (roundsToGo > 0) {
+                            roundsToGo--;
+                            BiotopeController.this.biotope.runRound();
+                        }
                     
-                    if (roundsToGo <= 0)
-                        roundTimer.stop();
-                }
+                        if (roundsToGo <= 0)
+                            roundTimer.stop();
+                    }
         	}
-        });
+            });
         roundTimer.stop();
         roundsToGo = 0;
         numberOfRounds = 0;
@@ -48,43 +56,71 @@ public class BiotopeController implements ActionListener, ChangeListener {
     public void setBiotope (Biotope biotope) {
         this.biotope = biotope;
     }
-    
+
+    /**
+     * @inheritDoc
+     */
     public void actionPerformed(ActionEvent e) {        
         String command = e.getActionCommand();
         
         if (command.equals("nextRound"))
-        	nextRound();
+            nextRound();
         else if (command.equals("severalRounds"))
-        	runSeveralRounds(numberOfRounds);
+            runSeveralRounds(numberOfRounds);
         else if (command.equals("unlimitedRounds"))
-        	loop();
+            loop();
         else if (command.equals("stopRounds"))
-        	stopSimulation();
+            stopSimulation();
     }
-    
+
+    /**
+     * Make the controlled Biotope batch-run the specified amount of
+     * rounds. There will be a delay between each round, this delay
+     * can be set with the delay() method. The execution of rounds can
+     * be stopped prematurely.
+     *
+     * @param rounds The number of rounds that will be executed.
+     */
     public void runSeveralRounds(int rounds) {
     	unlimited = false;
     	roundsToGo = rounds;
     	roundTimer.start();
     }
     
+    /**
+     * Run a single round in the controlled Biotope, stopping any
+     * already-running batch run of multiple rounds.
+     */
     public void nextRound() {
     	stopSimulation();
         biotope.runRound();
     }
     
+    /**
+     * Stop the currently running batch of rounds. If no batch-run is
+     * in progress, calling this method is a no-op.
+     */
     public void stopSimulation() {
         unlimited = false;
         roundsToGo = 0;
         roundTimer.stop();
     }
     
+    /**
+     * Run a potentially infinite amount of rounds until stopped.
+     */
     public void loop() {
     	unlimited = true;
         roundsToGo = 0;
         roundTimer.start();
     }
     
+    /**
+     * Set the delay that will be inserted between rounds in batch
+     * runs.
+     *
+     * @param value The delay between rounds in milliseconds.
+     */
     public void delay(int value) {
     	roundTimer.setDelay(value);
     }
@@ -105,15 +141,18 @@ public class BiotopeController implements ActionListener, ChangeListener {
         manipulationRadius = newRadius;
     }
     
+    /**
+     * @inheritDoc
+     */
     public void stateChanged (ChangeEvent e) {
     	JSpinner spinner = (JSpinner)e.getSource(); 
     	
     	int value = (Integer)spinner.getValue();
     	
     	if(spinner.getName().equals("timerIntervalSpinner"))
-    		delay(value);
+            delay(value);
     	else if(spinner.getName().equals("numberOfRoundsSpinner"))
-    		this.numberOfRounds = value;
+            this.numberOfRounds = value;
     }
 
     /**
