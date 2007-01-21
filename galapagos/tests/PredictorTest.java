@@ -4,9 +4,12 @@ import galapagos.behaviors.*;
 import galapagos.biotope.*;
 
 /**
- * Test that the Predictor uses the two-bit prediction algorithm properly.
+ * Test of the Predictor behavior.
  */
 public class PredictorTest extends BehaviorTest {
+	/**
+	 * Test that the Predictor uses the two-bit prediction algorithm properly.
+	 */
     public void testDecide()
     {
         // By default, clean (a Predictor is a nice finch!)
